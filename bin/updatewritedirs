@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Looks for a local file called writedirs.txt and attempts to make the list of directories it contains writeable recursively.
+# Scansthe application's directory structure for writeable directories, and merges what it finds into the writedirs.txt configuration file.
 #
 #  beporter@users.sourceforge.net
 
