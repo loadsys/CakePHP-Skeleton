@@ -33,8 +33,8 @@ if [ $CAKE ]; then
 	awk -v var=$TEST_DATABASE '{ gsub(/test_database/,var,$0); print }' $CONFIG_DIR/database.php > $CONFIG_DIR/database.php.tmp
 	mv $CONFIG_DIR/database.php.tmp $CONFIG_DIR/database.php
 
-	# Make tmp writable
-	chmod -R 777 $DIR/tmp;
+	# Make tmp directories writable
+	$DIR/bin/writedirs
 
 	# Run migrations
 	$DIR/Console/cake Migrations.migration run all -p Migrations
