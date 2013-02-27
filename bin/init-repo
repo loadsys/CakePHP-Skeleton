@@ -4,6 +4,9 @@ DIR="$( cd -P "$( dirname "$0" )"/.. && pwd )";
 CONFIG_DIR="$DIR/Config";
 CAKE="$( ls Lib )";
 
+DEFAULT_DEV_DATABASE=NOTSET
+DEFAULT_TEST_DATABASE=ALSONOTSET
+
 # Initialize submodules
 git submodule update --init --recursive
 
@@ -11,19 +14,19 @@ if [ $CAKE ]; then
 	# Setup core.php and database.php
 	cp $CONFIG_DIR/core.php.default $CONFIG_DIR/core.php
 	cp $CONFIG_DIR/database.php.default $CONFIG_DIR/database.php
-	echo 'Enter the development database name [duplo_development]:'
+	echo 'Enter the development database name [${DEFAULT_DEV_DATABASE}]:'
 	read DEV_DATABASE
-	echo 'Enter the development database name [duplo_test]:'
+	echo 'Enter the development database name [${DEFAULT_TEST_DATABASE}]:'
 	read TEST_DATABASE
 	if [ $DEV_DATABASE ]; then
 		DEV_DATABASE=$DEV_DATABASE
 	else
-		DEV_DATABASE="duplo_development"
+		DEV_DATABASE=$DEFAULT_DEV_DATABASE
 	fi
 	if [ $TEST_DATABASE ]; then
 		TEST_DATABASE=$TEST_DATABASE
 	else
-		TEST_DATABASE="duplo_test"
+		TEST_DATABASE=$DEFAULT_TEST_DATABASE
 	fi
 	awk -v var=$DEV_DATABASE '{ gsub(/dev_database/,var,$0); print }' $CONFIG_DIR/database.php > $CONFIG_DIR/database.php.tmp
 	mv $CONFIG_DIR/database.php.tmp $CONFIG_DIR/database.php
@@ -38,7 +41,7 @@ if [ $CAKE ]; then
 	$DIR/Console/cake Migrations.migration run all -p Queue
 	$DIR/bin/migrations
 
-	# seed database with data and optionally test data
+	# Seed database with data and optionally test data
 	$DIR/Console/cake seed fill
 	echo 'Would you like to seed the database with test data [y/n]:'
 	read SEED
