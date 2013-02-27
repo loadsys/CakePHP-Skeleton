@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+DIR="$( cd -P "$( dirname "$0" )"/.. && pwd )"
+
+rm -f $DIR/tmp/cache/cake_*
+rm -f $DIR/tmp/cache/models/*
+rm -f $DIR/tmp/cache/persistent/*
+rm -f $DIR/tmp/cache/views/*
