@@ -6,25 +6,30 @@ This is the only section that applies to *using* this repo. The rest of this fil
 
 *SERIOUS WORK IN PROGRESS HERE! THIS DOESN'T WORK YET!*
 
-1. First, clone the new blank repo into a local folder: ```git clone git@github.com:loadsys/New-Project.git destination/Project/Folder```
+## Repo setup
 
-1. Then, clone the skeleton into another local folder: ```git clone git@github.com:loadsys/CakePHP-Skeleton.git yourSkeletonFolder/```
+1. Then, clone the skeleton into another local folder:
 
-1. Move into the skeleton folder and run the copy script: ```cd yourSkeletonFolder; bin/seed-skeleton destination/Project/Folder```
+```bash
+git clone git@github.com:loadsys/CakePHP-Skeleton.git /path/to/CakePHP-Skeleton
+```
 
-1. Move into the new project's folder and run the normal init-repo script: ```cd destination/Project/Folder; bin/init-repo```
+2. Create new project:
 
-1. Edit the README.md: Removing this block, and updating the rest of the template for the new project.
+```bash
+/path/to/global/cake bake project project_name --skel /path/to/CakePHP-Skeleton
+```
 
-1. Set up seed SQL data and migrations.
+3. Create project on Github and copy the git:// url
+4. setup repo script
+// Could handle the git remote add origin user-supplied-url
 
-1. Commit and push the changes.
+5. Edit the README.md: Removing this block, and updating the rest of the template for the new project.
+6. Verify that submodules are added (Migrations, DebugKit, any other that are project specific)
 
-1. All other developers setting up the project from this point on only need to clone the repo, and run ```bin/init-repo``` as exaplained in the templated instructions below.
+## Post Repo setup
 
-
-
-
+1. Run `bin/init-repo`
 
 ## Updating the Skeleton Itself ##
 
