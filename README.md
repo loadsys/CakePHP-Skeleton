@@ -1,6 +1,6 @@
 # Loadsys Cake Skeleton #
 
-This is the only section that applies to *using* this repo. The rest of this file is meant to be a template for the destination project. This whole section 
+This is the only section that applies to *using* this repo. The rest of this file is meant to be a template for the destination project. This whole section should be removed from document once the skeleton has been copied into the target project following the instructions below. 
 
 ## Skeleton Usage ##
 
