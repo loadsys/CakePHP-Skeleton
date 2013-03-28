@@ -1,6 +1,6 @@
 # Loadsys Cake Skeleton #
 
-This is the only section that applies to *using* this repo. The rest of this file is meant to be a template for the destination project. This whole section should be removed from document once the skeleton has been copied into the target project following the instructions below. 
+This is the only section that applies to *using* this repo. The rest of this file is meant to be a template for the destination project. This whole section should be removed from the document once the skeleton has been copied into the target project following the instructions below. 
 
 ## Skeleton Usage ##
 
@@ -43,7 +43,10 @@ Updating the Cake core is a different story:
 
 
 
-===========================================
+-------------------------------
+
+
+
 
 _This template includes more information than a typical project requires, both to provide hints on possible things to include, as well as to make the process of filling it largely a matter of deleting information that is not applicable. Specifically; be sure to remove any notes and comments in italics, like this one. By convention, pseudo-variables you should replace are typically in ALLCAPS._
 
