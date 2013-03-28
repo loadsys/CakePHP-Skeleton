@@ -14,3 +14,5 @@ fi
 git submodule update --init --recursive
 
 $DIR/bin/migrations
+$DIR/bin/clear-cache
+$DIR/bin/writedirs

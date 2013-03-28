@@ -1,16 +1,23 @@
 #!/usr/bin/env bash
+# TODO: Description.
 
 DIR="$( cd -P "$( dirname "$0" )"/.. && pwd )";
+#TODO: Add smarts to (roughly) detect cake version and handle differences like "Config/" vs. "config/" intelligently so the script doesn't need to be customized for every project.
 CONFIG_DIR="$DIR/Config";
 CAKE="$( ls Lib )";
 
-DEFAULT_DEV_DATABASE=NOTSET
+#TODO: These vars should probably be prompts.
+EFAULT_DEV_DATABASE=NOTSET
 DEFAULT_TEST_DATABASE=ALSONOTSET
 
 # Initialize submodules
 git submodule update --init --recursive
 
+#TODO: This if statement could prompt for the path to the correct Cake folder if it doesn't exist, and create the symlink itself before proceeding.
 if [ $CAKE ]; then
+	
+	#TODO: Should add some sanity checks to stop the script from running on an existing (already configured) setup. Maybe check for config/core.php and config/database.php before proceeding?
+	
 	# Setup core.php and database.php
 	cp $CONFIG_DIR/core.php.default $CONFIG_DIR/core.php
 	cp $CONFIG_DIR/database.php.default $CONFIG_DIR/database.php

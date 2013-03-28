@@ -85,7 +85,7 @@ _Manual Instructions_
 			'prefix' => '',
 		);
 
-The bare schema for the database is located in ```config/db/db.sql```. You may also need to apply updates from ```config/db/db_updates.sql``` as well.
+The bare schema for the database is located in ```config/sql/schema.sql```. You may also need to apply updates from ```config/sql/db_updates.sql``` as well.
 
 
 ### Source Code ###

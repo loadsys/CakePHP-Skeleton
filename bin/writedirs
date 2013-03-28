@@ -20,7 +20,7 @@ then
 	done < $CONFIG_DIR/$DIRLISTFILE
 else
 	# The writedirs.txt file is empty or can't be read. At least set the tmp dir as writeable.
-	chmod -R 777 $DIR/tmp
+	chmod -R 777 $DIR/app/tmp
 	
 	# Also try to auto-correct the situation by creating the writedirs.txt file and populating it with the existing writeable dirs in the folder structure.
 	touch $CONFIG_DIR/$DIRLISTFILE
