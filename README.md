@@ -1,3 +1,50 @@
+# Loadsys Cake Skeleton #
+
+This is the only section that applies to *using* this repo. The rest of this file is meant to be a template for the destination project. This whole section 
+
+## Skeleton Usage ##
+
+*SERIOUS WORK IN PROGRESS HERE! THIS DOESN'T WORK YET!*
+
+1. First, clone the new blank repo into a local folder: ```git clone git@github.com:loadsys/New-Project.git destination/Project/Folder```
+
+1. Then, clone the skeleton into another local folder: ```git clone git@github.com:loadsys/CakePHP-Skeleton.git yourSkeletonFolder/```
+
+1. Move into the skeleton folder and run the copy script: ```cd yourSkeletonFolder; bin/seed-skeleton destination/Project/Folder```
+
+1. Move into the new project's folder and run the normal init-repo script: ```cd destination/Project/Folder; bin/init-repo```
+
+1. Edit the README.md: Removing this block, and updating the rest of the template for the new project.
+
+1. Set up seed SQL data and migrations.
+
+1. Commit and push the changes.
+
+1. All other developers setting up the project from this point on only need to clone the repo, and run ```bin/init-repo``` as exaplained in the templated instructions below.
+
+
+
+
+
+## Updating the Skeleton Itself ##
+
+* Clone the repo.
+* Change any of the Loadsys "additions" like the readme or the scripts.
+* Commit and push.
+
+Updating the Cake core is a different story:
+
+*TBD*
+
+
+
+
+
+
+
+
+===========================================
+
 _This template includes more information than a typical project requires, both to provide hints on possible things to include, as well as to make the process of filling it largely a matter of deleting information that is not applicable. Specifically; be sure to remove any notes and comments in italics, like this one. By convention, pseudo-variables you should replace are typically in ALLCAPS._
 
 
@@ -93,6 +140,11 @@ The bare schema for the database is located in ```config/sql/schema.sql```. You 
 _Outline the process of getting the app ready to work on in a development environment._
 
 1. Install the application in your webroot.
+
+		git clone git@github.com:loadsys/PROJECT.git ./
+		bin/init-repo
+
+or
 
 		git clone git@github.com:loadsys/PROJECT.git ./
 		git submodule update --init --resursive
