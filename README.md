@@ -1,6 +1,6 @@
 # Loadsys Cake Skeleton #
 
-This is the only section that applies to *using* this repo. The rest of this file is meant to be a template for the destination project. This whole section should be removed from the document once the skeleton has been copied into the target project following the instructions below. 
+This is the only section that applies to *using* this repo. The rest of this file is meant to be a template for the destination project. This whole section should be removed from the document once the skeleton has been copied into the target project following the instructions below.
 
 ## Skeleton Usage ##
 
@@ -72,7 +72,7 @@ _**Always** include the minimum PHP version, PHP extensions (and versions) utili
 
 * [CakePHP](https://github.com/cakephp/cakephp/tree/2.1.1) v2.1.1
 * PHP v5.3+
-	* ImageMagick (imagick) v6.0.3 / v6.7.8-10 
+	* ImageMagick (imagick) v6.0.3 / v6.7.8-10
 	* SSL2 (openssl)
 	* Memcache (memcache)
 * MySQL v5+
@@ -160,7 +160,7 @@ or
 		cp Config/core.dev.php Config/core.php
 		Console/cake setup
 		Console/cake Migrations.migration run all
-		
+
 
 _Include "first time" steps that only need to be done once, but that a new dev wouldn't otherwise know to do at all._
 
@@ -216,38 +216,47 @@ _Always document the process for making changes to the database schema, even if 
 
 The database is maintained using the CakePHP migrations plugin. Run the below command to update your database. The very first time you run this command, your database should be blank.
 
-	sh .scripts/migrations.sh all
+	bin/migrations all
 
 Run the command below after making database changes. When prompted to update schema.php, choose yes and then choose overwrite.
 
-	sh .scripts/migrations.sh generate
+	bin/migrations generate
 
 
 ## Testing ##
 
 _If the project has a test suite (and it should!), document how to run tests at least, and where to write new ones (especially if the project is older or non-standard.)_
 
-Automated testing can be done through the browser like normal (by visiting http://domain/test).
+Automated testing can be done throught the browser like normal (by visiting http://domain/test).
 
-Command line automated test running is also possible with Guard. To install all the necessary gems, you'll first need Bundler.
-
-``` bash
-gem install bundler
-```
-
-Depending on how your ruby is installed, you may need `sudo`. Now use bundler to install the gems required for the automated testing.
+Command line automated test running is also possible with Grunt. To install all the necessary libraries, you'll first install grunt-cli globally.
 
 ``` bash
-bundle install
+npm install -g grunt-cli
 ```
 
-Again, this may need `sudo`. This will install Guard and a lib for watching the filesystem. To start the file watcher, simply use the `guard` command.
+Depending on how your node is installed, you may need `sudo`. Now use npm to install the libraries required for the automated testing.
 
 ``` bash
-bundle exec guard
+npm install
 ```
 
-This will block the terminal while it waits for file changes. New files should get picked up as well. The `bundle exec` part is only required if you don't have ruby installed through rbenv or rvm. It makes the command run with the gemfile specified gems and versions.
+Again, this may need `sudo`. This will install the node grunt library locally in `node_modules`. To start the file watcher, simply use the `grunt dev` command.
+
+``` bash
+grunt dev
+```
+
+This will block the terminal while it waits for file changes. New files should get picked up as well.
+
+
+## Asset Compilation
+
+If the project is using the asset server to compile assets, then it can also use `grunt build` to compile and minify a list of files that are included in the layout into a directory in webroot. Be sure to have followed the steps from the testing section to install the node dependencies. Then run the `grunt` command:
+
+``` bash
+grunt build
+```
 
 
 ## Immersion ##
