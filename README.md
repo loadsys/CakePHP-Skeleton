@@ -256,7 +256,7 @@ Tests can also be written for the browser JavaScript code. Include the js assets
 grunt test:app_name.dev/testjs
 ```
 
-Replace `app_name.dev` with whatever is in the browser (for example `localhost/app_name`).
+Replace `app_name.dev` with whatever is in the browser (for example `localhost/app_name`). If you do access the app in the browser at `http://localhost/app_name`, you can simply use `grunt test`, and the task will default to running `http://localhost/app_name/testjs`.
 
 
 ## Asset Compilation

@@ -49,12 +49,15 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('test', 'Run the browser tests in command line', function(protocol, url) {
-    if (/http/.test(protocol)) {
+    var path = require('path'),
+        runTests = require('./Console/node/run_tests');
+    if (!protocol && !url) {
+      url = 'localhost/' + path.basename(__dirname) + '/testjs';
+    } else if (/http/.test(protocol)) {
       url = url.replace('//', '');
     } else {
       url = protocol;
     }
-    var runTests = require('./Console/node/run_tests');
     runTests('http://' + url, this.async());
   });
 };
