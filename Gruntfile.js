@@ -47,4 +47,14 @@ module.exports = function(grunt) {
     var assetBuilder = require('./Console/node/asset_builder');
     assetBuilder(this.data.dest, this.data.files, this.data.include, this.async());
   });
+
+  grunt.registerTask('test', 'Run the browser tests in command line', function(protocol, url) {
+    if (/http/.test(protocol)) {
+      url = url.replace('//', '');
+    } else {
+      url = protocol;
+    }
+    var runTests = require('./Console/node/run_tests');
+    runTests('http://' + url, this.async());
+  });
 };

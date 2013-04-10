@@ -250,6 +250,15 @@ grunt dev
 This will block the terminal while it waits for file changes. New files should get picked up as well.
 
 
+Tests can also be written for the browser JavaScript code. Include the js assets and test files in `View/Pages/test.ctp`. There is a `grunt` task to run these tests as well:
+
+``` bash
+grunt test:app_name.dev/testjs
+```
+
+Replace `app_name.dev` with whatever is in the browser (for example `localhost/app_name`).
+
+
 ## Asset Compilation
 
 If the project is using the asset server to compile assets, then it can also use `grunt build` to compile and minify a list of files that are included in the layout into a directory in webroot. Be sure to have followed the steps from the testing section to install the node dependencies. Then run the `grunt` command:
