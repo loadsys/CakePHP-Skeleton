@@ -4,32 +4,64 @@ This is the only section that applies to *using* this repo. The rest of this fil
 
 ## Skeleton Usage ##
 
-*SERIOUS WORK IN PROGRESS HERE! THIS DOESN'T WORK YET!*
+*SERIOUS WORK IN PROGRESS HERE! THIS SECTION IS NOT COMPLETE YET!*
 
-## Repo setup
+### Repo setup ###
 
 1. Then, clone the skeleton into another local folder:
 
-```bash
-git clone git@github.com:loadsys/CakePHP-Skeleton.git /path/to/CakePHP-Skeleton
-```
+	```bash
+	git clone git@github.com:loadsys/CakePHP-Skeleton.git /path/to/CakePHP-Skeleton
+	```
 
 2. Create new project:
 
-```bash
-/path/to/global/cake bake project project_name --skel /path/to/CakePHP-Skeleton
-```
+	```bash
+	/path/to/global/cake bake project -v --skel /path/to/CakePHP-Skeleton PROJECTNAME
+	```
+
+	* The skeleton copy has some issues currently:
+
+			Warning Error: file_get_contents(.../newApp/Config/core.php): failed to open stream: No such file or directory in [.../cake_2.3.2/lib/Cake/Utility/File.php, line 158]
+
+			Unable to generate random hash for 'Security.salt', you should change it in .../Config/core.php
+			Warning Error: file_get_contents(.../newApp/Config/core.php): failed to open stream: No such file or directory in [.../cake_2.3.2/lib/Cake/Utility/File.php, line 158]
+
+			Unable to generate random seed for 'Security.cipherSeed', you should change it in .../Config/core.php
+			Warning Error: file_get_contents(.../newApp/Config/core.php): failed to open stream: No such file or directory in [.../cake_2.3.2/lib/Cake/Utility/File.php, line 158]
+
+			The cache prefix was NOT set
+			Unable to set console path for app/Console.
+			CakePHP is not on your `include_path`, CAKE_CORE_INCLUDE_PATH will be hard coded.
+			You can fix this by adding CakePHP to your `include_path`.
+			Unable to set CAKE_CORE_INCLUDE_PATH, you should change it in .../newApp/webroot/index.php
+			Project baked but with some issues..
+
+	* It copies the Cake-Skeleton projects own `.git/` folder, which we don't want to preserve.
+	* It fails to add new security salt hashes to core.php, because `core.php` doesn't exist, only `core.php.default` does.
+	* It doesn't set the `CAKE_CORE_INCLUDE_PATH` path correctly, because there is no local link to `lib/Cake` in the destination folder yet.
+	* We should write a wrapper script.
+		* It should take the global path to the target cake version to link to and the destination project path as arguments. 
+		* It can start by extracting a `git archive` copy of the skeleton to use as the `--skel` argument for the creation of the new project. (See the `add_cake_version.sh` script for an example of how to do this.) 
+		* Then it can create the destination folder and the Cake symlink ahead of time. 
+		* It can also rename the core.php.default file to just core.php before the copy, and back afterwards.
+		* It could even chop the top part of this Skeleton README off for you.
 
 3. Create project on Github and copy the git:// url
-4. setup repo script
-// Could handle the git remote add origin user-supplied-url
+
+4. Run the "setup repo script" (that doesn't exist yet!!) to create a schema.php file and establish initial migrations for the project.
+
+// We _could_ handle the `git remote add origin $user-supplied-url` here.
 
 5. Edit the README.md: Removing this block, and updating the rest of the template for the new project.
+
 6. Verify that submodules are added (Migrations, DebugKit, any other that are project specific)
 
-## Post Repo setup
+## Post Repo setup ###
 
 1. Run `bin/init-repo`
+
+
 
 ## Updating the Skeleton Itself ##
 
