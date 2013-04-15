@@ -15,11 +15,11 @@ This is the only section that applies to *using* this repo. The rest of this fil
 	```
 
 2. Create new project:
-
+	
 	```bash
 	/path/to/global/cake bake project -v --skel /path/to/CakePHP-Skeleton PROJECTNAME
 	```
-
+	
 	* The skeleton copy has some issues currently:
 
 			Warning Error: file_get_contents(.../newApp/Config/core.php): failed to open stream: No such file or directory in [.../cake_2.3.2/lib/Cake/Utility/File.php, line 158]
