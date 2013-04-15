@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# TODO: Description.
+# @TODO: Description.
 
 DIR="$( cd -P "$( dirname "$0" )"/.. && pwd )";
 #TODO: Add smarts to (roughly) detect cake version and handle differences like "Config/" vs. "config/" intelligently so the script doesn't need to be customized for every project.
@@ -7,32 +7,28 @@ CONFIG_DIR="$DIR/Config";
 CAKE="$( ls Lib )";
 
 #TODO: These vars should probably be prompts.
-EFAULT_DEV_DATABASE=NOTSET
-DEFAULT_TEST_DATABASE=ALSONOTSET
+DEFAULT_DEV_DATABASE=$1
+DEFAULT_TEST_DATABASE="${1}_test"
 
 # Initialize submodules
 git submodule update --init --recursive
 
 #TODO: This if statement could prompt for the path to the correct Cake folder if it doesn't exist, and create the symlink itself before proceeding.
-if [ $CAKE ]; then
+if [ ! -z "$CAKE" ]; then
 	
 	#TODO: Should add some sanity checks to stop the script from running on an existing (already configured) setup. Maybe check for config/core.php and config/database.php before proceeding?
 	
 	# Setup core.php and database.php
 	cp $CONFIG_DIR/core.php.default $CONFIG_DIR/core.php
 	cp $CONFIG_DIR/database.php.default $CONFIG_DIR/database.php
-	echo 'Enter the development database name [${DEFAULT_DEV_DATABASE}]:'
+	echo "Enter the development database name [${DEFAULT_DEV_DATABASE}]:"
 	read DEV_DATABASE
-	echo 'Enter the development database name [${DEFAULT_TEST_DATABASE}]:'
+	echo "Enter the development database name [${DEFAULT_TEST_DATABASE}]:"
 	read TEST_DATABASE
-	if [ $DEV_DATABASE ]; then
-		DEV_DATABASE=$DEV_DATABASE
-	else
+	if [ ! $DEV_DATABASE ]; then
 		DEV_DATABASE=$DEFAULT_DEV_DATABASE
 	fi
-	if [ $TEST_DATABASE ]; then
-		TEST_DATABASE=$TEST_DATABASE
-	else
+	if [ ! $TEST_DATABASE ]; then
 		TEST_DATABASE=$DEFAULT_TEST_DATABASE
 	fi
 	awk -v var=$DEV_DATABASE '{ gsub(/dev_database/,var,$0); print }' $CONFIG_DIR/database.php > $CONFIG_DIR/database.php.tmp
