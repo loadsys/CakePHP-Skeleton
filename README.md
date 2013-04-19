@@ -6,21 +6,22 @@ This is the only section that applies to *using* this repo. The rest of this fil
 
 ### Skeleton Setup ###
 
-1. Clone the skeleton project into a local folder.
+Clone the skeleton project into a local folder.
 
-	```bash
-	git clone git@github.com:loadsys/CakePHP-Skeleton.git /path/to/CakePHP-Skeleton
-	```
+```bash
+git clone git@github.com:loadsys/CakePHP-Skeleton.git /path/to/CakePHP-Skeleton
+```
 
 
 ### Create New Project ###
 
-1. Run the `spawn` command to handle all of the steps for spinning off a new project.
+Run the `spawn` command to handle all of the steps for spinning off a new project.
 
-	```bash
-	cd /path/to/CakePHP-Skeleton
-	bin/spawn /absolute/path/to/cake/core /path/to/new/project git://remote.repo/url
-	```
+```bash
+cd /path/to/CakePHP-Skeleton
+git pull origin master
+bin/spawn /absolute/path/to/cake/core /path/to/new/project/root git://remote.repo/url
+```
 
 The `spawn` command automatically links the Cake core into the destination folder, removes the Skeleton's .git folder, adds the git repo as the 'origin' remote and chops this top section of the Skeleton's README out of the destination copy. Afterwards, there are still some manual steps to complete:
 
