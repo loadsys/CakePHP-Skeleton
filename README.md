@@ -37,7 +37,7 @@ The `spawn` command automatically links the Cake core into the destination folde
 
 
 
-## Additional Developers ###
+### Additional Developers ###
 
 Each new developer that clones the repo for the first time should follow these instructions to set up their local environment.
 
@@ -53,9 +53,11 @@ Each new developer that clones the repo for the first time should follow these i
 * Change any of the Loadsys "additions" like the readme or the scripts.
 * Commit and push.
 
-Updating the Cake core is a different story:
+## Updating the Cake core version ##
 
-*TBD*
+...is a different story entirely.
+
+**TBD**
 
 
 
