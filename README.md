@@ -6,58 +6,81 @@ This is the only section that applies to *using* this repo. The rest of this fil
 
 *SERIOUS WORK IN PROGRESS HERE! THIS SECTION IS NOT COMPLETE YET!*
 
-### Repo setup ###
+We should write a wrapper script to do 90% of what's below:
 
-1. Then, clone the skeleton into another local folder:
+* It should take the global path to the target cake version to link to and the destination project path as arguments. 
+* It should be run from the local copy of the cloned CakePHP-Skeleton repo, but should NOT be included in the skeleton used to build the new project.
+* It can start by extracting a `git archive` copy of the skeleton to use as the `--skel` argument for the creation of the new project. (See below, or the `add_cake_version.sh` script for an example of how to do this.) 
+* Then it can create the destination project folder and the Cake symlink ahead of time. 
+* It can also rename the core.php.default file to just core.php before the copy, and back afterwards.
+* It could even chop the top part of this Skeleton README off for you.
+* It should run the initial `schema generate -f` for you.
+* It could take the git:// repo URL as an argument and add that as the default remote for the newly spawned project.
 
-	```bash
-	git clone git@github.com:loadsys/CakePHP-Skeleton.git /path/to/CakePHP-Skeleton
-	```
+### Skeleton Setup ###
 
-2. Create new project:
+1. Clone the skeleton project into a local folder.
+
+		```bash
+		git clone git@github.com:loadsys/CakePHP-Skeleton.git /path/to/CakePHP-Skeleton
+		```
+
+1. Make a git archive of the project to remove the .git/ folder, and extract it to a temp folder. (This is the copy we will be using to spawn the new project from.)
+
+		```bash
+		git archive HEAD --format=zip > tmp/archive.zip
+		cd tmp
+		unzip -d cakeskel archive.zip
+		```
+
+
+### Create New Project ###
+
+1. As an interim step, we also need to copy the `Config/core.php.default` file to `Config/core.php` so the bake process can set new random salts for us automatically.
+
+		```bash
+		cp Config/core.php.default Config/core.php
+		```
+
+1. Move to the folder that will *contain* your new project's root folder.
+
+1. Create the link to the cake core:
+
+		```bash
+		mkdir -p NEWAPP/Lib
+		ln -s /absolute/path/to/global/cake/lib/Cake NEWAPP/Lib/Cake
+		```
+
+1. Create the new project, being sure to use the extracted copy of the skeleton we created in the `tmp/cakeskel/` folder:
 	
-	```bash
-	/path/to/global/cake bake project -v --skel /path/to/CakePHP-Skeleton PROJECTNAME
-	```
-	
-	* The skeleton copy has some issues currently:
+		```bash
+		NEWAPP/Lib/Cake/Console/cake bake project -v --skel /path/to/CakePHP-Skeleton/tmp/cakeskel NEWAPP
+		```
 
-			Warning Error: file_get_contents(.../newApp/Config/core.php): failed to open stream: No such file or directory in [.../cake_2.3.2/lib/Cake/Utility/File.php, line 158]
+1. Create project on Github and copy the git:// URL.
 
-			Unable to generate random hash for 'Security.salt', you should change it in .../Config/core.php
-			Warning Error: file_get_contents(.../newApp/Config/core.php): failed to open stream: No such file or directory in [.../cake_2.3.2/lib/Cake/Utility/File.php, line 158]
+1. Add that as the remote for the new project.
 
-			Unable to generate random seed for 'Security.cipherSeed', you should change it in .../Config/core.php
-			Warning Error: file_get_contents(.../newApp/Config/core.php): failed to open stream: No such file or directory in [.../cake_2.3.2/lib/Cake/Utility/File.php, line 158]
+		```bash
+		cd /path/to/NEWAPP
+		git init
+		git remote add origin REPOURL
+		```
 
-			The cache prefix was NOT set
-			Unable to set console path for app/Console.
-			CakePHP is not on your `include_path`, CAKE_CORE_INCLUDE_PATH will be hard coded.
-			You can fix this by adding CakePHP to your `include_path`.
-			Unable to set CAKE_CORE_INCLUDE_PATH, you should change it in .../newApp/webroot/index.php
-			Project baked but with some issues..
+1. Run the "setup repo script" (that doesn't exist yet!!) to create a schema.php file and establish initial migrations for the project. Manual steps:
+	* Run `Console/cake schema generate -f`
+	* Commit the schema to the repo.
 
-	* It copies the Cake-Skeleton projects own `.git/` folder, which we don't want to preserve.
-	* It fails to add new security salt hashes to core.php, because `core.php` doesn't exist, only `core.php.default` does.
-	* It doesn't set the `CAKE_CORE_INCLUDE_PATH` path correctly, because there is no local link to `lib/Cake` in the destination folder yet.
-	* We should write a wrapper script.
-		* It should take the global path to the target cake version to link to and the destination project path as arguments. 
-		* It can start by extracting a `git archive` copy of the skeleton to use as the `--skel` argument for the creation of the new project. (See the `add_cake_version.sh` script for an example of how to do this.) 
-		* Then it can create the destination folder and the Cake symlink ahead of time. 
-		* It can also rename the core.php.default file to just core.php before the copy, and back afterwards.
-		* It could even chop the top part of this Skeleton README off for you.
+1. Edit the README.md: Remove this block, and update the rest of the template for the new project.
 
-3. Create project on Github and copy the git:// url
+1. Verify that submodules are added (Migrations, DebugKit, any other that are project specific)
 
-4. Run the "setup repo script" (that doesn't exist yet!!) to create a schema.php file and establish initial migrations for the project.
+1. Commit and push all of these changes to the repo. It should be ready for other developers to clone now.
 
-// We _could_ handle the `git remote add origin $user-supplied-url` here.
-
-5. Edit the README.md: Removing this block, and updating the rest of the template for the new project.
-
-6. Verify that submodules are added (Migrations, DebugKit, any other that are project specific)
 
 ## Post Repo setup ###
+
+Each new developer that clones the repo for the first time will follow these instructions to set up their local environment.
 
 1. Run `bin/init-repo`
 
@@ -79,7 +102,7 @@ Updating the Cake core is a different story:
 
 
 
-
+_Don't change this next line. Everything from here up will automatically get deleted when creating a new project using `bin/spawn`._
 -------------------------------
 
 
