@@ -62,7 +62,8 @@ Updating the Cake core is a different story:
 
 
 
-_Don't change this next line. Everything from here up will automatically get deleted when creating a new project using `bin/spawn`._
+_Don't change this next divider line. Everything from here up will automatically get deleted when creating a new project using `bin/spawn`._
+
 -------------------------------
 
 
