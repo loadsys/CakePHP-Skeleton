@@ -4,19 +4,6 @@ This is the only section that applies to *using* this repo. The rest of this fil
 
 ## Skeleton Usage ##
 
-*SERIOUS WORK IN PROGRESS HERE! THIS SECTION IS NOT COMPLETE YET!*
-
-We should write a wrapper script to do 90% of what's below:
-
-* It should take the global path to the target cake version to link to and the destination project path as arguments. 
-* It should be run from the local copy of the cloned CakePHP-Skeleton repo, but should NOT be included in the skeleton used to build the new project.
-* It can start by extracting a `git archive` copy of the skeleton to use as the `--skel` argument for the creation of the new project. (See below, or the `add_cake_version.sh` script for an example of how to do this.) 
-* Then it can create the destination project folder and the Cake symlink ahead of time. 
-* It can also rename the core.php.default file to just core.php before the copy, and back afterwards.
-* It could even chop the top part of this Skeleton README off for you.
-* It should run the initial `schema generate -f` for you.
-* It could take the git:// repo URL as an argument and add that as the default remote for the newly spawned project.
-
 ### Skeleton Setup ###
 
 1. Clone the skeleton project into a local folder.
@@ -25,62 +12,35 @@ We should write a wrapper script to do 90% of what's below:
 		git clone git@github.com:loadsys/CakePHP-Skeleton.git /path/to/CakePHP-Skeleton
 		```
 
-1. Make a git archive of the project to remove the .git/ folder, and extract it to a temp folder. (This is the copy we will be using to spawn the new project from.)
-
-		```bash
-		git archive HEAD --format=zip > tmp/archive.zip
-		cd tmp
-		unzip -d cakeskel archive.zip
-		```
-
 
 ### Create New Project ###
 
-1. As an interim step, we also need to copy the `Config/core.php.default` file to `Config/core.php` so the bake process can set new random salts for us automatically.
+1. Run the `spawn` command to handle all of the steps for spinning off a new project.
 
 		```bash
-		cp Config/core.php.default Config/core.php
+		cd /path/to/CakePHP-Skeleton
+		bin/spawn /absolute/path/to/cake/core /path/to/new/project git://remote.repo/url
 		```
 
-1. Move to the folder that will *contain* your new project's root folder.
-
-1. Create the link to the cake core:
-
-		```bash
-		mkdir -p NEWAPP/Lib
-		ln -s /absolute/path/to/global/cake/lib/Cake NEWAPP/Lib/Cake
-		```
-
-1. Create the new project, being sure to use the extracted copy of the skeleton we created in the `tmp/cakeskel/` folder:
-	
-		```bash
-		NEWAPP/Lib/Cake/Console/cake bake project -v --skel /path/to/CakePHP-Skeleton/tmp/cakeskel NEWAPP
-		```
-
-1. Create project on Github and copy the git:// URL.
-
-1. Add that as the remote for the new project.
-
-		```bash
-		cd /path/to/NEWAPP
-		git init
-		git remote add origin REPOURL
-		```
-
-1. Run the "setup repo script" (that doesn't exist yet!!) to create a schema.php file and establish initial migrations for the project. Manual steps:
-	* Run `Console/cake schema generate -f`
-	* Commit the schema to the repo.
-
-1. Edit the README.md: Remove this block, and update the rest of the template for the new project.
+The `spawn` command automatically links the Cake core into the destination folder, removes the Skeleton's .git folder, adds the git repo as the 'origin' remote and chops this top section of the Skeleton's README out of the destination copy. Afterwards, there are still some manual steps to complete:
 
 1. Verify that submodules are added (Migrations, DebugKit, any other that are project specific)
 
-1. Commit and push all of these changes to the repo. It should be ready for other developers to clone now.
+1. Set up Config/database.php.
+
+1. Run `Console/cake schema generate -f`.
+
+1. Add project information to the README.md file.
+
+1. Commit everything and push to the remote repo.
 
 
-## Post Repo setup ###
 
-Each new developer that clones the repo for the first time will follow these instructions to set up their local environment.
+## Additional Developers ###
+
+Each new developer that clones the repo for the first time should follow these instructions to set up their local environment.
+
+1. Set up new local development and test databases, and grant DB user permissions to them.
 
 1. Run `bin/init-repo`
 
