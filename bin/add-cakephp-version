@@ -1,6 +1,11 @@
 #!/bin/sh
-# This script will download and create a CakePHP "core" folder for the 
+# This script will download and create a CakePHP "core" folder for the
 # version number specified in whatever folder it lives in.
+#
+# You must relocate this script to its own directory where it can spawn new
+# folders for each Cake version without interfering with a git repo. This
+# should be somewhere central on your system where all Cake projects can
+# symlink to the individual Cake version required.
 # 
 # Usage:
 #    ./add-cakephp-version x.y.z
