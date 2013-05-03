@@ -1,0 +1,72 @@
+#!/bin/sh
+# This script will download and create a CakePHP "core" folder for the 
+# version number specified in whatever folder it lives in.
+# 
+# Usage:
+#    ./add_cakephp_version.sh x.y.z
+#
+# Pass a CakePHP release number as the first argument.
+
+DIR="$( cd -P "$( dirname "$0" )" && pwd )";
+TMPDIR="${DIR}/tmp"
+REPO=git://github.com/cakephp/cakephp.git
+REUSE_REPO=1  # Change this to 0 to force the script to clone the whole cakephp repo every time.
+
+# Just a little precaution since this script comes bundled in the CakePHP-Skeleton's bin/ folder, but should't be used from there.
+if [ ${PWD##*/} = 'bin' ]; then
+	echo "!!! The script has detected you are trying to run it from the bin/ folder.";
+	echo "!!! You must move this script to its own folder outside of the git repo.";
+	exit 2;
+fi
+
+if [ $1 ]; then
+	TAG=$1;
+else
+	echo "Usage: add_cakephp_version.sh <tag number>";
+	exit 1;
+fi
+DESTDIR="${DIR}/cake_${TAG}"
+
+# Automatically replace an existing copy of the version.
+if [ -d "${DESTDIR}" ]; then
+	echo "## Recreating Cake core v${TAG}" >&2
+	rm -rf ${DESTDIR}
+else
+	echo "## Creating Cake core v${TAG}" >&2
+fi
+mkdir ${DESTDIR}
+
+# If configured, reuse the existing temp folder (if present).
+if [ $REUSE_REPO > 0 -a -d "${TMPDIR}" ]; then
+	echo "## Reusing existing tmp folder: ${TMPDIR}" >&2
+
+else
+	# Delete a leftover temp folder if present.
+	if [ -d "${TMPDIR}" ]; then
+		echo "## Purging old tmp folder: ${TMPDIR}" >&2
+		rm -rf ${TMPDIR}
+	fi
+
+	echo "## Cloning cake repository from ${REPO}" >&2
+	git clone ${REPO} ${TMPDIR}
+fi
+
+echo "## Fetching updates from remote." >&2
+cd ${TMPDIR}
+git fetch
+
+echo "## Staging snapshot." >&2
+git archive $TAG --format=zip > archive.zip
+mv archive.zip ${DESTDIR}
+
+echo "## Installing snapshot into destination." >&2
+cd ${DESTDIR}
+unzip -q archive.zip
+
+echo "## Cleaning up." >&2
+rm -f archive.zip
+if [ $REUSE_REPO -eq 0 ]; then
+	rm -rf ${TMPDIR}
+fi
+
+echo "## Done: ${DESTDIR}" >&2
