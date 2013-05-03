@@ -17,7 +17,8 @@ TMPDIR="${DIR}/tmp"
 REPO=git://github.com/cakephp/cakephp.git
 REUSE_REPO=1  # Change this to 0 to force the script to clone the whole cakephp repo every time.
 
-# Just a little precaution since this script comes bundled in the CakePHP-Skeleton's bin/ folder, but should't be used from there.
+# Just a little precaution since this script comes bundled in the 
+# CakePHP-Skeleton's bin/ folder, but should't be used from there.
 if [ ${PWD##*/} = 'bin' ]; then
 	echo "!!! The script has detected you are trying to run it from the bin/ folder.";
 	echo "!!! You must move this script to its own folder outside of the git repo.";
