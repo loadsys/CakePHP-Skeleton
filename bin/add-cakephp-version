@@ -3,7 +3,7 @@
 # version number specified in whatever folder it lives in.
 # 
 # Usage:
-#    ./add_cakephp_version.sh x.y.z
+#    ./add-cakephp-version x.y.z
 #
 # Pass a CakePHP release number as the first argument.
 
@@ -22,7 +22,7 @@ fi
 if [ $1 ]; then
 	TAG=$1;
 else
-	echo "Usage: add_cakephp_version.sh <tag number>";
+	echo "Usage: add-cakephp-version <tag number>";
 	exit 1;
 fi
 DESTDIR="${DIR}/cake_${TAG}"
