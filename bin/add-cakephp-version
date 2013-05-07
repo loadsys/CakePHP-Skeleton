@@ -61,6 +61,13 @@ echo "## Fetching updates from remote." >&2
 cd ${TMPDIR}
 git fetch
 
+echo "## Verifying requested tag: ${TAG}" >&2
+git show-ref --tags --quiet --verify -- "refs/tags/$1"
+if [ $? -ne 0 ]; then
+	echo "!! Tag does not exist in the repo. Please check your input and try again.";
+	exit 1;
+fi
+
 echo "## Staging snapshot." >&2
 git archive $TAG --format=zip > archive.zip
 mv archive.zip ${DESTDIR}
