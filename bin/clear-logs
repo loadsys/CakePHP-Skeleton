@@ -6,8 +6,8 @@ usage ()
 	cat <<EOT
 
 ${0##*/}  
-    Clears files from known Cake tmp directories. In particular, 
-    should be run after database schema changes. Should be run 
+    Clears files from Cake's logs directory. Really only needed to
+    recover disk space from aggressive logs. Should be run 
     from the project root folder.
 
 Usage:
@@ -25,8 +25,5 @@ fi
 
 DIR="$( cd -P "$( dirname "$0" )"/.. && pwd )"
 
-echo "## Clearing cache folders.";
-rm -f $DIR/tmp/cache/cake_*
-rm -f $DIR/tmp/cache/models/*
-rm -f $DIR/tmp/cache/persistent/*
-rm -f $DIR/tmp/cache/views/*
+echo "## Clearing logs.";
+rm -f $DIR/tmp/logs/*

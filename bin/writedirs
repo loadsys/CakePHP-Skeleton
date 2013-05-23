@@ -1,8 +1,33 @@
 #!/usr/bin/env bash
 #
-# Looks for a local file called writedirs.txt and attempts to make the list of directories it contains writeable recursively. If it fails to find or read that file, or if it is empty, it will fall back to setting the tmp/ dir as writeable.
+# 
 #
 #  beporter@users.sourceforge.net
+
+#---------------------------------------------------------------------
+usage ()
+{
+	cat <<EOT
+
+${0##*/}  
+    Looks for a local file called writedirs.txt and attempts to make 
+    the list of directories it contains writable recursively. If it 
+    fails to find or read that file, or if it is empty, it will fall 
+    back to setting the tmp/ dir as writeable. Should be run from 
+    the project root folder.
+
+Usage:
+    bin/${0##*/}
+
+
+EOT
+
+	exit 0
+}
+if [ "$1" = '-h' ]; then
+	usage
+fi
+
 
 # Relative to the app's Config folder.
 DIRLISTFILE=writedirs.txt
@@ -14,13 +39,15 @@ CONFIG_DIR="$DIR/Config";
 
 if [ -s $CONFIG_DIR/$DIRLISTFILE ]
 then
+	echo "## Processing ${DIRLISTFILE} for writable directories."
 	while read F ; do
 		#echo $F  # Debugging.
 		chmod -R 777 $DIR/$F
 	done < $CONFIG_DIR/$DIRLISTFILE
 else
+	echo "## Config file ${DIRLISTFILE} not found. Creating it and generating a list of writable directories."
 	# The writedirs.txt file is empty or can't be read. At least set the tmp dir as writeable.
-	chmod -R 777 $DIR/app/tmp
+	chmod -R 777 $DIR/tmp
 	
 	# Also try to auto-correct the situation by creating the writedirs.txt file and populating it with the existing writeable dirs in the folder structure.
 	touch $CONFIG_DIR/$DIRLISTFILE

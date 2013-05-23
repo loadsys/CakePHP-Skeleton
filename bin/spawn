@@ -1,12 +1,33 @@
 #!/usr/bin/env bash
-# This script is used to automate the process of spawning new projects from the CakePHP-Skeleton project.
-# Before running this, you should have two local databases set up for the development and test versions of the project.
-#
-# Usage:
-#	bin/spawn <cake core path> <new app path> <git remote URL>
-#	$1 = Absolute path to Lib/Cake. Must be Cake v2.3.0 or higher.
-#	$2 = Path to the folder you want to create the new project in.
-#	$3 = Remote git repo URL to add as the 'origin' for the new project.
+
+#---------------------------------------------------------------------
+usage ()
+{
+	cat <<EOT
+
+${0##*/}  
+    Automates the process of spawning new projects from the 
+    CakePHP-Skeleton project.
+
+    Before running this, you should have two local databases set up for 
+    the development and test versions of the project. Look at README.md 
+    for details.
+
+Usage:
+    ${0##*/} <cake core path> <new app path> <git remote URL>
+
+	$1 = Absolute path to lib/Cake. Must be Cake v2.3.0 or higher.
+	$2 = Path to the folder you want to create the new project in.
+	$3 = Remote git repo URL to add as the 'origin' for the new project.
+
+
+EOT
+
+	exit 0
+}
+if [ "$1" = '-h' ]; then
+	usage
+fi
 
 
 # Set paths.
@@ -15,11 +36,18 @@ DIR_TMP="${DIR}/tmp"
 DIR_SKELETON_SEED="cakeskel"
 
 # Input checking.
-if [ -n "$1" ] && [ -d "$1" ]; then
+if [ -z "$1" ]; then
+	echo "!! No Cake core path provided."  >&2
+	usage
+	exit 1
+fi
+
+if [ -d "$1" ]; then
 	echo "## Setting Cake core path to: ${1}" >&2
 	DIR_CAKE_CORE=$1
 else
 	echo "!! Bad Cake core path provided."  >&2
+	usage
 	exit 1
 fi
 
@@ -28,6 +56,7 @@ if [ -n "$2" ]; then
 	DIR_NEW_APP=$2
 else
 	echo "!! No path provided for new app."  >&2
+	usage
 	exit 1
 fi
 
@@ -36,6 +65,7 @@ if [ -n "$3" ]; then
 	URL_REPO=$3
 else
 	echo "!! No remote git repo URL provided."  >&2
+	usage
 	exit 1
 fi
 
@@ -77,8 +107,12 @@ cd `dirname ${DIR_NEW_APP}`
 ${DIR_NEW_APP}/Lib/Cake/Console/cake bake project --skel ${DIR_TMP}/${DIR_SKELETON_SEED} ${DIR_NEW_APP}
 
 cd ${DIR_NEW_APP}
-cp Config/core.php Config/core.php.default
+cp ${DIR_NEW_APP}/Config/core.php ${DIR_NEW_APP}/Config/core.php.default
 sed -e '1,/---/d;/---/,$p' -i '' "${DIR_NEW_APP}/README.md"
+
+#@TODO: Offer to write database.php settings for you. If [y], prompt for each input (host, dbname, user, pass, prefix)  then run bin/db-writeconfig. Remove #1 in list below when this is automated.
+
+#@TODO: Offer to run schema generate -f. Remove #2 below when this is complete.
 
 echo "## Setting up git repo for new project." >&2
 git init
@@ -90,4 +124,5 @@ echo "##    - Set up Config/database.php." >&2
 echo "##    - Run \`Console/cake schema generate -f\`." >&2
 echo "##    - Add project information to the README.md file." >&2
 echo "##    - Commit and push everything to the remote repo." >&2
+
 

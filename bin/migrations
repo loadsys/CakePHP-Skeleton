@@ -1,5 +1,30 @@
 #!/usr/bin/env bash
 
+#---------------------------------------------------------------------
+usage ()
+{
+	cat <<EOT
+
+${0##*/}  
+    Convenience wrapper to run any pending Migrations. Takes an optional 
+    Migrations COMMAND (defaults to "run all") and an optional plugin 
+    for which to execute migrations. Should be run from the project 
+    root folder.
+
+Usage:
+    bin/${0##*/} [command] [plugin]
+
+
+EOT
+
+	exit 0
+}
+if [ "$1" = '-h' ]; then
+	usage
+fi
+
+
+
 DIR="$( cd -P "$( dirname "$0" )"/.. && pwd )"
 
 if [ "$1" ]; then
