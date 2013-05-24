@@ -41,6 +41,13 @@ MIGRATION_DIR="$CONFIG_DIR/Migration"
 SLEEP_TIME=10
 DEFAULT_DBUPDATES_FILE="$CONFIG_DIR/sql/db_updates.sql"
 
+if [ -d "$MIGRATION_DIR" ] && [ "$(ls -A $MIGRATION_DIR)" ]; then
+	DB_UPDATES_METHOD='migrations'
+elif [ -e "$DEFAULT_DBUPDATES_FILE" ]; then
+	DB_UPDATES_METHOD='db_updates'
+else
+	DB_UPDATES_METHOD='none'
+fi
 
 # Input processing.
 if [ $1 ]; then
@@ -100,10 +107,9 @@ git fetch origin
 
 
 # Apply database updates, one way or another.
-if [ -d "$MIGRATION_DIR" ] && [ "$(ls -A $MIGRATION_DIR)" ]; then
-	echo "## Running database migrations."
-	$BIN_DIR/migrations
-elif [ -e "$DEFAULT_DBUPDATES_FILE" ]; then
+if [ "$DB_UPDATES_METHOD" = 'migrations' ]; then
+	echo "## Deferring database migrations until after merge."
+elif [ "$DB_UPDATES_METHOD" = 'db_updates' ]; then
 	# Show manual pending DB updates to user. (Or use possibly use bin/db-apply-updates here to execute the SQL against the DB automatically, 
 	# which should be fairly recoverable if it's wrong [which it can be] considering we have already made a backup.)
 	DB_CHANGES="$( $BIN_DIR/db-show-updates $EXISTINGCOMMIT $ARG_NEWCOMMIT)"
@@ -119,7 +125,7 @@ elif [ -e "$DEFAULT_DBUPDATES_FILE" ]; then
 	else
 		echo "## No database updates to apply.";
 	fi
-else
+elif [ "$DB_UPDATES_METHOD" = 'none' ]; then
 	echo "## Could not automatically determine database change tracking system."
 	read -p "## Make sure any pending DB changes have been made and press [ENTER] to continue."
 fi
@@ -139,6 +145,11 @@ fi
 echo "## New commit is now active:";
 git log -1
 
+
+if [ "$DB_UPDATES_METHOD" = 'migrations' ]; then
+	echo "## Applying database migrations."
+	$BIN_DIR/migrations
+fi
 
 # Copy the correct config files into place for this environment.
 $BIN_DIR/set-configs $ARG_APPENV
