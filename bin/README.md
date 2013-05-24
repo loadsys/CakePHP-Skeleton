@@ -53,6 +53,7 @@ Automates all of the steps for a read-only copy of the app (such as staging or p
 * Checking the local working copy to make sure no changes have been made from the checked-out commit that might prevent an automatic pull or merge.
 * Backing up the active database (crudely, but effective for smallish apps).
 * On older projects, checking for db_updates.sql changes that should be applied before merging new code and pausing to display them to the user before proceeding.
+* Pulling and merging code from the remote repo.
 * Applying Migrations, if present.
 * Clearing Cake cache directories.
 * Copying over environment-specific configs, if present.
@@ -62,7 +63,7 @@ Automates all of the steps for a read-only copy of the app (such as staging or p
 
 
 ### bin/db-login ###
-A simple shortcut script that uses the contents of `Config/database.php` to start a command line `,ysql` session for you. Incredibly convenient in a production environment to run manual data queries during troubleshooting.
+A simple shortcut script that uses the contents of `Config/database.php` to start a command line `mysql` session for you. Incredibly convenient in a production environment to run manual data queries during troubleshooting.
 
 
 ### bin/??? ###
