@@ -25,8 +25,8 @@ git submodule update
 
 ## Contributing Improvements ##
 
-1. Checkout a copy of the Loadsys CakePHP-Skeleton, which includes this project as a submodule.
-2. @TODO ???
+1. Checkout a copy of the Loadsys CakePHP-Skeleton, which includes this project as a submodule. (This arrangement is useful for the ability to test the scripts  against the CakePHP-Skeleton project itself.)
+2. @TODO What's the actual process from here? Edit the submodule?
 
 
 ## Key Scripts ##
@@ -66,7 +66,13 @@ Automates all of the steps for a read-only copy of the app (such as staging or p
 A simple shortcut script that uses the contents of `Config/database.php` to start a command line `mysql` session for you. Incredibly convenient in a production environment to run manual data queries during troubleshooting.
 
 
-### bin/??? ###
-@TODO: Write description.
+### bin/spawn ###
+Unique to the Skeleton (it doesn't get copied into projects spawned from the Skeleton), it automates the process of generating new blank projects from the CakePHP-Skeleton project itself.
+
+
+### bin/add-cakephp-version and bin/symlink-cake-core ###
+The first script automates the process of fetching and preparing local copies of the CakePHP core project.
+
+The second automates the Loadsys standard practice of not including Cake core files in the repo and instead symlinking to a local Cake core.
 
 
