@@ -4,3 +4,6 @@
 [submodule "Plugin/Migrations"]
 	path = Plugin/Migrations
 	url = git@github.com:loadsys/migrations.git
+[submodule "bin"]
+	path = bin
+	url = https://github.com/loadsys/CakePHP-Shell-Scripts.git
