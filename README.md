@@ -10,7 +10,9 @@ Clone the skeleton project into a local folder.
 
 ```bash
 git clone git@github.com:loadsys/CakePHP-Skeleton.git /path/to/CakePHP-Skeleton
+git submodule update --init --recursive
 ```
+(The second line pulls all of the Loadsys shell scripts into the bin/ directory.)
 
 
 ### Create New Project ###
@@ -20,10 +22,17 @@ Run the `spawn` command to handle all of the steps for spinning off a new projec
 ```bash
 cd /path/to/CakePHP-Skeleton
 git pull origin master
-bin/spawn /absolute/path/to/cake/core /path/to/new/project/root git://remote.repo/url
+skelbin/spawn /absolute/path/to/cake/core /path/to/new/project/root git://remote.repo/url
 ```
 
-The `spawn` command automatically links the Cake core into the destination folder, removes the Skeleton's .git folder, adds the git repo as the 'origin' remote and chops this top section of the Skeleton's README out of the destination copy. Afterwards, there are still some manual steps to complete:
+The `spawn` command automatically:
+* Links the Cake core into the destination folder.
+* Removes the entire `skelbin/` directory (as it contains scripts only applicable to the use of the Skeleton itself).
+* Removes the Skeleton's .git folder.
+* Adds the git repo as the 'origin' remote.
+* Chops this top section of the Skeleton's README out of the destination copy. 
+
+Afterwards, there are still some manual steps to complete:
 
 1. Verify that submodules are added (Migrations, DebugKit, any other that are project specific)
 
@@ -39,11 +48,13 @@ The `spawn` command automatically links the Cake core into the destination folde
 
 ### Additional Developers ###
 
-Each new developer that clones the repo for the first time should follow these instructions to set up their local environment.
+Each new developer that clones the new projects's repo for the first time should follow these instructions to set up their local environment.
 
 1. Set up new local development and test databases, and grant DB user permissions to them.
 
-1. Run `bin/init-repo`
+1. Clone the repo: `git clone URL LOCALDIR`
+
+1. Run `./bootstrap.sh` from LOCALDIR to kick off the process of fetching submodules (including the bin/ dir) and executing the project's actual `bin/init-repo` script.
 
 
 
@@ -87,18 +98,16 @@ _Brief app description. Why does it exist? Who uses it? Arbitrary 4 sentence lim
 
 _**Always** include the minimum PHP version, PHP extensions (and versions) utilized, database software version, and any other **external** programs used. Think in particular about the production environment, even if a tool (like memcached) is not used locally in development._
 
-* [CakePHP](https://github.com/cakephp/cakephp/tree/2.1.1) v2.1.1
+* [CakePHP](https://github.com/cakephp/cakephp/tree/2.3.5) v2.3.5
 * PHP v5.3+
 	* ImageMagick (imagick) v6.0.3 / v6.7.8-10
 	* SSL2 (openssl)
 	* Memcache (memcache)
 * MySQL v5+
 * Memcached (production)
+* npm
 
 _If there is a script to configure the environment (PHP, extensions, etc.), document its usage **in addition to** the actual requirements list._
-
-* ruby (rvm|rbenv 1.9.3 preferably)
-* bundle gem  ```gem install bundle```
 
 _There are no "optional" installs. If a project has tests, developers are expected to be able to run them locally as well as they can run the app itself._
 
@@ -108,7 +117,8 @@ _There are no "optional" installs. If a project has tests, developers are expect
 _List any external packages that are either directly a part of the repo, or included as submodules. Include links to the package's homepage or repo, and the version number in use (if applicable). The list below is pre-populated with the submodules included in this CakePHP-Skeleton repo, and common add-ons._
 
 * [DebugKit](https://github.com/cakephp/debug_kit/tree/2.0) v2.0
-* [Loadsys Migrations](https://github.com/cakephp/debug_kit.git)
+* [Loadsys Migrations](https://github.com/loadsys/migrations)
+* [Loadsys Cake Shell Scripts](https://github.com/loadsys/CakePHP-Shell-Scripts)
 * [lessphp](https://github.com/leafo/lessphp)
 
 * [jQuery](https://github.com/jquery/jquery/tree/1.7.1) v1.7.1
@@ -139,11 +149,11 @@ _In general, document the series of steps necessary to set up the project on a n
 
 _Only keep the relevant section below for the given project._
 
-_Automated instructions_
+_Sample Automated instructions_
 
 1. (The database will be configured during the clone process below.)
 
-_Manual Instructions_
+_Sample Manual Instructions_
 
 1. For development sites you need to set up the database config something like this:
 
@@ -167,7 +177,7 @@ _Outline the process of getting the app ready to work on in a development enviro
 1. Install the application in your webroot.
 
 		git clone git@github.com:loadsys/PROJECT.git ./
-		bin/init-repo
+		./bootstrap.sh
 
 or
 
@@ -175,7 +185,6 @@ or
 		git submodule update --init --resursive
 		ln -s /PATH/TO/cake/lib/Cake Lib/Cake
 		cp Config/core.dev.php Config/core.php
-		Console/cake setup
 		Console/cake Migrations.migration run all
 
 
@@ -237,7 +246,7 @@ The database is maintained using the CakePHP migrations plugin. Run the below co
 
 Run the command below after making database changes. When prompted to update schema.php, choose yes and then choose overwrite.
 
-	bin/migrations generate
+	bin/migrations generate -f
 
 
 ## Testing ##
