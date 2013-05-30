@@ -285,6 +285,16 @@ grunt test:app_name.dev/testjs
 Replace `app_name.dev` with whatever is in the browser (for example `localhost/app_name`). If you do access the app in the browser at `http://localhost/app_name`, you can simply use `grunt test`, and the task will default to running `http://localhost/app_name/testjs`.
 
 
+### Replacing Ruby Test Runner with grunt ###
+
+If you have a project that is using the older Ruby version of the test runner, follow these steps to "upgrade" to the node/grunt version:
+
+1. In your project root, remove: `Gemfile`, `Gemfile.lock` (if present) and `Guardfile`.
+1. Copy into your project from this repo: `package.json`, `Gruntfile.js` and the entire `Console/node/` folder.
+1. As directed in the setup steps above, run this to make sure it's all initialized: `npm install -g grunt-cli && npm install`
+1. Now you can run `grunt watch` from the project root to start the test runner.
+
+
 ## Asset Compilation
 
 If the project is using the asset server to compile assets, then it can also use `grunt build` to compile and minify a list of files that are included in the layout into a directory in webroot. Be sure to have followed the steps from the testing section to install the node dependencies. Then run the `grunt` command:
