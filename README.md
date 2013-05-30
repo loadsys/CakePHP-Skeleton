@@ -302,6 +302,7 @@ If you have a project that is using the older Ruby version of the test runner, f
 
 1. In your project root, remove: `Gemfile`, `Gemfile.lock` (if present) and `Guardfile`.
 1. Copy into your project from this repo: `package.json`, `Gruntfile.js` and the entire `Console/node/` folder.
+1. Add `node_modules` to your project's `.gitignore` file.
 1. As directed in the setup steps above, run this to make sure it's all initialized: `npm install -g grunt-cli && npm install`
 1. Now you can run `grunt watch` from the project root to start the test runner.
 
