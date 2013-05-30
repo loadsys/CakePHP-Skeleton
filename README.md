@@ -276,6 +276,8 @@ grunt dev
 This will block the terminal while it waits for file changes. New files should get picked up as well.
 
 
+### Browser Tests ###
+
 Tests can also be written for the browser JavaScript code. Include the js assets and test files in `View/Pages/test.ctp`. There is a `grunt` task to run these tests as well:
 
 ``` bash
@@ -285,7 +287,16 @@ grunt test:app_name.dev/testjs
 Replace `app_name.dev` with whatever is in the browser (for example `localhost/app_name`). If you do access the app in the browser at `http://localhost/app_name`, you can simply use `grunt test`, and the task will default to running `http://localhost/app_name/testjs`.
 
 
-### Replacing Ruby Test Runner with grunt ###
+### Other grunt Commands ###
+
+* `watch` - Starts the file watcher and auto-executes tests for any file that changes (and has a test file associated with it.)
+* `server` - Starts an asset compilation server that does.... (ask Joey.)
+* `dev` - The same as watch+dev.
+* `build` - Ask Joey.
+* `test` - Ask Joey.
+
+
+### Replacing Ruby/guard Test Runner with node/grunt ###
 
 If you have a project that is using the older Ruby version of the test runner, follow these steps to "upgrade" to the node/grunt version:
 
@@ -293,6 +304,8 @@ If you have a project that is using the older Ruby version of the test runner, f
 1. Copy into your project from this repo: `package.json`, `Gruntfile.js` and the entire `Console/node/` folder.
 1. As directed in the setup steps above, run this to make sure it's all initialized: `npm install -g grunt-cli && npm install`
 1. Now you can run `grunt watch` from the project root to start the test runner.
+
+_You should remove this section from your project's README if it's already using the grunt tool._
 
 
 ## Asset Compilation
