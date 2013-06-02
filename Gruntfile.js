@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 module.exports = function(grunt) {
   var includePaths = [ 'webroot/js', 'webroot/css' ];
 
@@ -10,7 +12,8 @@ module.exports = function(grunt) {
         '!Lib/Cake/**/*.php',
         '**/*.php'
       ],
-      tasks: 'null'
+      tasks: 'null',
+      vagrantHost: ''
     },
     server: {
       dev: {
@@ -29,8 +32,13 @@ module.exports = function(grunt) {
   });
 
   grunt.event.on('watch', function(action, filepath) {
-    var file, CakeTestRunner = require('./Console/node/cake_test_runner');
-    file = new CakeTestRunner(filepath);
+    var CakeTestRunner = require('./Console/node/cake_test_runner'),
+        file = new CakeTestRunner(filepath);
+
+    if (fs.existsSync('.vagrant') && grunt.config.data.watch.vagrantHost) {
+      file.vagrantHost = grunt.config.data.watch.vagrantHost;
+    }
+
     file.exists(function() { file.run(); });
   });
 
