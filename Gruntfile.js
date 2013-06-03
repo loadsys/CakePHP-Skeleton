@@ -12,8 +12,7 @@ module.exports = function(grunt) {
         '!Lib/Cake/**/*.php',
         '**/*.php'
       ],
-      tasks: 'null',
-      vagrantHost: ''
+      tasks: 'null'
     },
     server: {
       dev: {
@@ -35,8 +34,8 @@ module.exports = function(grunt) {
     var CakeTestRunner = require('./Console/node/cake_test_runner'),
         file = new CakeTestRunner(filepath);
 
-    if (fs.existsSync('.vagrant') && grunt.config.data.watch.vagrantHost) {
-      file.vagrantHost = grunt.config.data.watch.vagrantHost;
+    if (fs.existsSync('.vagrant') && process.env.VAGRANT_HOST) {
+      file.vagrantHost = process.env.VAGRANT_HOST;
     }
 
     file.exists(function() { file.run(); });
