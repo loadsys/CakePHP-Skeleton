@@ -119,6 +119,8 @@ git remote add origin ${URL_REPO}
 
 #@TODO: Init project's submodules, in order to pull in the bin/ folder.
 
+#@TODO: In the newly spawned project, update the bin/ submodule version to the latest master release. (bin/bin-selfupdate)
+
 #@TODO: Offer to write database.php settings for you. If [y], prompt for each input (host, dbname, user, pass, prefix)  then run bin/db-writeconfig. Remove #1 in list below when this is automated.
 
 #@TODO: Offer to run schema generate -f. Remove #2 below when this is complete.
