@@ -9,6 +9,7 @@ module.exports = CakeTestRunner = function(filepath, action) {
   this.type = null;
   this.testCase = null;
   this.plugin = null;
+  this.vagrantHost = false;
   this.parse();
 };
 
@@ -71,9 +72,17 @@ CakeTestRunner.prototype.exists = function(callback) {
   }
 };
 
+CakeTestRunner.prototype.command = function() {
+  var command = 'Console/cake test ' + this.type + ' ' + this.testCase;
+  if (this.vagrantHost) {
+    command = "ssh vagrant@" + this.vagrantHost + " '/vagrant/" + command + "'";
+  }
+  return command;
+};
+
 CakeTestRunner.prototype.run = function() {
   this.clear();
-  exec('Console/cake test ' + this.type + ' ' + this.testCase, function(err, stdout, stderr) {
+  exec(this.command(), function(err, stdout, stderr) {
     if (err) {
       console.log(err);
     }
@@ -102,7 +111,6 @@ CakeTestRunner.prototype.notify = function(content, title) {
   console.log("\n" + content);
 
   if (notify) {
-    console.log(title);
     exec('terminal-notifier -message ' + message + ' -title "' + title + '" -group ' + group + ' -activate ' + app);
   }
 };
