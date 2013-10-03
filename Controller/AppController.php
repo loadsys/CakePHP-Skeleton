@@ -32,4 +32,40 @@ App::uses('Controller', 'Controller');
  * @link http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
+
+	/**
+	 * Components to load for all controllers.
+	 *
+	 * @var array
+	 */
+	public $components = array(
+// 		'Auth' => array(
+// 			'authError' => 'You must be logged in to access this page.',
+// 			'loginRedirect' => '/',
+// 			'logoutRedirect' => '/',
+// 			'loginAction' => array(
+// 				'controller' => 'users',
+// 				'action' => 'login',
+// 				'plugin' => false,
+// 			),
+// 			'authenticate' => array(
+// 				'Blowfish' => array(
+// 					'fields' => array(
+// 						'username' => 'email',
+// 						'password' => 'password',
+// 					),
+// 					'scope' => array(
+// 						'User.active' => 1,
+// 					),
+// 					'contain' => array(),
+// 				),
+// 			),
+// 			'authorize' => array(
+// 				'Controller'
+// 			),
+// 		),
+		'Session',
+		'DebugKit.Toolbar',
+	);
+
 }
