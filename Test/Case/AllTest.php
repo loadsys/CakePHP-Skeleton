@@ -1,19 +1,40 @@
 <?php
 /*
- * Custom test suite to execute all model tests.
+ * Custom test suite to execute all app/plugin tests.
  */
 class AllTest extends PHPUnit_Framework_TestSuite {
+	public static $suites = array(
+		// Start with (typically) lower-level dependencies.
+		'AllLibsTest.php',
+		'AllVendorsTest.php',
+		'AllPluginsTest.php',
 
-    //@TODO: See also (http://us1.php.net/manual/en/class.directoryiterator.php#88385) for an automatic way of scanning the dirs and including files/classes.
+		// Then data manipulation.
+		'AllBehaviorsTest.php',
+		'AllModelsTest.php',
 
-    public static function suite() {
-        $path = APP . 'Test' . DS . 'Case' . DS;
-        $path = dirname(__FILE__) . DS;  // This works better for plugins. (Maybe everything.)
-        $suite = new CakeTestSuite('All Tests');
+		// Then business logic.
+		'AllComponentsTest.php',
+		'AllControllersTest.php',
 
-        $suite->addTestFile($path . 'AllModelsTest.php');
-        $suite->addTestFile($path . 'AllControllersTest.php');
+		// Then command line apps that probably depend on all of the above.
+		'AllCommandsTest.php',
+		'AllTasksTest.php',
 
-        return $suite;
-    }
+		// Then view helpers.
+		'AllHelpersTest.php',
+	);
+
+	public static function suite() {
+		$path = dirname(__FILE__) . '/';
+		$suite = new CakeTestSuite('All Tests');
+
+		foreach (self::$suites as $file) {
+			if (is_readable($path . $file)) {
+				$suite->addTestFile($path . $file);
+			}
+		}
+
+		return $suite;
+	}
 }
