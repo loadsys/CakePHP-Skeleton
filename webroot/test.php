@@ -2,22 +2,14 @@
 /**
  * Web Access Frontend for TestSuite
  *
- * PHP 5
- *
- * CakePHP(tm) Tests <http://book.cakephp.org/2.0/en/development/testing.html>
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice
- *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://book.cakephp.org/2.0/en/development/testing.html
  * @package       app.webroot
  * @since         CakePHP(tm) v 1.2.0.4433
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
 set_time_limit(0);
 ini_set('display_errors', 1);
+
 /**
  * Use the DS to separate the directories in other defines
  */
@@ -54,6 +46,9 @@ if (!defined('APP_DIR')) {
  * need to cannot modify your include_path, you can set this path.
  *
  * Leaving this constant undefined will result in it being defined in Cake/bootstrap.php
+ *
+ * The following line differs from its sibling
+ * /app/webroot/test.php
  */
 define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . APP_DIR . DS . 'Lib');
 
@@ -86,7 +81,7 @@ if (!empty($failed)) {
 }
 
 if (Configure::read('debug') < 1) {
-	exit(__d('cake_dev', 'Debug setting does not allow access to this url.'));
+	throw new NotFoundException(__d('cake_dev', 'Debug setting does not allow access to this URL.'));
 }
 
 require_once CAKE . 'TestSuite' . DS . 'CakeTestSuiteDispatcher.php';
