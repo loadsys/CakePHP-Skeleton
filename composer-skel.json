@@ -1,0 +1,31 @@
+{
+    "name": "repo/app_name",
+    "description": "Not defined.",
+    "license": "proprietary",
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "http://pear.cakephp.org"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/loadsys/CakePHP-Shell-Scripts"
+        }
+    ],
+    "require": {
+        "pear-cakephp/cakephp": ">=2.4.0",
+        "cakephp/debug_kit": "2.2.*",
+        "cakedc/migrations": "2.2.*",
+        "loadsys/cakephp-shell-scripts": "dev-master",
+        "slywalker/boost_cake": "1.0.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*",
+        "icecave/woodhouse": "dev-master",
+        "phpdocumentor/phpdocumentor": "2.*@beta"
+    },
+    "config": {
+        "vendor-dir": "Vendor/",
+        "bin-dir": "bin"
+    }
+}
