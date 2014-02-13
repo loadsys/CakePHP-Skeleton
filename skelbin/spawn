@@ -125,7 +125,7 @@ bin/git-submodules
 
 
 echo "## Adding local/vagrant DB configs." >&2
-bin/db-writeconfigs DB_NAME user '' localhost
+bin/db-writeconfig DB_NAME user '' localhost
 
 #@TODO: Offer to run schema generate -f. Remove #2 below when this is complete.
 
