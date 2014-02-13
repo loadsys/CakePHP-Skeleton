@@ -97,3 +97,13 @@ CakeLog::config('error', array(
 	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
 	'file' => 'error',
 ));
+
+// Load bash variables for this project.
+if (is_readable(APP . '/Config/env_vars.txt')) {
+	$env = parse_ini_file(APP . '/Config/env_vars.txt');
+	if (is_array($env)) {
+		Configure::write('Environment', $env);
+	}
+	unset($env);
+}
+

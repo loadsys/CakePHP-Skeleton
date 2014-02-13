@@ -1,9 +1,3 @@
-tmp/*
-Config/core.php
-Config/database.php
-Lib/Cake
-webroot/assets
-
 # OS generated files
 .DS_Store
 .DS_Store?
@@ -13,3 +7,28 @@ webroot/assets
 Icon?
 ehthumbs.db
 Thumbs.db
+
+# CakePHP
+tmp/*
+
+# Loadsys
+Lib/Cake
+
+# Composer
+Vendor/*
+bin/
+Plugin/DebugKit
+Plugin/Migrations
+Plugin/BoostCake
+
+# Vagrant + puphpet
+.vagrant
+xhprof/
+phpmyadmin/
+
+# npm + grunt
+node_modules/
+webroot/assets
+
+
+
