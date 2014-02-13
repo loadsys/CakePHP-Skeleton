@@ -341,7 +341,7 @@ if (Configure::read('debug') > 0) {
 }
 
 // Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
-$prefix = 'CakePHP-Skeleton_';
+$prefix = 'myapp_';
 
 /**
  * Configure the cache used for general framework caching. Path information,
