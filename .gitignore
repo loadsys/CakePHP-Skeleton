@@ -13,6 +13,7 @@ tmp/*
 
 # Loadsys
 Lib/Cake
+backups/
 
 # Composer
 Vendor/*
