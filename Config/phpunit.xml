@@ -1,18 +1,18 @@
 <phpunit colors="true">
 	<filter>
 		<blacklist>
-			<!-- Exclude test directory itself and Cake core directory. -->
+			<!-- Exclude test directory itself and composer-installed deps. -->
 			<directory>../Test</directory>
 			<directory>../lib/Cake</directory>
 			<directory>../Lib/Cake</directory>
 			<directory>../Vendor</directory>
-			<!-- Project-specific exclusions. -->
 			<directory>../Plugin/DebugKit</directory>
 			<directory>../Plugin/Migrations</directory>
+			<!-- Project-specific exclusions. -->
 		</blacklist>
 	</filter>
 	<logging>
-		<!-- Exported to loadsysdev for viewing. -->
+		<!-- HTML reports exported to loadsysdev for viewing. -->
 		<log
 			type="coverage-html"
 			target="../tmp/coverage/html/"
@@ -21,7 +21,7 @@
 			lowUpperBound="40"
 			highLowerBound="90"
 		/>
-		<!-- Used by travis helpers to generate the proper coverage badge. -->
+		<!-- Text report used by travis helpers to generate the proper coverage badge. -->
 		<log
 			type="coverage-text"
 			target="../tmp/coverage.txt"

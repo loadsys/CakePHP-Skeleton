@@ -124,8 +124,9 @@ composer install
 bin/git-submodules
 
 
-echo "## Adding local/vagrant DB configs." >&2
-bin/db-writeconfig DB_NAME user '' localhost
+# echo "## Adding local/vagrant DB configs." >&2
+# bin/db-writeconfig db user '' localhost
+cp "$DIR/Vendor/loadsys/cakephp-shell-scripts/templates/database.template.php" "Config/database.php"
 
 #@TODO: Offer to run schema generate -f. Remove #2 below when this is complete.
 

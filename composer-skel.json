@@ -1,15 +1,11 @@
 {
-    "name": "repo/app_name",
-    "description": "Not defined.",
+    "name": "loadsys/_PROJECT_NAME_",
+    "description": "_PROJECT_DESCRIPTION_",
     "license": "proprietary",
     "repositories": [
         {
             "type": "pear",
             "url": "http://pear.cakephp.org"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/loadsys/CakePHP-Shell-Scripts"
         }
     ],
     "require": {
@@ -22,7 +18,8 @@
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
         "icecave/woodhouse": "dev-master",
-        "phpdocumentor/phpdocumentor": "2.*@beta"
+        "phpdocumentor/phpdocumentor": "2.*@beta",
+        "squizlabs/php_codesniffer": "1.*"
     },
     "config": {
         "vendor-dir": "Vendor/",

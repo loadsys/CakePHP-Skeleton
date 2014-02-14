@@ -50,7 +50,7 @@ Afterwards, there are still some manual steps to complete:
 	* `package.json`: Set the (nodejs) project name. (Not used for anything, but should be unique.)
 	* `.travis.yml`: @TODO
 	* `Config/env_vars-*.txt`: Set the project name and contact email (sent during `bin/update` runs) for each environment needed.
-	* `Lib/puphpet/config.yaml`: @TODO
+	* `Lib/puphpet/config.yaml`: Set your hostname and modify any port forwards (if they would conflict with another concurrent vagrant box.)
 
 1. Commit everything and push to the remote repo.
 
@@ -93,14 +93,16 @@ _Don't change this next divider line. Everything from here up will automatically
 _This template includes more information than a typical project requires, both to provide hints on possible things to include, as well as to make the process of filling it largely a matter of deleting information that is not applicable. Specifically; **be sure to remove or replace any notes and comments in italics,** like this one. By convention, pseudo-variables you should replace are typically in ALLCAPS._
 
 
-# [ProjectName](http://github.com/loadsys/PROJECT) #
+# [_PROJECT_TITLE_](http://github.com/loadsys/_PROJECT_REPO_URL_) #
+
+_PROJECT_DESCRIPTION_
 
 _Brief app description. Why does it exist? Who uses it?_
 
-* Production URL: http://PROJECT.com
-* Staging URL: http://PROJECT.loadsysdev.com
-* Project Management URL: http://loadsys.basecamphq.com/PROJECT
-* Loadsys Project Docs: http://123.writeboard.com/MANAGERS_WRITEBOARD
+* Production URL: _PROJECT_PRODUCTION_URL_
+* Staging URL: _PROJECT_STAGING_URL_
+* Project Management URL: _PROJECT_MANAGEMENT_URL_
+* Loadsys Project Docs: _PROJECT_DOCUMENT_URL_
 
 
 ## Environment ##
@@ -166,7 +168,7 @@ _In general, document the series of steps necessary to set up the project on a n
 Developers are expected to use the vagrant environment for all local work. Using a \_AMP stack on your machine directly is no longer advised or supported.
 
 ```bash
-git clone git@github.com:loadsys/PROJECT.git ./
+git clone git@github.com:loadsys/_PROJECT_REPO_URL_.git ./
 ./bootstrap.sh
 vagrant up
 ```
@@ -186,7 +188,7 @@ The bootstrap file takes care of installing dependencies. After this process, th
 1. **Critical: Set an apache environment variable for `APP_ENV=production`** so the correct database config is used.
 1. `cd` into that webroot.
 1. Clone the project:
-		git clone git@github.com:loadsys/PROJECT.git ./
+		git clone https://github.com/loadsys/_PROJECT_REPO_URL_.git ./
 		./bootstrap.sh
 1. (Your `Config/database.php` file's `__construct()` method should already be updated with production DB credentials.)
 1. (Any other production-specific configs should already exist in `Config/core-production.php`.)
@@ -358,4 +360,4 @@ __TBD__
 
 ## License ##
 
-Copyright (c) 2014 CLIENT
+Copyright (c) 2014 _PROJECT_CLIENT_NAME_

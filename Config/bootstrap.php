@@ -99,11 +99,25 @@ CakeLog::config('error', array(
 ));
 
 // Load bash variables for this project.
-if (is_readable(APP . '/Config/env_vars.txt')) {
-	$env = parse_ini_file(APP . '/Config/env_vars.txt');
-	if (is_array($env)) {
-		Configure::write('Environment', $env);
-	}
-	unset($env);
-}
+loadEnvVars();
 
+/**
+ * Attempts to load environment variables from `Config/variables.php` into a Configure 'Environment' variable.
+ *
+ * Will first check to see if an environment variable named `APP_ENV` is set, and if so, will use its value as the top-level key to load. For example; if `APP_ENV=production`, the contents of the [production] key would be saved into `Configure::read('Envrionment')`.
+ *
+ * The main purpose of using a function is that it keeps working variables out of scope.
+ *
+ * @access public
+ * @return void
+ */
+function loadEnvVars() {
+	$appEnv = (getenv('APP_ENV') ?: 'global');
+	$envFile = APP . '/Config/variables.php';
+	if (is_readable($envFile)) {
+		include_once($envFile);
+		if (is_array($PROJECT_VARS) && isset($PROJECT_VARS[$appEnv])) {
+			Configure::write('Environment', $PROJECT_VARS[$appEnv]);
+		}
+	}
+}

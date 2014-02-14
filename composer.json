@@ -6,10 +6,6 @@
         {
             "type": "pear",
             "url": "http://pear.cakephp.org"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/loadsys/CakePHP-Shell-Scripts"
         }
     ],
     "require": {

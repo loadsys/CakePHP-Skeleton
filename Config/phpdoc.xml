@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <phpdocumentor>
-	<title><![CDATA[app_name]]></title>
+	<title><![CDATA[_PROJECT_TITLE_]]></title>
 
     <files>
 		<!-- Create docs for everything in project root. -->
@@ -21,7 +21,8 @@
     </files>
 
     <parser>
-        <default-package-name>app_name</default-package-name>
+        <default-package-name>_PROJECT_NAME_</default-package-name>
+
         <encoding>utf-8</encoding>
         <target>../tmp/docs-build</target>
         <markers>
