@@ -1,0 +1,28 @@
+{
+    "name": "loadsys/_PROJECT_NAME_",
+    "description": "_PROJECT_DESCRIPTION_",
+    "license": "proprietary",
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "http://pear.cakephp.org"
+        }
+    ],
+    "require": {
+        "pear-cakephp/cakephp": ">=2.4.0",
+        "cakephp/debug_kit": "2.2.*",
+        "cakedc/migrations": "2.2.*",
+        "loadsys/cakephp-shell-scripts": "dev-master",
+        "slywalker/boost_cake": "1.0.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*",
+        "icecave/woodhouse": "dev-master",
+        "phpdocumentor/phpdocumentor": "2.*@beta",
+        "squizlabs/php_codesniffer": "1.*"
+    },
+    "config": {
+        "vendor-dir": "Vendor/",
+        "bin-dir": "bin"
+    }
+}

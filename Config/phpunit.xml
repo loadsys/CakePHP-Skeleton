@@ -1,0 +1,37 @@
+<phpunit colors="true">
+	<filter>
+		<blacklist>
+			<!-- Exclude test directory itself and composer-installed deps. -->
+			<directory>../Test</directory>
+			<directory>../lib/Cake</directory>
+			<directory>../Lib/Cake</directory>
+			<directory>../Vendor</directory>
+			<directory>../Plugin/DebugKit</directory>
+			<directory>../Plugin/Migrations</directory>
+			<!-- Project-specific exclusions. -->
+		</blacklist>
+	</filter>
+	<logging>
+		<!-- HTML reports exported to loadsysdev for viewing. -->
+		<log
+			type="coverage-html"
+			target="../tmp/coverage/html/"
+			charset="UTF-8"
+			highlight="true"
+			lowUpperBound="40"
+			highLowerBound="90"
+		/>
+		<!-- Text report used by travis helpers to generate the proper coverage badge. -->
+		<log
+			type="coverage-text"
+			target="../tmp/coverage.txt"
+			lowUpperBound="40"
+			highLowerBound="90"
+		/>
+		<!-- Not currently used, but generate it anyway so it's there already. -->
+		<log
+			type="coverage-clover"
+			target="../tmp/coverage/clover.xml"
+		/>
+	</logging>
+</phpunit>

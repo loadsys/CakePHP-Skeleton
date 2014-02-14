@@ -1,0 +1,160 @@
+---
+vagrantfile-local:
+    vm:
+        box: ubuntu-precise12042-x64-vbox43
+        box_url: 'http://box.puphpet.com/ubuntu-precise12042-x64-vbox43.box'
+        hostname: abus-vagrant
+        network:
+            #private_network: 192.168.56.101
+            public_network: # '' (blank means prompt the user), 'en1: Wi-Fi (AirPort)',  'en0: Ethernet', 'en3: Thunderbolt Ethernet'
+            forwarded_port:
+                apache:
+                    host: '8080'
+                    guest: '80'
+                mysql:
+                    host: '3307'
+                    guest: '3306'
+        provider:
+            virtualbox:
+                modifyvm:
+                    natdnshostresolver1: on
+                    memory: '1024'
+                setextradata:
+                    VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root: 1
+        provision:
+            puppet:
+                manifests_path: Lib/puphpet/puppet
+                manifest_file: manifest.pp
+                options:
+                    - '--verbose'
+                    - '--hiera_config /vagrant/Lib/puphpet/puppet/hiera.yaml'
+                    - '--parser future'
+        synced_folder:
+            project_root:
+                id: vagrant-root
+                source: ./
+                target: /var/www
+                nfs: 'false'
+        usable_port_range: 2200..2250
+    ssh:
+        host: null
+        port: null
+        private_key_path: null
+        username: vagrant
+        guest_port: null
+        keep_alive: true
+        forward_agent: false
+        forward_x11: false
+        shell: 'bash -l'
+    vagrant:
+        host: detect
+server:
+    packages:
+        - emacs
+        - curl
+        - git-core
+        - nodejs
+        - nodejs-dev
+        - npm
+    dot_files:
+        -
+            bash_aliases: null
+    _prevent_empty: ''
+apache:
+    modules:
+        - php
+        - rewrite
+        - proxy
+        - ssl
+    vhosts:
+        vagrant_dev:
+            servername: vagrant.dev
+            docroot: /var/www/webroot
+            port: '80'
+            setenv:
+                - 'APP_ENV vagrant'
+            override:
+                - All
+    user: vagrant
+    group: vagrant
+    default_vhost: false
+    mpm_module: prefork
+    mod_pagespeed: 0
+    mod_spdy: 0
+php:
+    version: '54'
+    composer: '1'
+    modules:
+        php:
+            - cli
+            - intl
+            - mcrypt
+            - curl
+            - geoip
+            - imagick
+            - memcache
+            - memcached
+            - readline
+            - sqlite
+        pear: {  }
+            #- pear.phpunit.de PHPUnit
+            #- PHP_CodeSniffer
+            #- pear.phpdoc.org phpdoc/phpDocumentor
+        pecl:
+            - pecl_http
+            - APC
+            - PDO
+            - PDO_MYSQL
+            - PDO_SQLITE
+            - yaml
+    ini:
+        display_errors: On
+        error_reporting: '-1'
+        session.save_path: /var/www/tmp/sessions
+        #include_path: 
+    timezone: America/Chicago
+xdebug:
+    install: '1'
+    settings:
+        xdebug.default_enable: '1'
+        xdebug.remote_autostart: '0'
+        xdebug.remote_connect_back: '1'
+        xdebug.remote_enable: '1'
+        xdebug.remote_handler: dbgp
+        xdebug.remote_port: '9000'
+mysql:
+    root_password: password
+    phpmyadmin: '1'
+    adminer: 0
+    databases:
+        default:
+            grant:
+                - ALL
+            name: vagrant
+            host: localhost
+            user: vagrant
+            password: vagrant
+            #sql_file: /var/www/Config/Schema/vagrant.sql
+        test:
+            grant:
+                - ALL
+            name: vagrant_test
+            host: localhost
+            user: vagrant
+            password: vagrant
+            #sql_file: /var/www/Config/Schema/vagrant.sql
+mongodb:
+    install: 0
+    auth: 1
+    port: '27017'
+    databases: {  }
+beanstalkd:
+    install: 0
+    listenaddress: 0.0.0.0
+    listenport: '13000'
+    maxjobsize: '65535'
+    maxconnections: '1024'
+    binlogdir: /var/lib/beanstalkd/binlog
+    binlogfsync: null
+    binlogsize: '10485760'
+

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor>
+	<title><![CDATA[_PROJECT_TITLE_]]></title>
+
+    <files>
+		<!-- Create docs for everything in project root. -->
+		<directory>../</directory>
+
+		<!-- Except for these folders. -->
+		<ignore>../Config/*</ignore>
+		<ignore>../Plugin/*</ignore>
+		<ignore>../Test/*</ignore>
+		<ignore>../Vendor/*</ignore>
+		<ignore>../tmp/*</ignore>
+		<ignore>../bin/*</ignore>
+		<ignore>../docs/*</ignore>
+		<ignore>../node_modules/*</ignore>
+
+        <ignore-hidden>on</ignore-hidden>
+        <ignore-symlinks>on</ignore-symlinks>
+    </files>
+
+    <parser>
+        <default-package-name>_PROJECT_NAME_</default-package-name>
+
+        <encoding>utf-8</encoding>
+        <target>../tmp/docs-build</target>
+        <markers>
+            <item>@TODO</item>
+            <item>@FIXME</item>
+        </markers>
+        <extensions>
+            <extension>php</extension>
+        </extensions>
+        <visibility></visibility>
+    </parser>
+
+    <transformer>
+        <target>../tmp/docs/</target>
+    </transformer>
+
+    <transformations>
+        <template name="responsive-twig"/>
+    </transformations>
+
+    <logging>
+        <level>error</level>
+        <default>../tmp/logs/phpdoc.log</default>
+        <errors>../tmp/logs/phpdoc_errors.log</errors>
+    </logging>
+</phpdocumentor>
