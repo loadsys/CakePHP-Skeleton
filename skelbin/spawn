@@ -62,9 +62,7 @@ if [ -n "$2" ]; then
 	URL_REPO=$2
 else
 	echo "!! No remote git repo URL provided."  >&2
-	URL_REPO=0
-	#usage
-	#exit 1
+	URL_REPO="none"
 fi
 
 
@@ -113,7 +111,8 @@ sed -e '1,/---/d;/---/,$p' -i '' "${DIR_NEW_APP}/README.md"
 
 echo "## Setting up git repo for new project." >&2
 git init
-if [ ${URL_REPO} -ne 0 ]; then
+if [ "${URL_REPO}" != "none" ]; then
+	echo "## Adding remote: ${URL_REPO}" >&2
 	git remote add origin ${URL_REPO}
 else
 	echo "## Skipped adding remote (none provided)." >&2
@@ -131,7 +130,7 @@ cp "$DIR/Vendor/loadsys/cakephp-shell-scripts/templates/database.template.php" "
 #@TODO: Offer to run schema generate -f. Remove #2 below when this is complete.
 
 echo "## Done. You should:" >&2
-echo "##    - Run \`Console/cake schema generate -f\` (from inside vagrant)." >&2
+echo "##    - Run 'Console/cake schema generate -f' (from inside vagrant)." >&2
 echo "##    - Add project information to the README.md file." >&2
 echo "##    - Commit and push everything to the remote repo." >&2
 
