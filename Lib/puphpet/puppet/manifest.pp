@@ -177,6 +177,10 @@ case $::operatingsystem {
         err('You have chosen to install PHP 5.5 on Ubuntu 10.04 Lucid. This will probably not work!')
       }
     }
+    # Ensure additional repos are ready.
+    each( $server_values['apt-ppa-repos'] ) |$repo| {
+      apt::ppa { $repo: }
+    }
   }
   'redhat', 'centos': {
     if is_hash($php_values) {
@@ -367,7 +371,21 @@ if count($php_values['modules']['php']) > 0 {
   php_mod { $php_values['modules']['php']:; }
 }
 if count($php_values['modules']['pear']) > 0 {
-  php_pear_mod { $php_values['modules']['pear']:; }
+  # set channels to auto discover
+  php::pear::config { auto_discover: value => 1 }
+  exec {"pear upgrade":
+    command => "/usr/bin/pear upgrade",
+    require => Package['php-pear'],
+    returns => [ 0, '', ' ']
+  }
+  exec { "pear update-channels" :
+    command => "/usr/bin/pear update-channels",
+    require => Package['php-pear'],
+  }
+
+  each( $php_values['modules']['pear'] ) |$pear| {
+      php_pear_mod { $pear: }
+  }
 }
 if count($php_values['modules']['pecl']) > 0 {
   php_pecl_mod { $php_values['modules']['pecl']:; }
@@ -420,9 +438,17 @@ define php_mod {
   }
 }
 define php_pear_mod {
-  php::pear::module { $name:
-    use_package         => false,
-    service_autorestart => $php_webserver_restart,
+  if is_hash($name) {
+    php::pear::module { $name['name']:
+      use_package         => false,
+      service_autorestart => $php_webserver_restart,
+      repository => $name['repository']
+    }
+  } else {
+    php::pear::module { $name:
+      use_package         => false,
+      service_autorestart => $php_webserver_restart,
+    }
   }
 }
 define php_pecl_mod {
