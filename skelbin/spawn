@@ -122,6 +122,10 @@ echo "## Priming dependencies for new project." >&2
 composer install
 bin/git-submodules
 
+#@TODO: Need to: 1) temporarily remove tmp/* from .gitignore. 2) Add and commit all tmp/**.gitkeep files. 3) Re-add tmp/* to .gitignore. (The new `tmp/.gitignore` file may solve this already. Needs testing.)
+
+# Clean up the tmp/cakeskel dir so it's easier to work with the skeleton repo.
+rm -rf ${DIR_TMP}/${DIR_SKELETON_SEED}
 
 # echo "## Adding local/vagrant DB configs." >&2
 # bin/db-writeconfig db user '' localhost
