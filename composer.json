@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "pear-cakephp/cakephp": ">=2.4.0",
+        "cakephp/cakephp": ">=2.4.0",
         "loadsys/cakephp-shell-scripts": "dev-master"
     },
     "config": {
