@@ -131,6 +131,8 @@ Noted that all development (and production) dependencies are already available i
 * phpDocumentor
 * PHP Code Sniffer
 
+* @TODO: Preinstall grunt and phantomjs
+
 
 
 ### Included Libaries and Submodules ###
@@ -169,7 +171,7 @@ Developers are expected to use the vagrant environment for all local work. Using
 
 ```bash
 git clone git@github.com:loadsys/_PROJECT_REPO_URL_.git ./
-./bootstrap.sh
+./bootstrap.sh   #@TODO: This doesn't work yet.
 vagrant up
 ```
 
