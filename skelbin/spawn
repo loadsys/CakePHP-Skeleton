@@ -7,17 +7,13 @@ usage ()
 
 ${0##*/}  
     Automates the process of spawning new projects from the 
-    CakePHP-Skeleton project.
-
-    Before running this, you should run `composer install` to make a Cake core
-    available and have two local databases set up for the development and test
-    versions of the new project. Look at README.md for details.
+    CakePHP-Skeleton project. Look at README.md for details.
 
 Usage:
-    ${0##*/} <new app path> <git remote URL>
+    ${0##*/} <new app path> [git remote URL]
 
-	$1 = Path to the folder you want to create the new project in.
-	$2 = Remote git repo URL to add as the 'origin' for the new project.
+	$1 = Path to the folder in which you want to create the new project.
+	$2 = Optional remote git repo URL to add as the 'origin' for the new project.
 
 
 EOT
@@ -30,17 +26,17 @@ fi
 
 
 # Set paths.
-DIR="$( cd -P "$( dirname "$0" )"/.. && pwd )";
+DIR="$( cd -P "$( dirname "$0" )"/.. >/dev/null 2>&1 && pwd )"
 DIR_TMP="${DIR}/tmp"
 DIR_SKELETON_SEED="cakeskel"
-DIR_CAKE_REL="Vendor/pear-pear.cakephp.org/CakePHP/Cake"
+DIR_CAKE_REL="Vendor/cakephp/cakephp/lib"
 DIR_CAKE_CORE="${DIR}/${DIR_CAKE_REL}"
 
 # Input checking.
 if [ ! -d "$DIR_CAKE_CORE" ]; then
 	echo "!! Cake core not found in expected path: ${DIR_CAKE_CORE}"  >&2
 	echo "   Trying to run `composer install` for you..."
-	composer install
+	composer install --dev --no-interaction
 	if [ !-d "$DIR_CAKE_CORE" ]; then
 		echo "!! Couldn't run `composer install`. Aborting."  >&2
 		usage
@@ -62,9 +58,7 @@ if [ -n "$2" ]; then
 	URL_REPO=$2
 else
 	echo "!! No remote git repo URL provided."  >&2
-	URL_REPO=0
-	#usage
-	#exit 1
+	URL_REPO="none"
 fi
 
 
@@ -88,6 +82,7 @@ unzip -qd ${DIR_SKELETON_SEED} archive.zip
 
 echo "## Tweaking the skeleton seed copy before baking." >&2
 rm -rf ${DIR_TMP}/${DIR_SKELETON_SEED}/skelbin
+rm -rf ${DIR_TMP}/${DIR_SKELETON_SEED}/composer.lock
 mv -f ${DIR_TMP}/${DIR_SKELETON_SEED}/composer-skel.json ${DIR_TMP}/${DIR_SKELETON_SEED}/composer.json
 
 echo "## Creating destination folder: ${DIR_NEW_APP}" >&2
@@ -98,12 +93,12 @@ echo "## Baking new project." >&2
 echo "   (Ignore any warnings about cache prefix, app/Console and CAKE_CORE_INCLUDE_PATH.)" >&2
 cd `dirname ${DIR_NEW_APP}`
 ${DIR}/bin/cake bake project --skel ${DIR_TMP}/${DIR_SKELETON_SEED} ${DIR_NEW_APP}
+rm -f ${DIR_TMP}/archive.zip
 
-
-
-echo "## Cleaning up new README." >&2
+# Switch into the new project's root.
 cd ${DIR_NEW_APP}
 
+echo "## Cleaning up new README." >&2
 sed -e '1,/---/d;/---/,$p' -i '' "${DIR_NEW_APP}/README.md"
 
 
@@ -111,9 +106,11 @@ sed -e '1,/---/d;/---/,$p' -i '' "${DIR_NEW_APP}/README.md"
 
 #@TODO: Really we need to run a wizard here to ask for the proper values for a bunch of the config files (composer.json[name, description], Config/env_vars.txt, Lib/puphpet/config.yaml, etc.)
 
+
 echo "## Setting up git repo for new project." >&2
 git init
-if [ ${URL_REPO} -ne 0 ]; then
+if [ "${URL_REPO}" != "none" ]; then
+	echo "## Adding remote: ${URL_REPO}" >&2
 	git remote add origin ${URL_REPO}
 else
 	echo "## Skipped adding remote (none provided)." >&2
@@ -121,17 +118,21 @@ fi
 
 echo "## Priming dependencies for new project." >&2
 composer install
-bin/git-submodules
+bin/deps-install
 
+# Clean up the tmp/cakeskel dir so it's easier to work with the skeleton repo.
+rm -rf ${DIR_TMP}/${DIR_SKELETON_SEED}
 
+# @TODO: This is going to be supplanted by the new env-specific setup when the vagrant bits bundled with the skeleton are updated.
 # echo "## Adding local/vagrant DB configs." >&2
 # bin/db-writeconfig db user '' localhost
 cp "$DIR/Vendor/loadsys/cakephp-shell-scripts/templates/database.template.php" "Config/database.php"
 
 #@TODO: Offer to run schema generate -f. Remove #2 below when this is complete.
+#bin/run-in-vagrant 'Console/cake schema generate -f'
 
 echo "## Done. You should:" >&2
-echo "##    - Run \`Console/cake schema generate -f\` (from inside vagrant)." >&2
+echo "##    - Run 'Console/cake schema generate -f' (from inside vagrant)." >&2
 echo "##    - Add project information to the README.md file." >&2
 echo "##    - Commit and push everything to the remote repo." >&2
 

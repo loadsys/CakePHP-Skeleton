@@ -3,10 +3,10 @@ vagrantfile-local:
     vm:
         box: ubuntu-precise12042-x64-vbox43
         box_url: 'http://box.puphpet.com/ubuntu-precise12042-x64-vbox43.box'
-        hostname: abus-vagrant
+        hostname: loadsys-vagrant   # @FIXME: Correct to identify the project in the hostname.
         network:
-            #private_network: 192.168.56.101
-            public_network: # '' (blank means prompt the user), 'en1: Wi-Fi (AirPort)',  'en0: Ethernet', 'en3: Thunderbolt Ethernet'
+            private_network: 192.168.56.101
+            #public_network: # '' (blank means prompt the user), 'en1: Wi-Fi (AirPort)',  'en0: Ethernet', 'en3: Thunderbolt Ethernet'
             forwarded_port:
                 apache:
                     host: '8080'
@@ -49,13 +49,19 @@ vagrantfile-local:
     vagrant:
         host: detect
 server:
+    apt-ppa-repos:
+        - ppa:git-core/ppa   # Provides newer git-core
+        - ppa:chris-lea/node.js  # Provides newer node and npm
     packages:
+        - python-software-properties
+        - python
+        - g++
+        - make
         - emacs
         - curl
-        - git-core
-        - nodejs
-        - nodejs-dev
-        - npm
+        - graphviz
+        - git-core  # Via ppa:git-core
+        - nodejs  # Via ppa:chris-lea
     dot_files:
         -
             bash_aliases: null
@@ -96,10 +102,15 @@ php:
             - memcached
             - readline
             - sqlite
-        pear: {  }
-            #- pear.phpunit.de PHPUnit
-            #- PHP_CodeSniffer
-            #- pear.phpdoc.org phpdoc/phpDocumentor
+            - xsl
+        pear:
+            - PHP_CodeSniffer
+            -
+                name: PHPUnit
+                repository: pear.phpunit.de
+            -
+                name: phpDocumentor
+                repository: pear.phpdoc.org
         pecl:
             - pecl_http
             - APC
@@ -157,4 +168,3 @@ beanstalkd:
     binlogdir: /var/lib/beanstalkd/binlog
     binlogfsync: null
     binlogsize: '10485760'
-

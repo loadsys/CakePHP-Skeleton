@@ -366,3 +366,30 @@ Cache::config('_cake_model_', array(
 	'serialize' => ($engine === 'File'),
 	'duration' => $duration
 ));
+
+
+/**
+ * Load environment-specific overrides.
+ *
+ * **THIS SHOULD BE THE LAST STATEMENT IN YOUR core.php FILE.**
+ *
+ * File such as `Config/core-production.php` can be created to match the
+ * `APP_ENV` environment variable and must contain a $config = array(...);
+ * definition in them to override any values defined here in `core.php` or in
+ * `bootstrap.php`. Any configuration changes that are environment-specific
+ * should be made in the appropriate file. See also: `Config/database.php` for
+ * allowed APP_ENV values.
+ */
+$env = getenv('APP_ENV');
+if (is_readable(dirname(__FILE__) . "/core-{$env}.php")) {
+	Configure::load("core-{$env}");
+}
+
+/**
+ * Load developer-specific overrides. (Allows a developer to customize their
+ * local config as needed for testingby placing their definitions in the
+ * `Config/core-local.php` file.)
+ */
+if (is_readable(dirname(__FILE__) . "/core-local.php")) {
+	Configure::load("core-local");
+}

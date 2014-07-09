@@ -21,16 +21,29 @@ if [ "$1" = '-h' ]; then
 fi
 
 
-DIR="$( cd -P "$( dirname "$0" )"/.. && pwd )"
+DIR="$( cd -P "$( dirname "$0" )"/. >/dev/null 2>&1 && pwd )"
 INIT_SCRIPT="$DIR/bin/init-repo"
+COMPOSER_CONFIG_FILE="$DIR/composer.json"
 
 echo "## Initializing submodules."
 git submodule update --init --recursive
+
+# Install composer packages using versions specified in config/lock file.
+if [ -e "$COMPOSER_CONFIG_FILE" ]; then
+	COMPOSER="$( which composer )"
+	if [ $? -gt 0 ]; then
+		echo "!! Found composer config file '$COMPOSER_CONFIG_FILE', but composer is not present on this system."
+		exit 2
+	else
+		echo "## Found composer at: ${COMPOSER}"
+		"$COMPOSER" install --dev --no-interaction
+	fi
+fi
 
 if [ -e "$INIT_SCRIPT" ]; then
 	echo "## Bootstrapping init script."
 	$INIT_SCRIPT "$@"
 else
-	echo "## Could not locate init script in project."
+	echo "## Could not locate init script in project. Exiting."
 	exit 1
 fi

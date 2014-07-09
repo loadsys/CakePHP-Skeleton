@@ -8,25 +8,22 @@ Icon?
 ehthumbs.db
 Thumbs.db
 
-# CakePHP
-tmp/*
-
 # Loadsys
-Lib/Cake
-backups/
+/Lib/Cake
+/backups
 
 # Composer
-Vendor/*
-bin/
-Plugin/DebugKit
-Plugin/Migrations
-Plugin/BoostCake
+/Vendor
+/bin
+/Plugin/DebugKit
+/Plugin/Migrations
+/Plugin/BoostCake
 
 # Vagrant + puphpet
-.vagrant
-xhprof/
-phpmyadmin/
+/.vagrant
+/xhprof
+/phpmyadmin
 
 # npm + grunt
-node_modules/
-webroot/assets
+/node_modules
+/webroot/assets
