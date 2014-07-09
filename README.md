@@ -17,12 +17,12 @@ composer install
 Note that there are two composer config files in this project.
 
 * `composer.json` defines the dependencies that the skeleton needs in order to spawn a new project.
-* `composer-skel.json` are default dependencies that will be included in the spawned project itself. (It will be renamed appropriately when using `spawn`.
+* `composer-skel.json` are default dependencies that will be included in the spawned project itself. (It will be renamed appropriately when using `spawn`.)
 
 
 ### Create New Project ###
 
-Run the `spawn` command to handle all of the steps for spinning off a new project.
+Run the `skelbin/spawn` command to handle all of the steps for spinning off a new project.
 
 ```bash
 cd /path/to/CakePHP-Skeleton
@@ -30,12 +30,12 @@ git pull origin master
 skelbin/spawn /path/to/new/project/root git://remote.repo/url
 ```
 
-The `spawn` command automatically:
+The `spawn` command performs the following steps for you:
 
 * Runs `composer install` to load dependencies (including the Cake core itself) into the new project.
 * Removes the entire `skelbin/` directory (as it contains scripts only applicable to the use of the Skeleton itself).
-* Removes the Skeleton's .git folder.
-* Adds the git repo as the 'origin' remote.
+* Removes _the Skeleton's_ .git folder.
+* Adds _the new project's_ git repo as the 'origin' remote.
 * Chops this top section of the Skeleton's README out of the destination copy. 
 * Installs composer dependencies (Cake core, Migrations, DebugKit, Loadsys Shell Scripts) and initializes any submodules (currently none).
 * Sets up a vagrant-friendly `database.php` file.
