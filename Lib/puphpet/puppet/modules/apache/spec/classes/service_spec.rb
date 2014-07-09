@@ -10,6 +10,11 @@ describe 'apache::service', :type => :class do
         :osfamily               => 'Debian',
         :operatingsystemrelease => '6',
         :concat_basedir         => '/dne',
+        :lsbdistcodename        => 'squeeze',
+        :operatingsystem        => 'Debian',
+        :id                     => 'root',
+        :kernel                 => 'Linux',
+        :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       }
     end
     it { should contain_service("httpd").with(
@@ -72,6 +77,11 @@ describe 'apache::service', :type => :class do
         )
       }
     end
+
+    context "with $service_ensure => 'UNDEF'" do
+      let (:params) {{ :service_ensure => 'UNDEF' }}
+      it { should contain_service("httpd").without_ensure }
+    end
   end
 
 
@@ -81,6 +91,10 @@ describe 'apache::service', :type => :class do
         :osfamily               => 'RedHat',
         :operatingsystemrelease => '5',
         :concat_basedir         => '/dne',
+        :operatingsystem        => 'RedHat',
+        :id                     => 'root',
+        :kernel                 => 'Linux',
+        :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       }
     end
     it { should contain_service("httpd").with(
@@ -97,6 +111,10 @@ describe 'apache::service', :type => :class do
         :osfamily               => 'FreeBSD',
         :operatingsystemrelease => '9',
         :concat_basedir         => '/dne',
+        :operatingsystem        => 'FreeBSD',
+        :id                     => 'root',
+        :kernel                 => 'FreeBSD',
+        :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       }
     end
     it { should contain_service("httpd").with(

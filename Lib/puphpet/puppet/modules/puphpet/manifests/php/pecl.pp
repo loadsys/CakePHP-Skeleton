@@ -9,6 +9,11 @@ define puphpet::php::pecl (
   $service_autorestart
 ){
 
+  $ignore = {
+    'date_time' => true,
+    'mysql'     => true,
+  }
+
   $pecl = $::osfamily ? {
     'Debian' => {
       #
@@ -20,6 +25,7 @@ define puphpet::php::pecl (
 
   $pecl_beta = $::osfamily ? {
     'Debian' => {
+      'augeas'      => 'augeas',
       'zendopcache' => $::operatingsystem ? {
         'debian' => false,
         'ubuntu' => 'ZendOpcache',
@@ -40,7 +46,10 @@ define puphpet::php::pecl (
       'imagick'     => 'php5-imagick',
       'memcache'    => 'php5-memcache',
       'memcached'   => 'php5-memcached',
-      'mongo'       => 'php5-mongo',
+      'mongo'       => $::lsbdistcodename ? {
+        'precise' => false,
+        default   => 'php5-mongo',
+      },
       'zendopcache' => 'php5-zendopcache',
     },
     'Redhat' => {
@@ -56,10 +65,15 @@ define puphpet::php::pecl (
 
   $downcase_name = downcase($name)
 
-  if has_key($pecl, $downcase_name) {
+  if has_key($ignore, $downcase_name) {
     $pecl_name       = $pecl[$downcase_name]
     $package_name    = false
     $preferred_state = 'stable'
+  }
+  elsif has_key($pecl, $downcase_name) {
+    $pecl_name       = false
+    $package_name    = false
+    $preferred_state = false
   }
   elsif has_key($pecl_beta, $downcase_name) and $pecl_beta[$downcase_name] {
     $pecl_name       = $pecl_beta[$downcase_name]
@@ -75,8 +89,8 @@ define puphpet::php::pecl (
     $package_name = false
   }
 
-  if $pecl_name and ! defined(Php::Pecl::Module[$pecl_name]) {
-    php::pecl::module { $pecl_name:
+  if $pecl_name and ! defined(::Php::Pecl::Module[$pecl_name]) {
+    ::php::pecl::module { $pecl_name:
       use_package         => false,
       preferred_state     => $preferred_state,
       service_autorestart => $service_autorestart,

@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe 'apache::mod::event', :type => :class do
   let :pre_condition do
     'class { "apache": mpm_module => false, }'
@@ -8,6 +10,10 @@ describe 'apache::mod::event', :type => :class do
         :osfamily               => 'FreeBSD',
         :operatingsystemrelease => '9',
         :concat_basedir         => '/dne',
+        :operatingsystem        => 'FreeBSD',
+        :id                     => 'root',
+        :kernel                 => 'FreeBSD',
+        :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       }
     end
     it { should contain_class("apache::params") }
@@ -17,9 +23,14 @@ describe 'apache::mod::event', :type => :class do
   context "on a Debian OS" do
     let :facts do
       {
+        :lsbdistcodename        => 'squeeze',
         :osfamily               => 'Debian',
         :operatingsystemrelease => '6',
         :concat_basedir         => '/dne',
+        :operatingsystem        => 'Debian',
+        :id                     => 'root',
+        :kernel                 => 'Linux',
+        :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       }
     end
 
@@ -31,7 +42,7 @@ describe 'apache::mod::event', :type => :class do
     context "with Apache version < 2.4" do
       let :params do
         {
-          :apache_version => 2.2,
+          :apache_version => '2.2',
         }
       end
 
@@ -44,7 +55,7 @@ describe 'apache::mod::event', :type => :class do
     context "with Apache version >= 2.4" do
       let :params do
         {
-          :apache_version => 2.4,
+          :apache_version => '2.4',
         }
       end
 
@@ -62,13 +73,17 @@ describe 'apache::mod::event', :type => :class do
         :osfamily               => 'RedHat',
         :operatingsystemrelease => '6',
         :concat_basedir         => '/dne',
+        :operatingsystem        => 'RedHat',
+        :id                     => 'root',
+        :kernel                 => 'Linux',
+        :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       }
     end
 
     context "with Apache version >= 2.4" do
       let :params do
         {
-          :apache_version => 2.4,
+          :apache_version => '2.4',
         }
       end
 

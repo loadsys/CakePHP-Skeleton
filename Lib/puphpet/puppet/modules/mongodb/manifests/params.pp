@@ -48,14 +48,14 @@ class mongodb::params inherits mongodb::globals {
         $user  = pick($user, 'mongodb')
         $group = pick($group, 'mongodb')
         if $::mongodb::globals::version {
-          $server_package_name = "mongodb-org=${::mongodb::globals::version}"
+          $server_package_name = "mongodb-10gen=${::mongodb::globals::version}"
         } else {
-          $server_package_name = 'mongodb-org'
+          $server_package_name = 'mongodb-10gen'
         }
         $service_name = 'mongodb'
         $config       = '/etc/mongodb.conf'
         $dbpath       = '/var/lib/mongodb'
-        $logpath      = '/var/log/mongodb/mongod.log'
+        $logpath      = '/var/log/mongodb/mongodb.log'
         $bind_ip      = ['127.0.0.1']
       } else {
         # although we are living in a free world,
@@ -69,7 +69,7 @@ class mongodb::params inherits mongodb::globals {
         $service_name        = pick($service_name, 'mongodb')
         $config              = '/etc/mongodb.conf'
         $dbpath              = '/var/lib/mongodb'
-        $logpath             = '/var/log/mongodb/mongod.log'
+        $logpath             = '/var/log/mongodb/mongodb.log'
         $bind_ip             = pick($bind_ip, ['127.0.0.1'])
         $pidfilepath         = undef
       }

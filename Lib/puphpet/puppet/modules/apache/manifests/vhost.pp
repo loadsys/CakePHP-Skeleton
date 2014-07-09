@@ -70,16 +70,6 @@
 #    docroot => '/path/to/docroot',
 #  }
 #  apache::vhost { 'site.name.fqdn':
-#    port          => '80',
-#    rewrites => [
-#      {
-#        comment       => "redirect non-SSL traffic to SSL site",
-#        rewrite_cond => ['%{HTTPS} off'],
-#        rewrite_rule => ['(.*) https://%{HTTPS_HOST}%{REQUEST_URI}']
-#      }
-#    ]
-#  }
-#  apache::vhost { 'site.name.fqdn':
 #    port            => '80',
 #    docroot         => '/path/to/other_docroot',
 #    custom_fragment => template("${module_name}/my_fragment.erb"),
@@ -94,6 +84,7 @@ define apache::vhost(
     $add_listen                  = true,
     $docroot_owner               = 'root',
     $docroot_group               = $::apache::params::root_group,
+    $docroot_mode                = undef,
     $serveradmin                 = undef,
     $ssl                         = false,
     $ssl_cert                    = $::apache::default_ssl_cert,
@@ -144,6 +135,7 @@ define apache::vhost(
     $php_admin_flags             = [],
     $php_admin_values            = [],
     $no_proxy_uris               = [],
+    $proxy_preserve_host         = false,
     $redirect_source             = '/',
     $redirect_dest               = undef,
     $redirect_status             = undef,
@@ -167,13 +159,16 @@ define apache::vhost(
     $wsgi_import_script_options  = undef,
     $wsgi_process_group          = undef,
     $wsgi_script_aliases         = undef,
+    $wsgi_pass_authorization     = undef,
     $custom_fragment             = undef,
     $itk                         = undef,
+    $action                      = undef,
     $fastcgi_server              = undef,
     $fastcgi_socket              = undef,
     $fastcgi_dir                 = undef,
     $additional_includes         = [],
-    $apache_version              = $::apache::apache_version
+    $apache_version              = $::apache::apache_version,
+    $suexec_user_group           = undef,
   ) {
   # The base class must be included first because it is used by parameter defaults
   if ! defined(Class['apache']) {
@@ -197,6 +192,11 @@ define apache::vhost(
   if $rewrites {
     validate_array($rewrites)
     validate_hash($rewrites[0])
+  }
+
+  if $suexec_user_group {
+    validate_re($suexec_user_group, '^\w+ \w+$',
+    "${suexec_user_group} is not supported for suexec_user_group.  Must be 'user group'.")
   }
 
   # Deprecated backwards-compatibility
@@ -250,6 +250,14 @@ define apache::vhost(
     include ::apache::mod::vhost_alias
   }
 
+  if $wsgi_daemon_process {
+    include ::apache::mod::wsgi
+  }
+
+  if $suexec_user_group {
+    include ::apache::mod::suexec
+  }
+
   # This ensures that the docroot exists
   # But enables it to be specified across multiple vhost resources
   if ! defined(File[$docroot]) {
@@ -257,6 +265,7 @@ define apache::vhost(
       ensure  => directory,
       owner   => $docroot_owner,
       group   => $docroot_group,
+      mode    => $docroot_mode,
       require => Package['httpd'],
     }
   }
@@ -318,6 +327,7 @@ define apache::vhost(
       $listen_addr_port = "${ip}:${port}"
       $nvh_addr_port = "${ip}:${port}"
     } else {
+      $listen_addr_port = undef
       $nvh_addr_port = $ip
       if ! $servername and ! $ip_based {
         fail("Apache::Vhost[${name}]: must pass 'ip' and/or 'port' parameters for name-based vhosts")
@@ -328,6 +338,7 @@ define apache::vhost(
       $listen_addr_port = $port
       $nvh_addr_port = "${vhost_name}:${port}"
     } else {
+      $listen_addr_port = undef
       $nvh_addr_port = $name
       if ! $servername {
         fail("Apache::Vhost[${name}]: must pass 'ip' and/or 'port' parameters, and/or 'servername' parameter")
@@ -343,15 +354,15 @@ define apache::vhost(
     }
   }
   if ! $ip_based {
-    if ! defined(Apache::Namevirtualhost[$nvh_addr_port]) and $ensure == 'present' {
+    if ! defined(Apache::Namevirtualhost[$nvh_addr_port]) and $ensure == 'present' and (versioncmp($apache_version, '2.4') < 0) {
       ::apache::namevirtualhost { $nvh_addr_port: }
     }
   }
 
   # Load mod_rewrite if needed and not yet loaded
   if $rewrites or $rewrite_cond {
-    if ! defined(Apache::Mod['rewrite']) {
-      ::apache::mod { 'rewrite': }
+    if ! defined(Class['apache::mod::rewrite']) {
+      include ::apache::mod::rewrite
     }
   }
 
@@ -420,7 +431,7 @@ define apache::vhost(
       directoryindex => $directoryindex,
     }
 
-    if $apache_version == 2.4 {
+    if versioncmp($apache_version, '2.4') >= 0 {
       $_directory_version = {
         require => 'all granted',
       }
@@ -471,6 +482,7 @@ define apache::vhost(
   # proxy fragment:
   #   - $proxy_dest
   #   - $no_proxy_uris
+  #   - $proxy_preserve_host (true to set ProxyPreserveHost to on and false to off
   # rack fragment:
   #   - $rack_base_uris
   # redirect fragment:
