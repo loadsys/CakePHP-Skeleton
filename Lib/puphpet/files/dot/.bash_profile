@@ -1,2 +1,9 @@
-# Ensure the env var is set in bash for the Cake console to pick up.
-export APP_ENV=vagrant
+# Do nothing but load the rc file, if present.
+if [ -r "$HOME/.bashrc" ]; then
+    . "$HOME/.bashrc"
+fi
+
+# Include .profile if it exists
+if [ -r "$HOME/.profile" ]; then
+. "$HOME/.profile"
+fi
