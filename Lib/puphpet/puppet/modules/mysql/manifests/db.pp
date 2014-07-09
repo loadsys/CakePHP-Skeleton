@@ -14,6 +14,12 @@ define mysql::db (
   validate_re($ensure, '^(present|absent)$',
   "${ensure} is not supported for ensure. Allowed values are 'present' and 'absent'.")
   $table = "${name}.*"
+  # Detect "qualified" usernames and don't automatically append the specified host if one is present already. -bp
+  if $user =~ /@/ {
+    $userPlusHost = $user
+  } else {
+    $userPlusHost = "${user}@${host}"
+  }
 
   include '::mysql::client'
 
@@ -23,7 +29,7 @@ define mysql::db (
     collate  => $collate,
     provider => 'mysql',
     require  => [ Class['mysql::server'], Class['mysql::client'] ],
-    before   => Mysql_user["${user}@${host}"],
+    before   => Mysql_user["${userPlusHost}"],  # -bp
   }
 
   $user_resource = {
@@ -32,15 +38,15 @@ define mysql::db (
     provider      => 'mysql',
     require       => Class['mysql::server'],
   }
-  ensure_resource('mysql_user', "${user}@${host}", $user_resource)
+  ensure_resource('mysql_user', "${userPlusHost}", $user_resource)  # -bp
 
   if $ensure == 'present' {
-    mysql_grant { "${user}@${host}/${table}":
+    mysql_grant { "${userPlusHost}/${table}":  # -bp
       privileges => $grant,
       provider   => 'mysql',
-      user       => "${user}@${host}",
+      user       => "${userPlusHost}",  # -bp
       table      => $table,
-      require    => [ Mysql_user["${user}@${host}"], Class['mysql::server'] ],
+      require    => [ Mysql_user["${userPlusHost}"], Class['mysql::server'] ],  # -bp
     }
 
     $refresh = ! $enforce_sql
