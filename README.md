@@ -12,13 +12,14 @@ Clone the skeleton project into a local folder.
 git clone git@github.com:loadsys/CakePHP-Skeleton.git /path/to/CakePHP-Skeleton
 composer install
 ```
-(The second line pulls a Cake core into `Vendor/pear-pear.cakephp.org/CakePHP/` and the Loadsys shell scripts into the `bin/` directory.)
+(The second line pulls a Cake core into `Vendor/cakephp/cakephp/lib/` and the Loadsys shell scripts into the `bin/` directory.)
 
 Note that there are two composer config files in this project.
 
-* `composer.json` defines the dependencies that the skeleton needs in order to spawn a new project.
-* `composer-skel.json` are default dependencies that will be included in the spawned project itself. (It will be renamed appropriately when using `spawn`.)
+* `composer.json` defines the dependencies that _the skeleton_ needs in order to spawn a new project.
+* `composer-skel.json` are default dependencies that will be included in _the spawned project itself_. (It will be renamed appropriately when using `spawn`.)
 
+Always disregard the composer.lock file. It doesn't serve any useful purpose in the context of using this Skeleton.
 
 ### Create New Project ###
 
@@ -93,7 +94,7 @@ _Don't change this next divider line. Everything from here up will automatically
 _This template includes more information than a typical project requires, both to provide hints on possible things to include, as well as to make the process of filling it largely a matter of deleting information that is not applicable. Specifically; **be sure to remove or replace any notes and comments in italics,** like this one. By convention, pseudo-variables you should replace are typically in ALLCAPS._
 
 
-# [_PROJECT_TITLE_](http://github.com/loadsys/_PROJECT_REPO_URL_) #
+# [_PROJECT_TITLE_](http://github.com/loadsys/_PROJECT_REPO_URL_)
 
 _PROJECT_DESCRIPTION_
 
@@ -105,14 +106,14 @@ _Brief app description. Why does it exist? Who uses it?_
 * Loadsys Project Docs: _PROJECT_DOCUMENT_URL_
 
 
-## Environment ##
+## Environment
 
 _"Environment" refers to external technologies required for the app to run. Anything that the app "assumes" will be available. Memcache is part of the environment, jQuery is a library. **Always** include the minimum PHP version, PHP extensions (and versions) utilized, database software version, and any other **external** programs used. Think in particular about the production environment, even if a tool (like memcached) is not used locally in development._
 
 These items should be installed and available before cloning the project repo.
 
 * [CakePHP](https://github.com/cakephp/cakephp/tree/2.4.5) v2.4.5+
-* PHP v5.3+
+* PHP v5.4+
 	* PDO + MySQL
 	* ImageMagick (imagick) v6.0.3 / v6.7.8-10
 	* SSL2 (openssl)
@@ -135,14 +136,14 @@ Noted that all development (and production) dependencies are already available i
 
 
 
-### Included Libaries and Submodules ###
+### Included Libaries and Submodules
 
 _"Libraries" refer to packages that are directly executed or used by the app. Items that the app is able to obtain or install for itself are libraries. List any packages that are pulled in via composer, included as git submodules or directly bundled in the repo. Include links to the package's homepage or repo, and the version number in use (if applicable). The list below is pre-populated with the submodules included in this CakePHP-Skeleton repo, and also lists some common add-ons._
 
 Libraries should be included with Composer whenever possible. Git submodules should be used as a fallback, and directly bundling the code into the project repo as a last resort.
 
 * [DebugKit](https://github.com/cakephp/debug_kit/tree/2.0) v2.0
-* [Loadsys Migrations](https://github.com/loadsys/migrations)
+* [CakeDC Migrations](https://github.com/cakedc/migrations)
 * [Loadsys Cake Shell Scripts](https://github.com/loadsys/CakePHP-Shell-Scripts)
 * [TestJs]() @TODO
 * [lessphp](https://github.com/leafo/lessphp)
@@ -152,7 +153,7 @@ Libraries should be included with Composer whenever possible. Git submodules sho
 * [Twitter Bootstrap](https://github.com/twitter/bootstrap/tree/v2.0.0) v2.0.x
 
 
-### cron Tasks ###
+### cron Tasks
 
 _Document anything that is expected to run outside of a normal web browser interface here. Include when it is supposed to run and any details about permissions, logging, etc._
 
@@ -160,7 +161,7 @@ _Document anything that is expected to run outside of a normal web browser inter
 
 
 
-## Installation ##
+## Installation
 
 _In general, document the series of steps necessary to set up the project on a new system (development or production). If there is a setup shell script, don't document its internal steps (the script itself does that), just how to run it. If setup is manual, list each step in order._
 
@@ -187,14 +188,19 @@ The bootstrap file takes care of installing dependencies. After this process, th
 1. Create a new blank database.
 1. Assign a user permissions to that database.
 1. Configure a webroot.
-1. **Critical: Set an apache environment variable for `APP_ENV=production`** so the correct database config is used.
-1. `cd` into that webroot.
+1. **Critical: Set an apache environment variable with `SetEnv APP_ENV production` in the `<VirtualHost>` block** so the correct database config is used.
+1. `cd` into the webroot.
 1. Clone the project:
 		git clone https://github.com/loadsys/_PROJECT_REPO_URL_.git ./
 		./bootstrap.sh
 1. (Your `Config/database.php` file's `__construct()` method should already be updated with production DB credentials.)
-1. (Any other production-specific configs should already exist in `Config/core-production.php`.)
+1. (Any other production-specific configs should already exist in `Config/core.php`.)
 1. Run `bin/migrations` to load the schema into the DB.
+
+ 
+
+1. @TODO: Get puppet provisioning working using existing puphpet configs, but altered for production (no xdebug, no `vagrant` user, etc.
+
 
 
 ### Writeable Directories
@@ -207,15 +213,14 @@ Writeable directories are managed by `Config/writedirs.txt`, and they can be set
 
 _Information a developer would need to work on the project in the "correct" way. (Tests, etc.)_
 
-### After Pulling ###
+### After Pulling
 
 Things to do after pulling updates from the remote repo.
 
 On your host:
 
-* `git submodules update --init --recursive` (There currently aren'y any git submodules, but it's a good habit to be in.)
-* `composer install` (Pull in any new dependencies.)
-* `vagrant provision` (Make any changes to the VM's config that may be necessary.
+* `bin/deps-install` (Install any changes/updated dependencies from git submodules, composer, pear, npm, etc.)
+* `vagrant provision` (Make any changes to the VM's config that may be necessary.)
 
 From inside the vagrant VM (via `vagrant ssh`):
 
@@ -223,12 +228,12 @@ From inside the vagrant VM (via `vagrant ssh`):
 * `bin/migrations` (Set up the DB with the latest schema.)
 * `bin/cake Seeds.seed fill vagrant` (Populate the latest set of development data from the seeds.)
 
-**@TODO:** These final two steps could really be rolled into the vagrant provisioning step.
+**@TODO:** These final steps could really be rolled into the vagrant provisioning step.
 
 
 ### Configuration
 
-App configuration is stored in `Config/core.php`. This configuration is then added to (or overwritten by) anything defined in the environment-specific config file, such as `Config/core-vagrant.php` or `Config/core-production.php`.
+App configuration is stored in `Config/core.php`. This configuration is then added to (or overwritten by) anything defined in the environment-specific config file, such as `Config/core-vagrant.php` or `Config/core-staging.php`.
 
 Database configurations for all environments is stored in `Config/database.php` and switched using an environment variable.
 
@@ -307,6 +312,8 @@ Testing can be done through the browser like normal (by visiting http://localhos
 
 Command line automated test running is also possible with Grunt, which is already installed in the vagrant box.
 
+@TODO: Update this to use `bin/run-in-vagrant` so the watcher can run on the host.
+
 ```bash
 vagrant ssh
 cd /var/www
@@ -316,7 +323,7 @@ grunt watch
 This will block the terminal while it waits for file changes. New files should get picked up as well.
 
 
-### Javascript Tests ###
+### Javascript Tests
 
 @TODO: Get the TestJs plugin integrated into the skeleton, use abus as reference.
 
@@ -332,7 +339,7 @@ This will block the terminal while it waits for file changes. New files should g
 
 
 
-### Other grunt Commands ###
+### Other grunt Commands
 
 * `watch` - Starts the file watcher and auto-executes tests for any file that changes (and has a test file associated with it.)
 * `server` - Starts an asset compilation server that does.... (ask Joey.)
@@ -351,7 +358,7 @@ grunt build
 ```
 
 
-## Immersion ##
+## Immersion
 
 _This section may make more sense to include with the "Project" documentation instead of the "repo" README..._
 
@@ -360,6 +367,6 @@ New devs should all run through these steps to get familiar with the app and the
 __TBD__
 
 
-## License ##
+## License
 
 Copyright (c) 2014 _PROJECT_CLIENT_NAME_

@@ -3,7 +3,7 @@
     "description": "_PROJECT_DESCRIPTION_",
     "license": "proprietary",
     "require": {
-        "cakephp/cakephp": ">=2.4.0",
+        "cakephp/cakephp": ">=2.5.0",
         "cakephp/debug_kit": "2.2.*",
         "cakedc/migrations": "2.2.*",
         "loadsys/cakephp-shell-scripts": "2.0.*",

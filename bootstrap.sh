@@ -21,7 +21,7 @@ if [ "$1" = '-h' ]; then
 fi
 
 
-DIR="$( cd -P "$( dirname "$0" )"/.. && pwd )"
+DIR="$( cd -P "$( dirname "$0" )"/. >/dev/null 2>&1 && pwd )"
 INIT_SCRIPT="$DIR/bin/init-repo"
 COMPOSER_CONFIG_FILE="$DIR/composer.json"
 
