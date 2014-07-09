@@ -2,14 +2,8 @@
     "name": "loadsys/cakephp-skeleton",
     "description": "CakePHP project skeleton for jumpstarting greenfield projects.",
     "license": "proprietary",
-    "repositories": [
-        {
-            "type": "pear",
-            "url": "http://pear.cakephp.org"
-        }
-    ],
     "require": {
-        "pear-cakephp/cakephp": ">=2.4.0",
+        "cakephp/cakephp": ">=2.4.0",
         "loadsys/cakephp-shell-scripts": "dev-master"
     },
     "config": {
