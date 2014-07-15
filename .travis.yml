@@ -1,0 +1,73 @@
+# Language Tests are Running In
+language: php
+
+# PHP versions to test against
+php:
+  - 5.4
+
+# Node version, if you have JS to test.
+#node_js:
+#  - "0.10"
+
+# Environment Variables to set
+env:
+  global:
+    - APP_ENV=travis
+    # Contains a $GITHUB_TOKEN env var for use with composer to avoid API limits.
+    - secure: "GskNShxJTSdczbddmPPIzKivDWn/YuaMFgr5UPSumPDirQQdbesRh/tQZNGiIaROXXnDs45wJCWT2ra8XdYBZouISXOoOZARQgz9JqUHAbkgtCbxa4qhp3ZwDymJMFd5eGvM99r9OCoSh2us+E2fhBb1+P5kvS6laB5TKYmwAX0="
+
+# Services to Enable
+services:
+  - mysql
+
+# Branches to be built or not
+branches:
+  # Blacklist these branches
+  except:
+    - master
+    - staging
+    - gh-pages
+
+# Before Installing Software/Dependencies Needed
+before_install:
+
+# Install Software/Dependencies Needed
+install:
+  - git submodule update --init --recursive
+  - composer install --dev --no-interaction
+  - ./bin/pear-install-deps
+  - ./bin/set-owner
+  - ./bin/set-configs "$APP_ENV"
+
+# Before the Test Script Runs
+before_script:
+  - phpenv rehash
+  - mysql -e 'DROP DATABASE IF EXISTS `travis_app`; CREATE DATABASE `travis_app`;'
+  - ./bin/writedirs
+
+# Test Script Call
+script:
+  - sh -c "./bin/run-codesniffer y;"
+  - ./bin/run-tests
+
+# After a Successful Build
+after_success:
+
+# After a Failed Build
+after_failure:
+
+# After every Build
+after_script:
+
+# Notifications Settings
+notifications:
+  email: false
+#  webhooks:
+#    urls:
+#      - http://wemux.loadsysdev.com/slack/travis
+#    on_failure: always
+#    on_success: always
+#    on_start: false
+
+# Github Private Key for an account that can read your private repos
+#source_key:
