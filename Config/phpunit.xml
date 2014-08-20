@@ -2,6 +2,7 @@
 	<filter>
 		<blacklist>
 			<!-- Exclude test directory itself and composer-installed deps. -->
+			<directory>../Config</directory>
 			<directory>../Test</directory>
 			<directory>../lib/Cake</directory>
 			<directory>../Lib/Cake</directory>
