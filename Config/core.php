@@ -406,8 +406,8 @@ if (is_readable(dirname(__FILE__) . "/core-{$env}.php")) {
 
 /**
  * Load developer-specific overrides. (Allows a developer to customize their
- * local config as needed for testingby placing their definitions in the
- * `Config/core-local.php` file.)
+ * local config as needed for testing by placing their definitions in an
+ * (untracked) `Config/core-local.php` file.)
  */
 if (is_readable(dirname(__FILE__) . "/core-local.php")) {
 	Configure::load("core-local");
