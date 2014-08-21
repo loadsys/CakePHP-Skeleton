@@ -95,7 +95,7 @@ class PasswordGenShell extends Shell {
 	 *
 	 * @access	protected
 	 * @param	string	$method	The name of the method to check.
-	 * @param	object	$obje	The instantiated object to check.
+	 * @param	object	$obj	The instantiated object to check.
 	 * @return	boolean			True if the named method exists (not via __call()), false otherwise.
 	 */
 	protected function isActualClassMethod($method, $obj) {

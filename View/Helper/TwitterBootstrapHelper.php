@@ -40,7 +40,7 @@ class TwitterBootstrapHelper extends HtmlHelper {
 	 *
 	 * @param mixed $title
 	 * @param mixed $url
-	 * @param array $options
+	 * @param array $opt
 	 * @param mixed $confirm
 	 * @access public
 	 * @return string
@@ -55,7 +55,7 @@ class TwitterBootstrapHelper extends HtmlHelper {
 	 *
 	 * @param mixed $title
 	 * @param mixed $url
-	 * @param array $options
+	 * @param array $opt
 	 * @param mixed $confirm
 	 * @access public
 	 * @return string

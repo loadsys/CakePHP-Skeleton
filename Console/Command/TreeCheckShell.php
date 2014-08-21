@@ -253,6 +253,8 @@ class TreeCheckShell extends Shell {
 	 * from `generareTreeList()`.
 	 *
 	 * @access  public
+	 * @param	string	$name	The formatted Model.name field to print indented.
+	 * @param	string	$id	The Model.id field to print in the leading column.
 	 * @return  void
 	 */
 	public function printLine($name, $id) {

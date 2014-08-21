@@ -53,7 +53,9 @@ class AppModel extends Model {
 	 *
 	 * @codeCoverageIgnore	Child calls all tested independently.
 	 * @access	public
-	 * @params	See: http://api.cakephp.org/2.3/source-class-Model.html#641-750
+	 * @param	mixed	$id		See: http://api.cakephp.org/2.3/source-class-Model.html#641-750
+	 * @param	mixed	$table	See: http://api.cakephp.org/2.3/source-class-Model.html#641-750
+	 * @param	mixed	$ds		See: http://api.cakephp.org/2.3/source-class-Model.html#641-750
 	 * @return	void
 	 */
 	public function __construct($id = false, $table = null, $ds = null) {
@@ -280,8 +282,8 @@ class AppModel extends Model {
 	 * handler class, AppEmail.
 	 *
 	 * @access	public
-	 * @param	string		The name of the CakeEmail config class to use.
-	 * @return	AppEmail	Instance of the subclassed CakeEmail class.
+	 * @param	string	$config	The name of the CakeEmail config class to use.
+	 * @return	AppEmail		Instance of the subclassed CakeEmail class.
 	 */
 	public function emailFactory($config = null) {
 		return new AppEmail($config);

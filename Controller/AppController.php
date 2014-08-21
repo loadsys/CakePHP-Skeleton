@@ -42,31 +42,31 @@ class AppController extends Controller {
 		'DebugKit.Toolbar',
 		'Session', // => array('className' => 'AppSession'),
 		'Paginator',
- 		//'Auth' => array(
- 		//	'authError' => 'You must be logged in to access this page.',
- 		//	'loginRedirect' => '/',
- 		//	'logoutRedirect' => '/',
- 		//	'loginAction' => array(
- 		//		'controller' => 'users',
- 		//		'action' => 'login',
- 		//		'plugin' => false,
- 		//	),
- 		//	'authenticate' => array(
- 		//		'Blowfish' => array(
- 		//			'fields' => array(
- 		//				'username' => 'email',
- 		//				'password' => 'password',
- 		//			),
- 		//			'scope' => array(
- 		//				'User.active' => 1,
- 		//			),
- 		//			'contain' => array(),
- 		//		),
- 		//	),
- 		//	'authorize' => array(
- 		//		'Controller'
- 		//	),
- 		//),
+		'Auth' => array(
+		//	'authError' => 'You must be logged in to access this page.',
+		//	'loginRedirect' => '/',
+		//	'logoutRedirect' => '/',
+		//	'loginAction' => array(
+		//		'controller' => 'users',
+		//		'action' => 'login',
+		//		'plugin' => false,
+		//	),
+		//	'authenticate' => array(
+		//		'Blowfish' => array(
+		//			'fields' => array(
+		//				'username' => 'email',
+		//				'password' => 'password',
+		//			),
+		//			'scope' => array(
+		//				'User.active' => 1,
+		//			),
+		//			'contain' => array(),
+		//		),
+		//	),
+		//	'authorize' => array(
+		//		'Controller'
+		//	),
+		),
 	);
 
 	/**
@@ -157,8 +157,8 @@ class AppController extends Controller {
 	 * handler class, AppEmail.
 	 *
 	 * @access	public
-	 * @param	string		The name of the CakeEmail config class to use.
-	 * @return	AppEmail	Instance of the subclassed CakeEmail class.
+	 * @param	string	$config	The name of the CakeEmail config class to use.
+	 * @return	AppEmail		Instance of the subclassed CakeEmail class.
 	 */
 	public function emailFactory($config = null) {
 		return new AppEmail($config);

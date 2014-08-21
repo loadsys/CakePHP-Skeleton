@@ -20,8 +20,8 @@ class PagesControllerTest extends ControllerTestCase {
 	 * @return void
 	 */
 	public function testDisplayNoPage() {
-		$result = $this->testAction('/pages');
 		$this->markTestIncomplete('testDisplayNoPage not implemented.');
+		$result = $this->testAction('/pages');
 	}
 
 	/**
@@ -30,8 +30,8 @@ class PagesControllerTest extends ControllerTestCase {
 	 * @return void
 	 */
 	public function testAdminDisplayNoPage() {
-		$result = $this->testAction('/admin/pages');
 		$this->markTestIncomplete('testAdminDisplayNoPage not implemented.');
+		$result = $this->testAction('/admin/pages');
 	}
 
 	/**
@@ -40,8 +40,8 @@ class PagesControllerTest extends ControllerTestCase {
 	 * @return void
 	 */
 	public function testDisplayPublicPage() {
-		$result = $this->testAction('/pages/test/test');
 		$this->markTestIncomplete('testDisplayPublicPage not implemented.');
+		$result = $this->testAction('/pages/test/test');
 	}
 
 	/**
@@ -51,8 +51,8 @@ class PagesControllerTest extends ControllerTestCase {
 	 * @return void
 	 */
 	public function testDisplayNoAdminPrefixedPages() {
-		$result = $this->testAction('/pages/test/admin_test');
 		$this->markTestIncomplete('testDisplayNoAdminPrefixedPages not implemented.');
+		$result = $this->testAction('/pages/test/admin_test');
 	}
 
 	/**
@@ -62,7 +62,7 @@ class PagesControllerTest extends ControllerTestCase {
 	 * @return void
 	 */
 	public function testAdminDisplayAutoPrefixedPage() {
-		$result = $this->testAction('/admin/pages/test/test');
 		$this->markTestIncomplete('testAdminDisplayAutoPrefixedPage not implemented.');
+		$result = $this->testAction('/admin/pages/test/test');
 	}
 }
