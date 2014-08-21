@@ -30,13 +30,13 @@ Configure::write('Exception', array(
 	//'jsBaseUrl' => 'js/',
 //));
 
-//Configure::write('Routing.prefixes', array('admin'));
+Configure::write('Routing.prefixes', array('admin'));
 
 //Configure::write('Cache', array(
 	//'disable' => true,
 	//'check' => true,
 	//'viewPrefix' => 'prefix',
-));
+//));
 
 Configure::write('Session', array(
 	'defaults' => 'php',

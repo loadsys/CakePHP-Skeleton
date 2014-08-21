@@ -28,9 +28,8 @@ class AppControllerTest extends ControllerTestCase {
 	 * @return void
 	 */
 	public function testBeforeFilter() {
-		$App = $this->generate('TestApp', array(
-			'methods' => array('__auth'),
-		));
+		$App = $this->getMock('TestAppController', array('__auth'), array(), 'TestApp', true);
+		$App->request = new stdclass();
 		$App->request->params = array('admin' => true);
 		$App->expects($this->once())
 			->method('__auth');
@@ -45,11 +44,16 @@ class AppControllerTest extends ControllerTestCase {
 	 * @return void
 	 */
 	public function testBeforeRender() {
-		$App = $this->generate('TestApp', array());
+		$App = $this->generate('TestApp', array(
+			'components' => array('Auth'),
+		));
+		$App->Auth->staticExpects($this->once())
+			->method('user')
+			->will($this->returnValue('canary'));
+
 		$App->beforeRender();
 
-		$this->markTestIncomplete('beforeRender does not currently set any view vars to test.');
-		$this->assertEquals('bar', $App->viewVars['foo']);
+		$this->assertEquals('canary', $App->viewVars['u']);
 	}
 
 	/**
