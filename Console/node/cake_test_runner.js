@@ -17,6 +17,7 @@ CakeTestRunner.prototype.parse = function(force) {
   if (this.parsed) return this.valid();
 
   var bits = this.filepath.split('/');
+  bits[bits.length - 1] = bits[bits.length - 1].replace('.php', '');
 
   if (bits[0] === 'Plugin') {
     bits.shift();
@@ -27,17 +28,18 @@ CakeTestRunner.prototype.parse = function(force) {
     if (bits[1] === 'Fixture') {
       return false;
     }
-    bits = bits.slice(2);
-    bits[bits.length - 1] = bits[bits.length - 1].replace('Test', '');
+    if (bits.length <= 2) {  // Weird case where the file that changed is in /Test/ directly.
+      return false;
+    }
+    bits = bits.slice(2);  // Chop off `Test/Case/` from start of path.
+    bits[bits.length - 1] = bits[bits.length - 1].replace(new RegExp('Test$', 'gm'), '');
   }
-
-  bits[bits.length - 1] = bits[bits.length - 1].replace('.php', '');
 
   if (!/^[A-Z]{1}[A-Za-z]+/.test(bits[bits.length - 1])) {
     return false;
   }
 
-  this.type   = this.plugin ? this.plugin : 'app';
+  this.type = this.plugin ? this.plugin : 'app';
   this.testCase = bits.join('/');
   this.parsed = true;
 
@@ -75,7 +77,7 @@ CakeTestRunner.prototype.exists = function(callback) {
 CakeTestRunner.prototype.command = function() {
   var command = 'Console/cake test ' + this.type + ' ' + this.testCase;
   if (this.vagrantHost) {
-    command = "ssh vagrant@" + this.vagrantHost + " '/vagrant/" + command + "'";
+    command = "vagrant ssh -c '/vagrant/" + command + "'";
   }
   return command;
 };
@@ -100,10 +102,10 @@ CakeTestRunner.prototype.notify = function(content, title) {
 
   if (/OK/.test(content)) {
     title = 'Pass - ' + title;
-    message = '"All run tests pass!"';
+    message = '"Test passed!"';
   } else if (/FAILURES!/.test(content)) {
     title = 'Fail - ' + title;
-    message = '"There was a failing test."';
+    message = '"A test failed."';
   } else {
     notify = false;
   }

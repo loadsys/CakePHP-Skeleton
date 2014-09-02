@@ -1,0 +1,3 @@
+id,parent_id,name,extra
+1,NULL,Valid First Row,extra is allowed
+2,1,Valid Child Row,this is okay

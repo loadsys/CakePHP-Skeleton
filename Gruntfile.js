@@ -9,7 +9,10 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     watch: {
       files: [
-        '!Lib/Cake/**/*.php',
+        '!Lib/Cake/**',
+        '!Vendor/**',
+        '!tmp/**',
+        '!.git/**/*.php',
         '**/*.php'
       ],
       tasks: 'null'
@@ -32,10 +35,10 @@ module.exports = function(grunt) {
 
   grunt.event.on('watch', function(action, filepath) {
     var CakeTestRunner = require('./Console/node/cake_test_runner'),
-        file = new CakeTestRunner(filepath);
+    file = new CakeTestRunner(filepath);
 
-    if (fs.existsSync('.vagrant') && process.env.VAGRANT_HOST) {
-      file.vagrantHost = process.env.VAGRANT_HOST;
+    if (fs.existsSync('.vagrant')) {  //@TODO: This doesn't work because the folder shows up inside the VM too.
+      file.vagrantHost = true;
     }
 
     file.exists(function() { file.run(); });

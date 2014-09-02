@@ -1,0 +1,3 @@
+id,not_parent_id,name
+1,NULL,First Row
+2,1,Child Row

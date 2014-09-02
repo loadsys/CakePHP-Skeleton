@@ -14,6 +14,7 @@ env:
   global:
     - APP_ENV=travis
     # Contains a $GITHUB_TOKEN env var for use with composer to avoid API limits.
+    # @TODO: Run `travis encrypt GITHUB_TOKEN=your-token-here` from the new project's root folder and paste the resulting value here:
     - secure: "GskNShxJTSdczbddmPPIzKivDWn/YuaMFgr5UPSumPDirQQdbesRh/tQZNGiIaROXXnDs45wJCWT2ra8XdYBZouISXOoOZARQgz9JqUHAbkgtCbxa4qhp3ZwDymJMFd5eGvM99r9OCoSh2us+E2fhBb1+P5kvS6laB5TKYmwAX0="
 
 # Services to Enable
@@ -34,20 +35,20 @@ before_install:
 # Install Software/Dependencies Needed
 install:
   - git submodule update --init --recursive
+  - composer config -g github-oauth.github.com $GITHUB_TOKEN
   - composer install --dev --no-interaction
-  - ./bin/pear-install-deps
   - ./bin/set-owner
   - ./bin/set-configs "$APP_ENV"
+  - ./bin/writedirs
 
 # Before the Test Script Runs
 before_script:
   - phpenv rehash
   - mysql -e 'DROP DATABASE IF EXISTS `travis_app`; CREATE DATABASE `travis_app`;'
-  - ./bin/writedirs
 
 # Test Script Call
 script:
-  - sh -c "./bin/run-codesniffer y;"
+  - ./bin/run-codesniffer y
   - ./bin/run-tests
 
 # After a Successful Build
