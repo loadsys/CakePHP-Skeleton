@@ -1,62 +1,111 @@
 <?php
 /**
- *
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       app.View.Layouts
- * @since         CakePHP(tm) v 0.10.0.1076
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * Default public page layout.
  */
 
-$cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework');
-$cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
-?>
-<!DOCTYPE html>
-<html>
+if (empty($keywordsForLayout)) {
+	$keywordsForLayout = __('default, keywords');
+}
+if (empty($descriptionForLayout)) {
+	$descriptionForLayout = __('Default description.');
+}
+if (!isset($socialMetaTags)) {
+	$socialMetaTags = array();
+}
+
+?><!DOCTYPE html>
+<html lang="en">
 <head>
 	<?php echo $this->Html->charset(); ?>
 	<title>
-		<?php echo $cakeDescription ?>:
+		<?php echo Configure::read('Defaults.long_name'); ?> -
 		<?php echo $title_for_layout; ?>
 	</title>
 	<?php
-		echo $this->Html->meta('icon');
+		echo $this->Html->meta(array('http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge'));
+		echo $this->Html->meta(array('name' => 'keywords', 'content' => $keywordsForLayout));
+		echo $this->Html->meta(array('name' => 'description', 'content' => $descriptionForLayout));
+		echo $this->Html->meta(array('name' => 'canonical', 'content' => Router::url(null, true)));
+		echo $this->Html->meta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1.0'));
 
-		echo $this->Html->css('cake.generic');
+		echo $this->element('Layouts/icons');
+		echo $this->element('Layouts/social_meta_tags', array(
+			'socialMetaTags' => $socialMetaTags,
+			'description_for_layout' => $descriptionForLayout,
+			'title_for_layout' => $title_for_layout
+		));
 
+		if (Configure::read('CDN.enabled')) {
+			$cssSources = array(
+				'//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css',
+				'//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css',
+				'global',
+				'public',
+			);
+		} else {
+			$cssSources = array(
+				'bootstrap-3.2.0/bootstrap.min',
+				'bootstrap-3.2.0/bootstrap-theme.min',
+				'global',
+				'public',
+			);
+		}
+		echo $this->Html->css($cssSources);
+	?>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+	<?php
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
-		echo $this->fetch('script');
+		//echo $this->Blah->styleForEnv(Configure::read('Environment.APP_ENV'));
 	?>
 </head>
+
 <body>
-	<div id="container">
-		<div id="header">
-			<h1><?php echo $this->Html->link($cakeDescription, 'http://cakephp.org'); ?></h1>
-		</div>
-		<div id="content">
+	<div class="container">
 
+		<?php echo $this->element('Layouts/header'); ?>
+
+		<main id="main" role="main">
+			<?php echo $this->element('Layouts/breadcrumbs', array(
+				'currentPage' => $title_for_layout
+			)); ?>
 			<?php echo $this->Session->flash(); ?>
-
+			<?php echo $this->Session->flash('auth'); ?>
 			<?php echo $this->fetch('content'); ?>
-		</div>
-		<div id="footer">
-			<?php echo $this->Html->link(
-					$this->Html->image('cake.power.gif', array('alt' => $cakeDescription, 'border' => '0')),
-					'http://www.cakephp.org/',
-					array('target' => '_blank', 'escape' => false)
-				);
-			?>
-		</div>
-	</div>
-	<?php echo $this->element('sql_dump'); ?>
+		</main>
+
+	</div> <!-- /container -->
+
+	<?php echo $this->element('Layouts/footer'); ?>
+
+	<?php
+		if (Configure::read('CDN.enabled')) {
+			$scriptSources = array(
+				'//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js',
+				'//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js',
+				'public',
+			);
+		} else {
+			$scriptSources = array(
+				'jquery-1.11.1/jquery.min',
+				'bootstrap-3.2.0/bootstrap.min',
+				'public',
+			);
+		}
+		echo $this->Html->script($scriptSources, array(
+			'inline' => false
+		));
+
+		echo $this->fetch('script');
+		echo $this->Js->writeBuffer(array('onDomReady' => false, 'safe' => false));
+		echo $this->element('Layouts/footer_scripts');
+		//echo $this->element('sql_dump'); // Handled by DebugKit.
+	?>
 </body>
 </html>

@@ -15,7 +15,7 @@
 					'rel' => 'nofollow',
 				)
 			); ?>
-			<?php echo __('Education Unlimited'); ?>
+			<?php echo Configure::read('Defaults.long_name'); ?>
 		</div>
 
 		<ul class="nav nav-pills">

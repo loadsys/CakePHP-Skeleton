@@ -56,4 +56,3 @@ foreach($metatags as $metatagProperty => $metatagContent) {
 		echo $this->Html->meta(array('property' => trim($metatagProperty), 'content' => $metatagContent));
 	}
 }
-?>

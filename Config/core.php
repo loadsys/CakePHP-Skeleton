@@ -42,9 +42,10 @@ Configure::write('Session', array(
 	'defaults' => 'php',
 ));
 
-Configure::write('Security.salt', 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi');
-
-Configure::write('Security.cipherSeed', '76859309657453542496749683645');
+Configure::write('Security', array(
+	'salt' => 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi',
+	'cipherSeed' => '76859309657453542496749683645',
+));
 
 //Configure::write('Asset', array(
 	//'timestamp' => true,
@@ -58,30 +59,21 @@ Configure::write('Acl', array(
 ));
 
 //date_default_timezone_set('UTC');
-
 //Configure::write('Config.timezone', 'Europe/Paris');
-
-$engine = 'File';
-
-// In development mode, caches should expire quickly.
-$duration = '+999 days';
-if (Configure::read('debug') > 0) {
-	$duration = '+10 seconds';
-}
-
-// Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
-$prefix = '_PROJECT_NAME__';  //@TODO: Set cache prefix for the app.
 
 /**
  * Configure the cache used for general framework caching. Path information,
  * object listings, and translation cache files are stored with this configuration.
  */
+$engine = 'File';
+$duration = (Configure::read('debug') > 0 ? '+10 seconds' : '+999 days');
+$prefix = '_PROJECT_NAME__';  //@TODO: Set cache prefix for the app, leave the trailing underscore.
 Cache::config('_cake_core_', array(
 	'engine' => $engine,
 	'prefix' => $prefix . 'cake_core_',
 	'path' => CACHE . 'persistent' . DS,
 	'serialize' => ($engine === 'File'),
-	'duration' => $duration
+	'duration' => $duration,
 ));
 
 /**
@@ -105,6 +97,51 @@ Cache::config('_cake_model_', array(
 //@TODO: Define app-specific vars here.
 
 /**
+ * Default Site Configuration
+ *
+ * Any time you'd be tempted to type one of these strings directly into
+ * a file, call this Configure var instead.
+ */
+Configure::write('Defaults', array(
+	'short_name' => 'APP', //@TODO: Set the app's short name.
+	'long_name' => 'Loadsys CakePHP Skeleton', //@TODO: Set the app's long name.
+	'domain' => 'snfi.org', //@TODO: Set the app's default domain name (used for email addresses and suitable for generated docs, like PDFs.)
+	'meta_description' => 'This is a fresh baked Loadsys CakePHP site skeleton.', //@TODO: Set the app's default meta description.
+	'meta_keywords' => 'loadsys, cakephp, rapid web development', //@TODO: Set the app's default meta keywords.
+));
+
+/**
+ * Anonymous helper function for constructing consistent email addresses.
+ */
+$email = function($localAddress, $displayName = false) {
+	$displayName = ($displayName ?: Configure::read('Defaults.short_name'));
+	$address = sprintf('%s@%s', $localAddress, Configure::read('Defaults.domain'));
+	return array($displayName => $address);
+};
+
+/*  */
+/**
+ * Email Configuration
+ *
+ * Either pass the result straight to AppEmail, or unpack a config key in
+ * your code like so:
+ *
+ * `list($name, $email) = Configure::read('Email.whatever');`
+ */
+Configure::write('Email', array(
+	'noreply' => $email('no-reply'),
+	'support' => $email('support'),
+	'contact' => $email('info'),
+));
+
+/**
+ * SSL
+ */
+Configure::write('SSL', array(
+	'enabled' => false,
+));
+
+/**
  * CDN Configuration
  */
 Configure::write('CDN', array(
@@ -121,17 +158,28 @@ Configure::write('Google', array(
 	),
 	'Analytics' => array(
 		'tracking_id' => '', // Leave empty to disable.
+		'domain' => '',
 	),
 ));
 
 /**
- * Social networking accounts. Leave any `username` fields empty to
- * disable related OpenGraph meta tags.
+ * Social networking accounts.
+ *
+ * Powers Elements/Layouts/social_meta_tags.ctp. Leave any [username]
+ * fields empty to disable related OpenGraph meta tags.
+ *
+ * Also powers Elements/Layouts/social_icons.ctp. Leave [link] empty to
+ * disable an icon. Place icons such as webroot/img/social-icons/Twitter.png,
+ * or specify [image] keys for each service below. [width] and [height]
+ * also optionally available (default 48x20 in the ctp.)
  */
 Configure::write('SocialNetworks', array(
 	'Twitter' => array(
 		'link' => 'https://twitter.com/',
 		'username' => '',
+		// 'image' => '',
+		// 'width' => '',
+		// 'height' => '',
 	),
 	'Facebook' => array(
 		'link' => 'https://www.facebook.com/',
@@ -177,3 +225,5 @@ if (is_readable(dirname(__FILE__) . "/core-local.php")) {
  * routes file, etc.
  */
 App::uses('UrlRef', 'Lib');
+
+unset($email); // Clean up helper function.
