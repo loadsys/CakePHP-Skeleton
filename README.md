@@ -10,6 +10,7 @@ Clone the skeleton project into a local folder.
 
 ```bash
 git clone git@github.com:loadsys/CakePHP-Skeleton.git /path/to/CakePHP-Skeleton
+cd /path/to/CakePHP-Skeleton
 composer install
 ```
 (The second line pulls a Cake core into `Vendor/cakephp/cakephp/lib/` and the Loadsys shell scripts into the `bin/` directory.)
@@ -31,7 +32,7 @@ git pull origin master
 skelbin/spawn /path/to/new/project/root git://remote.repo/url
 ```
 
-The `spawn` command performs the following steps for you:
+The `spawn` command performs the following steps **for you**:
 
 * Runs `composer install` to load dependencies (including the Cake core itself) into the new project.
 * Removes the entire `skelbin/` directory (as it contains scripts only applicable to the use of the Skeleton itself).
@@ -43,15 +44,31 @@ The `spawn` command performs the following steps for you:
 
 Afterwards, there are still some manual steps to complete:
 
-1. Run `Console/cake schema generate -f` from inside vagrant to create a default `Config/schema.php` file to start with.
+1.Create a default `Config/schema.php` file to start with.
+
+		cd /path/to/new/project/root
+		vagrant up
+		vagrant ssh
+		cd /var/www
+		Console/cake schema generate -f
 
 1. Edit the following files by hand to insert project-specific information:
+
 	* `README.md`: Add project information.
+
 	* `composer.json`: Set the (composer) project name and description. (Not used for anything, but should be unique.) Add any additional dependencies.
+
 	* `package.json`: Set the (nodejs) project name. (Not used for anything, but should be unique.)
-	* `.travis.yml`: @TODO
+
+	* `.travis.yml`: (Probably won't need to do anything here.)
+
 	* `Config/env_vars-*.txt`: Set the project name and contact email (sent during `bin/update` runs) for each environment needed.
+
 	* `Lib/puphpet/config.yaml`: Set your hostname and modify any port forwards (if they would conflict with another concurrent vagrant box.)
+
+	* `Config/phpdoc.xml`: Set the project name in two places.
+
+	* Search project-wide for `@TODO` markers. This should reveal any additional necessary configuration.
 
 1. Commit everything and push to the remote repo.
 
@@ -110,27 +127,40 @@ _Brief app description. Why does it exist? Who uses it?_
 
 _"Environment" refers to external technologies required for the app to run. Anything that the app "assumes" will be available. Memcache is part of the environment, jQuery is a library. **Always** include the minimum PHP version, PHP extensions (and versions) utilized, database software version, and any other **external** programs used. Think in particular about the production environment, even if a tool (like memcached) is not used locally in development._
 
-These items should be installed and available before cloning the project repo.
+### Hosting ###
 
-* [CakePHP](https://github.com/cakephp/cakephp/tree/2.4.5) v2.4.5+
+This section documents the minimum required tools for hosting this application.
+
+* [CakePHP](https://github.com/cakephp/cakephp/tree/2.5.2) v2.5.2+
 * PHP v5.4+
 	* PDO + MySQL
 	* ImageMagick (imagick) v6.0.3 / v6.7.8-10
 	* SSL2 (openssl)
-	* Memcache (memcache)
+	* Memcached (memcached)
+* Apache v2.2+
 * MySQL v5+
 * Memcached (production)
 
-### Development
+(These tools are all provided in the bundled vagrant environment, described below.)
 
-Noted that all development (and production) dependencies are already available inside the vagrant VM (as provisioned by puhphet). There are no "optional" installs. Developers must be able to run tests, generate phpDocs and run phpcs locally before committing.
 
-* vagrant (If you have this, you can ignore the rest of this since it is all in the VM.)
-* xdebug 2+
-* phpunit 3.7+
-* nodejs + npm (for auto-running tests)
-* phpDocumentor
-* PHP Code Sniffer
+### Developer-specific ###
+
+The following tools should be installed on your development machine in order to work with this project:
+
+* [composer](http://getcomposer.org/) for dependency management.
+* [vagrant](http://www.vagrantup.com/downloads.html) v1.6+ for dev VM hosting, along with:
+	* [VirtualBox](https://www.virtualbox.org/) v4.3+ (free)
+	* or [VMware Fusion](http://www.vmware.com/products/fusion) v6+ plus the [vagrant VMware plugin](https://www.vagrantup.com/vmware) (not free, but **fast**)
+* [node.js](http://nodejs.org/download/) + [npm](https://npmjs.org/) + [grunt-cli](http://gruntjs.com/getting-started) for automatically running tests.
+
+Vagrant + VirtualBox (or VMware) provide the following additional tools via a customized [PuPHPet](https://puphpet.com/)-based vagrant configuration which itself uses [puppet](http://puppetlabs.com/puppet/puppet-open-source) and [Hiera](http://docs.puppetlabs.com/hiera/1/). There are no "optional" installs. Developers must be able to run tests, generate phpDocs and run phpcs locally before committing. Thankfully, the vagrant VM provides most of the necessary tools, including:
+
+* PHP's [xdebug extension](http://xdebug.org/) v2+
+* [phpunit](http://phpunit.de/) v3.7
+* [nodejs](http://nodejs.org/) + [npm](https://www.npmjs.org/) (for auto-running tests)
+* [phpDocumentor](http://phpdoc.org/) v2
+* [PHP Code Sniffer](https://github.com/squizlabs/PHP_CodeSniffer) v2
 
 * @TODO: Preinstall grunt and phantomjs
 
@@ -138,26 +168,36 @@ Noted that all development (and production) dependencies are already available i
 
 ### Included Libaries and Submodules
 
-_"Libraries" refer to packages that are directly executed or used by the app. Items that the app is able to obtain or install for itself are libraries. List any packages that are pulled in via composer, included as git submodules or directly bundled in the repo. Include links to the package's homepage or repo, and the version number in use (if applicable). The list below is pre-populated with the submodules included in this CakePHP-Skeleton repo, and also lists some common add-ons._
+_"Libraries" refer to packages that are directly executed or used by the app. Items that the app is able to obtain or install for itself are libraries. List any packages that are pulled in via composer, included as git submodules or directly bundled in the repo. Include links to the package's homepage or repo and the version number in use (if applicable). The list below is pre-populated with the submodules included in this CakePHP-Skeleton repo, and also lists some common add-ons._
 
-Libraries should be included with Composer whenever possible. Git submodules should be used as a fallback, and directly bundling the code into the project repo as a last resort.
+Libraries should be included with Composer whenever possible. Git submodules should be used as a fallback, and directly bundling the code into the project repo as a last resort. The Skeleton includes the following defaults:
 
+Composer-provided:
+
+* [CakePHP](https://github.com/cakephp/cakephp) v2.4.0+
 * [DebugKit](https://github.com/cakephp/debug_kit/tree/2.0) v2.0
 * [CakeDC Migrations](https://github.com/cakedc/migrations)
 * [Loadsys Cake Shell Scripts](https://github.com/loadsys/CakePHP-Shell-Scripts)
-* [TestJs]() @TODO
-* [lessphp](https://github.com/leafo/lessphp)
 
-* [jQuery](https://github.com/jquery/jquery/tree/1.7.1) v1.7.1
-* [modernizr](https://github.com/Modernizr/Modernizr/tree/v2.0.6) v2.0.6
-* [Twitter Bootstrap](https://github.com/twitter/bootstrap/tree/v2.0.0) v2.0.x
+
+Git submodules:
+
+* (none)
+
+
+Bundled packages:
+
+* [Twitter Bootstrap](https://github.com/twbs/bootstrap) v3.x
+* [jQuery](https://github.com/jquery/jquery/) v1.x
 
 
 ### cron Tasks
 
 _Document anything that is expected to run outside of a normal web browser interface here. Include when it is supposed to run and any details about permissions, logging, etc._
 
-```0 0,12	* * *	/var/sites/webroot/app/console/TASK > /var/sites/webroot/app/tmp/log/TASK.log 2>&1```
+```
+0 0,12	* * *	/var/www/Console/cake COMMAND > /var/www/tmp/log/COMMAND.log 2>&1
+```
 
 
 
@@ -172,21 +212,23 @@ Developers are expected to use the vagrant environment for all local work. Using
 
 ```bash
 git clone git@github.com:loadsys/_PROJECT_REPO_URL_.git ./
-./bootstrap.sh   #@TODO: This doesn't work yet.
+./bootstrap.sh   #@TODO: This probably still needs some tweaking, but handles the basics.
 vagrant up
 ```
+
+The bootstrap file takes care of installing dependencies. After this process, the project should be available at http://localhost:8080/.
+
 
 @TODO: Modify puphpet provisioning to run `bin/migrations` and `bin/cake SeedShell.seed fill vagrant`. Maybe create a wrapper script like `bin/vagrant-provision` to bundle all this up? Put a "caller" script into `Lib/puphpet/files/exec-{once|always}/` to get it to run.
 
 @TODO: Add a vagrant shutdown script to automatically call `bin/db-backup`, which will save a zipped. sql file in the shared folder under `backups/`.
-
-The bootstrap file takes care of installing dependencies. After this process, the project should be available at http://localhost:8080/.
 
 
 ### Production (bare metal)
 
 1. Create a new blank database.
 1. Assign a user permissions to that database.
+1. (Locally) Update the `Config/database.php` with the new credentials and commit/push them to GitHub.
 1. Configure a webroot.
 1. **Critical: Set an apache environment variable with `SetEnv APP_ENV production` in the `<VirtualHost>` block** so the correct database config is used.
 1. `cd` into the webroot.
