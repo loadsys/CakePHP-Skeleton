@@ -22,6 +22,8 @@ class PagesControllerTest extends ControllerTestCase {
 	public function testDisplayNoPage() {
 		$this->markTestIncomplete('testDisplayNoPage not implemented.');
 		$result = $this->testAction('/pages');
+		$this->assertStringEndsWith("/", $this->headers['Location']);
+		$this->assertStringMatchesFormat("%S/admin/%Sblogs%S", $this->headers['Location']);
 	}
 
 	/**
