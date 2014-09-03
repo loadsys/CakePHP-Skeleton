@@ -44,7 +44,7 @@ Router::connect('/pages/*', array(
  * prefixes must still be enabled in PagesController by defining the
  * appropriate `{$prefix}_display()` action.
  */
-if ($prefixes = Configure::read(Routing.prefixes)) {
+if ($prefixes = Configure::read('Routing.prefixes')) {
 	foreach ($prefixes as $prefix) {
 		Router::connect("/{$prefix}/pages/*", array(
 			'controller' => 'pages',
