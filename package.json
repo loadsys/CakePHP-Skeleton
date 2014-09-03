@@ -1,5 +1,5 @@
 {
-  "name": "_PROJECT_NAME_",
+  "name": "@TODO:_PROJECT_NAME_",
   "scripts": {
     "start": "grunt dev"
   },
