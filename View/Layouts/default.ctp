@@ -60,7 +60,7 @@ if (!isset($socialMetaTags)) {
 	<?php
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
-		//echo $this->Blah->styleForEnv(Configure::read('Environment.APP_ENV'));
+		echo $this->Html->styleForEnv(Configure::read('Environment.APP_ENV'));
 	?>
 </head>
 
