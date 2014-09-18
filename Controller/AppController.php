@@ -39,8 +39,8 @@ class AppController extends Controller {
 	 * @var array
 	 */
 	public $components = array(
-		'DebugKit.Toolbar',
 		'Session', // => array('className' => 'AppSession'),
+		'DebugKit.Toolbar',
 		'Paginator',
 		'Auth' => array(
 		//	'authError' => 'You must be logged in to access this page.',
