@@ -52,11 +52,12 @@ class AppController extends Controller {
 		//		'plugin' => false,
 		//	),
 		//	'authenticate' => array(
-		//		'Blowfish' => array(
-		//			'fields' => array(
-		//				'username' => 'email',
-		//				'password' => 'password',
-		//			),
+		//		'Form' => array(
+		//			'passwordHasher' => 'Blowfish',
+		//				'fields' => array(
+		//					'username' => 'email',
+		//					'password' => 'password',
+		//				),
 		//			'scope' => array(
 		//				'User.active' => 1,
 		//			),
