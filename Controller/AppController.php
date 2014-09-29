@@ -54,10 +54,10 @@ class AppController extends Controller {
 		//	'authenticate' => array(
 		//		'Form' => array(
 		//			'passwordHasher' => 'Blowfish',
-		//				'fields' => array(
-		//					'username' => 'email',
-		//					'password' => 'password',
-		//				),
+		//			'fields' => array(
+		//				'username' => 'email',
+		//				'password' => 'password',
+		//			),
 		//			'scope' => array(
 		//				'User.active' => 1,
 		//			),
