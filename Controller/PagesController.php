@@ -49,7 +49,6 @@ class PagesController extends AppController {
 	/**
 	 * Displays a view
 	 *
-	 * @throws	NotFoundException
 	 * @param	string	What page to display
 	 */
 	public function display() {
@@ -68,6 +67,7 @@ class PagesController extends AppController {
 	/**
 	 * Does the heavy lifting for determing what file to view, if permitted.
 	 *
+	 * @throws	NotFoundException
 	 * @param	string	$path	The partial URL path requested.
 	 * @param	string	$prefix	The routing prefix (if any) in use for this request (to restrict access depending on role.)
 	 */
