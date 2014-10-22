@@ -49,34 +49,10 @@ class PagesController extends AppController {
 	/**
 	 * Displays a view
 	 *
-	 * @throws	NotFoundException
 	 * @param	string	What page to display
 	 */
 	public function display() {
-		$path = func_get_args();
-
-		$count = count($path);
-		if (!$count) {
-			return $this->redirect('/');
-		}
-		$page = $subpage = $title = null;
-
-		if (!empty($path[0])) {
-			$page = $path[0];
-		}
-		if (!empty($path[1])) {
-			$subpage = $path[1];
-		}
-		if (!empty($path[$count - 1])) {
-			$title = Inflector::humanize($path[$count - 1]);
-			// Redirect any `admin_` prefixed requests to /.
-			if (strpos($path[$count - 1], 'admin_') === 0) {
-				throw new NotFoundException(__('Invalid page'));
-			}
-		}
-		$this->set(compact('page', 'subpage'));
-		$this->set('title_for_layout', $title);
-		$this->render(implode('/', $path));
+		return $this->_display(func_get_args(), '');
 	}
 
 	/**
@@ -85,8 +61,17 @@ class PagesController extends AppController {
 	 * @param	string	What page to display
 	 */
 	public function admin_display() {
-		$path = func_get_args();
+		return $this->_display(func_get_args(), 'admin');
+	}
 
+	/**
+	 * Does the heavy lifting for determing what file to view, if permitted.
+	 *
+	 * @throws	NotFoundException
+	 * @param	string	$path	The partial URL path requested.
+	 * @param	string	$prefix	The routing prefix (if any) in use for this request (to restrict access depending on role.)
+	 */
+	protected function _display($path, $prefix = '') {
 		$count = count($path);
 		if (!$count) {
 			return $this->redirect('/');
@@ -101,11 +86,44 @@ class PagesController extends AppController {
 		}
 		if (!empty($path[$count - 1])) {
 			$title = Inflector::humanize($path[$count - 1]);
-			// Auto-prepend "admin_" to the final component of the path.
-			$path[$count - 1] = 'admin_' . $path[$count - 1];
+
+			// Block any prefixed page requests when no URL prefix present.
+			// (Stops `/pages/admin_pagename` from working, but not `/admin/pages/pagename`.)
+			if (empty($prefix) && $this->_nameIsPrefixed($path[$count - 1])) {
+				throw new NotFoundException(__('Invalid page'));
+			} elseif (!empty($prefix)) {
+				// Auto-prepend the $prefix to the final component of the path.
+				$path[$count - 1] = "{$prefix}_" . $path[$count - 1];
+			}
 		}
 		$this->set(compact('page', 'subpage'));
 		$this->set('title_for_layout', $title);
 		$this->render(implode('/', $path));
+	}
+
+	/**
+	 * Helper for determining if the provided filename begins with any of
+	 * the app's Configured routing prefixes.
+	 *
+	 * @param	string	$ctpName	The final component of the requested path name.
+	 * @return	bool				True if $ctpName starts with any of the app's
+	 *								configured Routing.prefixes, false otherwise.
+	 */
+	protected function _nameIsPrefixed($ctpName) {
+		// If there are no active routing prefixes, the file is not considered to be prefixed.
+		if (!($allPrefixes = Configure::read('Routing.prefixes'))) {
+			return false;
+		}
+
+		// If the name is determined to start with any of the prefixes, return true.
+		$f = function($carry, $v) use ($ctpName) {
+			return ($carry ?: strpos($ctpName, "{$v}_") === 0);
+		};
+		if (array_reduce($allPrefixes, $f, false)) {
+			return true;
+		}
+
+		// If all other checks drop through, name is not prefixed.
+		return false;
 	}
 }

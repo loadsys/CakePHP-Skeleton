@@ -15,13 +15,42 @@ class PagesControllerTest extends ControllerTestCase {
 	public $fixtures = array();
 
 	/**
-	 * Not specifying a page name for display() should fail.
+	 * setUp method
+	 *
+	 * @ref https://github.com/cakephp/cakephp/blob/12cf82ba19117e8bd6c33f6a757d7a9638cd529a/lib/Cake/Test/Case/View/ViewTest.php#L255,L285
+	 * @return void
+	 */
+	public function setUp() {
+		parent::setUp();
+
+		$path = APP . "Test/Samples/View/"; // Will be suffixed by `/Pages` automatically.
+		App::build(array(
+			'View' => array($path)
+		), App::RESET);
+	}
+
+	/**
+	 * tearDown method
+	 *
+	 * @ref https://github.com/cakephp/cakephp/blob/12cf82ba19117e8bd6c33f6a757d7a9638cd529a/lib/Cake/Test/Case/View/ViewTest.php#L287,L301
+	 * @return void
+	 */
+	public function tearDown() {
+		parent::tearDown();
+	}
+
+	/**
+	 * Not specifying a page name for display() should redirect to the site root.
 	 *
 	 * @return void
 	 */
 	public function testDisplayNoPage() {
-		$this->markTestIncomplete('testDisplayNoPage not implemented.');
 		$result = $this->testAction('/pages');
+		$this->assertEquals(
+			Router::url('/', true),
+			$this->headers['Location'],
+			'Not requesting a page explicitly should redirect to the app\'s homepage.'
+		);
 	}
 
 	/**
@@ -30,8 +59,12 @@ class PagesControllerTest extends ControllerTestCase {
 	 * @return void
 	 */
 	public function testAdminDisplayNoPage() {
-		$this->markTestIncomplete('testAdminDisplayNoPage not implemented.');
 		$result = $this->testAction('/admin/pages');
+		$this->assertEquals(
+			Router::url('/', true),
+			$this->headers['Location'],
+			'Not requesting a page explicitly should redirect to the app\'s homepage.'
+		);
 	}
 
 	/**
@@ -40,8 +73,29 @@ class PagesControllerTest extends ControllerTestCase {
 	 * @return void
 	 */
 	public function testDisplayPublicPage() {
-		$this->markTestIncomplete('testDisplayPublicPage not implemented.');
-		$result = $this->testAction('/pages/test/test');
+		$page = 'public_page';
+		$result = $this->testAction('/pages/' . 'nested/' . $page);
+		$this->assertStringMatchesFormat(
+			"%A{$page}%A",
+			$result,
+			'Resulting page should contain its own file name.'
+		);
+	}
+
+	/**
+	 * When no routing prefixes are configured, never check for prefixes on filenames.
+	 *
+	 * @return void
+	 */
+	public function testDisplayNoRoutingPrefixesConfigured() {
+		Configure::write('Routing.prefixes', array());
+		$page = 'admin_home';
+		$result = $this->testAction('/pages/' . $page);
+		$this->assertStringMatchesFormat(
+			"%A{$page}%A",
+			$result,
+			'Normally a protected page, but no routing prefixes configured to check against so display it.'
+		);
 	}
 
 	/**
@@ -51,8 +105,8 @@ class PagesControllerTest extends ControllerTestCase {
 	 * @return void
 	 */
 	public function testDisplayNoAdminPrefixedPages() {
-		$this->markTestIncomplete('testDisplayNoAdminPrefixedPages not implemented.');
-		$result = $this->testAction('/pages/test/admin_test');
+		$this->setExpectedException('NotFoundException', 'Invalid page');
+		$result = $this->testAction('/pages/admin_home');
 	}
 
 	/**
@@ -62,7 +116,12 @@ class PagesControllerTest extends ControllerTestCase {
 	 * @return void
 	 */
 	public function testAdminDisplayAutoPrefixedPage() {
-		$this->markTestIncomplete('testAdminDisplayAutoPrefixedPage not implemented.');
-		$result = $this->testAction('/admin/pages/test/test');
+		$page = 'protected_page';
+		$result = $this->testAction('/admin/pages/' . 'nested/'. $page);
+		$this->assertStringMatchesFormat(
+			"%A{$page}%A",
+			$result,
+			'Resulting page should contain its own file name.'
+		);
 	}
 }
