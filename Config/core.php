@@ -119,7 +119,6 @@ $email = function($localAddress, $displayName = false) {
 	return array($displayName => $address);
 };
 
-/*  */
 /**
  * Email Configuration
  *
