@@ -52,7 +52,8 @@ class AppController extends Controller {
 		//		'plugin' => false,
 		//	),
 		//	'authenticate' => array(
-		//		'Blowfish' => array(
+		//		'Form' => array(
+		//			'passwordHasher' => 'Blowfish',
 		//			'fields' => array(
 		//				'username' => 'email',
 		//				'password' => 'password',
