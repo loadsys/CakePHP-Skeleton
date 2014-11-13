@@ -13,6 +13,6 @@ insert_final_newline = true
 indent_style = tab
 
 # Matches the exact files package.json and .travis.yml
-[{package.json,.travis.yml,composer.json,*.yaml,*.yml}]
+[{package.json,.travis.yml,composer.json,composer-skel.json,*.yaml,*.yml}]
 indent_style = space
 indent_size = 2
