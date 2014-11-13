@@ -1,4 +1,4 @@
-<phpunit colors="true">
+<phpunit colors="true" bootstrap="../Vendor/autoload.php">
 	<filter>
 		<blacklist>
 			<!-- Exclude test directory itself and composer-installed deps. -->
@@ -35,4 +35,7 @@
 			target="../tmp/coverage/clover.xml"
 		/>
 	</logging>
+	<listeners>
+		<listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
+	</listeners>
 </phpunit>
