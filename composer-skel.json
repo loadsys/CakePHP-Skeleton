@@ -1,18 +1,24 @@
 {
-    "name": "loadsys/_PROJECT_NAME_",
-    "description": "_PROJECT_DESCRIPTION_",
-    "license": "proprietary",
-    "require": {
-    	"php": ">=5.4.19",
-        "cakephp/cakephp": "2.5.*",
-        "cakephp/debug_kit": "2.2.*",
-        "cakedc/migrations": "2.3.*",
-        "loadsys/cakephp-shell-scripts": "2.0.*"
-    },
-    "require-dev": {
-    },
-    "config": {
-        "vendor-dir": "Vendor/",
-        "bin-dir": "bin"
-    }
+  "name": "loadsys/_PROJECT_NAME_",
+  "description": "_PROJECT_DESCRIPTION_",
+  "license": "proprietary",
+  "require": {
+    "php": ">=5.4.19",
+    "cakephp/cakephp": "2.5.*",
+    "cakephp/debug_kit": "2.2.*",
+    "cakedc/migrations": "2.3.*",
+    "loadsys/cakephp-shell-scripts": "2.0.*",
+    "ext-mcrypt": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "3.7.*",
+    "phpdocumentor/phpdocumentor": "2.*@beta",
+    "squizlabs/php_codesniffer": "1.*",
+    "loadsys/loadsys_codesniffer": ">=0.2.0",
+    "johnkary/phpunit-speedtrap": "~1.0@dev"
+  },
+  "config": {
+    "vendor-dir": "Vendor/",
+    "bin-dir": "bin"
+  }
 }
