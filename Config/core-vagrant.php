@@ -10,4 +10,32 @@
 
 $config = array(
 	'debug' => 2,
+
+	/**
+	 * Vagrant DB configuration. These settings match those in
+	 * `Lib/puphpet/config.yaml` for the MySQL server that is set up in the
+	 * Vagrant VM. Must at least define a `default` connection.
+	 */
+	'Database' => array(
+		'default' => array(
+			'datasource' => 'Database/Mysql',
+			'persistent' => false,
+			'host' => 'localhost',
+			'login' => 'vagrant',
+			'password' => 'vagrant',
+			'database' => 'vagrant',
+		),
+		'test' => array(
+			'datasource' => 'Database/Mysql',
+			'persistent' => false,
+			'host' => 'localhost',
+			'login' => 'vagrant',
+			'password' => 'vagrant',
+			'database' => 'vagrant_test',
+		),
+		'memory' => array(
+			'datasource' => 'Database/Sqlite',
+			'database' => ':memory:', // Or something independently reviewable, like: 'tmp/treetest.sqlite3',
+		),
+	),
 );
