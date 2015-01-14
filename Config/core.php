@@ -97,6 +97,23 @@ Cache::config('_cake_model_', array(
 //@TODO: Define app-specific vars here.
 
 /**
+ * Default DB configuration. Should be suitable for production use when
+ * no APP_ENV is set. Must at least define a `default` connection.
+ */
+Configure::write('Database', array(
+	'default' => array(
+		'datasource' => 'Database/Mysql',
+		'persistent' => false,
+		'host' => '@TODO: Enter production DB host.',
+		'login' => '@TODO: Enter production DB login.',
+		'password' => '@TODO: Enter production DB password.',
+		'database' => '@TODO: Enter production DB database.',
+		//'prefix' => '',
+		//'encoding' => 'utf8',
+	),
+));
+
+/**
  * Default Site Configuration
  *
  * Any time you'd be tempted to type one of these strings directly into
