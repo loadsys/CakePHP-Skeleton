@@ -120,7 +120,14 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  config.vm.provision :shell, :path => "#{configDir}/shell/execute-files.sh"
+  config.vm.provision :shell do |s|
+    s.path = "#{configDir}/shell/execute-files.sh"
+    s.args = ['exec-once', 'exec-always']
+  end
+  config.vm.provision :shell, run: 'always' do |s|
+    s.path = "#{configDir}/shell/execute-files.sh"
+    s.args = ['startup-once', 'startup-always']
+  end
   config.vm.provision :shell, :path => "#{configDir}/shell/important-notices.sh"
 
   if File.file?("#{configDir}/files/dot/ssh/id_rsa")
