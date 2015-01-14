@@ -15,6 +15,7 @@ Thumbs.db
 
 # Composer
 /Vendor
+!/Vendor/.gitkeep
 /bin
 /Plugin/DebugKit
 /Plugin/Migrations
