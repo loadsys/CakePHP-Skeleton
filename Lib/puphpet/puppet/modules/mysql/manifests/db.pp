@@ -2,6 +2,7 @@
 define mysql::db (
   $user,
   $password,
+  $dbname      = $name,
   $charset     = 'utf8',
   $collate     = 'utf8_general_ci',
   $host        = 'localhost',
@@ -13,7 +14,8 @@ define mysql::db (
   #input validation
   validate_re($ensure, '^(present|absent)$',
   "${ensure} is not supported for ensure. Allowed values are 'present' and 'absent'.")
-  $table = "${name}.*"
+  $table = "${dbname}.*"
+
   # Detect "qualified" usernames and don't automatically append the specified host if one is present already. -bp
   if $user =~ /@/ {
     $userPlusHost = $user
@@ -23,14 +25,14 @@ define mysql::db (
 
   include '::mysql::client'
 
-  mysql_database { $name:
+  $db_resource = {
     ensure   => $ensure,
     charset  => $charset,
     collate  => $collate,
     provider => 'mysql',
     require  => [ Class['mysql::server'], Class['mysql::client'] ],
-    before   => Mysql_user["${userPlusHost}"],  # -bp
   }
+  ensure_resource('mysql_database', $dbname, $db_resource)
 
   $user_resource = {
     ensure        => $ensure,
@@ -46,19 +48,19 @@ define mysql::db (
       provider   => 'mysql',
       user       => "${userPlusHost}",  # -bp
       table      => $table,
-      require    => [ Mysql_user["${userPlusHost}"], Class['mysql::server'] ],  # -bp
+      require    => [Mysql_database[$dbname], Mysql_user["${userPlusHost}"], Class['mysql::server'] ],  # -bp
     }
 
     $refresh = ! $enforce_sql
 
     if $sql {
-      exec{ "${name}-import":
-        command     => "/usr/bin/mysql ${name} < ${sql}",
+      exec{ "${dbname}-import":
+        command     => "/usr/bin/mysql ${dbname} < ${sql}",
         logoutput   => true,
         environment => "HOME=${::root_home}",
         refreshonly => $refresh,
-        require     => Mysql_grant["${user}@${host}/${table}"],
-        subscribe   => Mysql_database[$name],
+        require     => Mysql_grant["${userPlusHost}/${table}"], # -bp
+        subscribe   => Mysql_database[$dbname],
       }
     }
   }

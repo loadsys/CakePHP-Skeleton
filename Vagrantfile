@@ -1,23 +1,18 @@
 require 'yaml'
 
-# Provides a mechanism to relocate the puphpet folder more easily. -bp
-configDir = File.dirname(File.expand_path(__FILE__)) + '/Lib/puphpet'
-configDir = './Lib/puphpet'
-configValues = YAML.load_file("#{configDir}/config.yaml")
-data = configValues['vagrantfile-local']
+rootDir = File.dirname(File.expand_path(__FILE__)) # Set root dir for use later. -bp
+configDir = './Lib/puphpet' # Set base dir to Lib/puphpet/ for use later. -bp
 
-Vagrant.configure("2") do |config|
-  config.vm.box = "#{data['vm']['box']}"
+configValues = YAML.load_file("#{configDir}/config.yaml") # Adjust path to match updated #dir. -bp
+data         = configValues['vagrantfile-local']
+
+Vagrant.require_version '>= 1.6.0'
+
+Vagrant.configure('2') do |config|
+  config.vm.box     = "#{data['vm']['box']}"
   config.vm.box_url = "#{data['vm']['box_url']}"
 
-  # Enable vagrant-cachier plugin for apt package caching on the host. -bp
-  if Vagrant.has_plugin?("vagrant-cachier")
-    #config.cache.auto_detect = true
-    # If you are using VirtualBox, you might want to enable NFS for shared folders
-    # config.cache.enable_nfs  = true
-  end
-
-  if data['vm']['hostname'].to_s != ''
+  if data['vm']['hostname'].to_s.strip.length != 0
     config.vm.hostname = "#{data['vm']['hostname']}"
   end
 
@@ -36,84 +31,203 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  if !data['vm']['post_up_message'].nil?
+    config.vm.post_up_message = "#{data['vm']['post_up_message']}"
+  end
+
+  if Vagrant.has_plugin?('vagrant-hostmanager')
+    hosts = Array.new()
+
+    if !configValues['apache']['install'].nil? &&
+        configValues['apache']['install'].to_i == 1 &&
+        configValues['apache']['vhosts'].is_a?(Hash)
+      configValues['apache']['vhosts'].each do |i, vhost|
+        hosts.push(vhost['servername'])
+
+        if vhost['serveraliases'].is_a?(Array)
+          vhost['serveraliases'].each do |vhost_alias|
+            hosts.push(vhost_alias)
+          end
+        end
+      end
+    elsif !configValues['nginx']['install'].nil? &&
+           configValues['nginx']['install'].to_i == 1 &&
+           configValues['nginx']['vhosts'].is_a?(Hash)
+      configValues['nginx']['vhosts'].each do |i, vhost|
+        hosts.push(vhost['server_name'])
+
+        if vhost['server_aliases'].is_a?(Array)
+          vhost['server_aliases'].each do |x, vhost_alias|
+            hosts.push(vhost_alias)
+          end
+        end
+      end
+    end
+
+    if hosts.any?
+      if config.vm.hostname.to_s.strip.length == 0
+        config.vm.hostname = 'puphpet-dev-machine'
+      end
+
+      config.hostmanager.enabled           = true
+      config.hostmanager.manage_host       = true
+      config.hostmanager.ignore_private_ip = false
+      config.hostmanager.include_offline   = false
+      config.hostmanager.aliases           = hosts
+    end
+  end
+
+  if Vagrant.has_plugin?('vagrant-cachier')
+    config.cache.scope = :box
+    # Additional vagrant-cachier plugin settings. -bp
+    #config.cache.auto_detect = true
+    # If you are using VirtualBox, you might want to enable NFS for shared folders
+    #config.cache.enable_nfs  = true
+  end
+
   data['vm']['synced_folder'].each do |i, folder|
     if folder['source'] != '' && folder['target'] != ''
-      nfs = (folder['nfs'] == "true") ? "nfs" : nil
-      if nfs == "nfs"
-        config.vm.synced_folder "#{folder['source']}", "#{folder['target']}", id: "#{i}", type: nfs
+      sync_owner = !folder['sync_owner'].nil? ? folder['sync_owner'] : 'www-data'
+      sync_group = !folder['sync_group'].nil? ? folder['sync_group'] : 'www-data'
+
+      if folder['sync_type'] == 'nfs'
+        config.vm.synced_folder "#{folder['source']}", "#{folder['target']}", id: "#{i}", type: 'nfs'
+        if Vagrant.has_plugin?('vagrant-bindfs')
+          config.bindfs.bind_folder "#{folder['target']}", "/mnt/vagrant-#{i}"
+        end
+      elsif folder['sync_type'] == 'smb'
+        config.vm.synced_folder "#{folder['source']}", "#{folder['target']}", id: "#{i}", type: 'smb'
+      elsif folder['sync_type'] == 'rsync'
+        rsync_args = !folder['rsync']['args'].nil? ? folder['rsync']['args'] : ['--verbose', '--archive', '-z']
+        rsync_auto = !folder['rsync']['auto'].nil? ? folder['rsync']['auto'] : true
+        rsync_exclude = !folder['rsync']['exclude'].nil? ? folder['rsync']['exclude'] : ['.vagrant/']
+
+        config.vm.synced_folder "#{folder['source']}", "#{folder['target']}", id: "#{i}",
+          rsync__args: rsync_args, rsync__exclude: rsync_exclude, rsync__auto: rsync_auto, type: 'rsync', group: sync_group, owner: sync_owner
+      elsif data['vm']['chosen_provider'] == 'parallels'
+        config.vm.synced_folder "#{folder['source']}", "#{folder['target']}", id: "#{i}",
+          group: sync_group, owner: sync_owner, mount_options: ['share']
       else
-        config.vm.synced_folder "#{folder['source']}", "#{folder['target']}", id: "#{i}", type: nfs,
-          group: 'www-data', user: 'www-data', mount_options: ["dmode=775", "fmode=764"]
+        config.vm.synced_folder "#{folder['source']}", "#{folder['target']}", id: "#{i}",
+          group: sync_group, owner: sync_owner, mount_options: ['dmode=775', 'fmode=764']
       end
     end
   end
 
-  config.vm.usable_port_range = (10200..10500)
+  config.vm.usable_port_range = (data['vm']['usable_port_range']['start'].to_i..data['vm']['usable_port_range']['stop'].to_i)
 
   # A pre-set env var takes precedence over the config.yaml file to allow per-developer overrides. -bp
   unless ENV.fetch('VAGRANT_DEFAULT_PROVIDER', '').strip.empty?
   	data['vm']['chosen_provider'] = ENV['VAGRANT_DEFAULT_PROVIDER'];
   end
 
-  if data['vm']['chosen_provider'].empty? || data['vm']['chosen_provider'] == "virtualbox"
+  if data['vm']['chosen_provider'].empty? || data['vm']['chosen_provider'] == 'virtualbox'
     ENV['VAGRANT_DEFAULT_PROVIDER'] = 'virtualbox'
 
     config.vm.provider :virtualbox do |virtualbox|
       data['vm']['provider']['virtualbox']['modifyvm'].each do |key, value|
-        if key == "memory"
+        if key == 'memory'
+          next
+        end
+        if key == 'cpus'
           next
         end
 
-        if key == "natdnshostresolver1"
-          value = value ? "on" : "off"
+        if key == 'natdnshostresolver1'
+          value = value ? 'on' : 'off'
         end
 
-        virtualbox.customize ["modifyvm", :id, "--#{key}", "#{value}"]
+        virtualbox.customize ['modifyvm', :id, "--#{key}", "#{value}"]
       end
 
-      virtualbox.customize ["modifyvm", :id, "--memory", "#{data['vm']['memory']}"]
-      virtualbox.customize ["modifyvm", :id, "--name", config.vm.hostname]  # Set the VM container's name. -bp
+      virtualbox.customize ['modifyvm', :id, '--memory', "#{data['vm']['memory']}"]
+      virtualbox.customize ['modifyvm', :id, '--cpus', "#{data['vm']['cpus']}"]
+
+      if data['vm']['provider']['virtualbox']['modifyvm']['name'].nil? ||
+        data['vm']['provider']['virtualbox']['modifyvm']['name'].empty?
+        if data['vm']['hostname'].to_s.strip.length != 0
+          virtualbox.customize ['modifyvm', :id, '--name', config.vm.hostname]
+        end
+      end
     end
   end
 
-  if data['vm']['chosen_provider'] == "vmware_fusion" || data['vm']['chosen_provider'] == "vmware_workstation"
-    ENV['VAGRANT_DEFAULT_PROVIDER'] = (data['vm']['chosen_provider'] == "vmware_fusion") ? "vmware_fusion" : "vmware_workstation"
+  if data['vm']['chosen_provider'] == 'vmware_fusion' || data['vm']['chosen_provider'] == 'vmware_workstation'
+    ENV['VAGRANT_DEFAULT_PROVIDER'] = (data['vm']['chosen_provider'] == 'vmware_fusion') ? 'vmware_fusion' : 'vmware_workstation'
 
-    config.vm.provider "vmware_fusion" do |v|
+    config.vm.provider :vmware_fusion do |v, override|
       data['vm']['provider']['vmware'].each do |key, value|
-        if key == "memsize"
+        if key == 'memsize'
+          next
+        end
+        if key == 'cpus'
           next
         end
 
         v.vmx["#{key}"] = "#{value}"
       end
 
-      v.vmx["memsize"] = "#{data['vm']['memory']}"
-      v.vmx["displayName"] = config.vm.hostname  # Set the VM container's name. -bp
+      v.vmx['memsize']  = "#{data['vm']['memory']}"
+      v.vmx['numvcpus'] = "#{data['vm']['cpus']}"
+
+      if data['vm']['provider']['vmware']['displayName'].nil? ||
+        data['vm']['provider']['vmware']['displayName'].empty?
+        if data['vm']['hostname'].to_s.strip.length != 0
+          v.vmx['displayName'] = config.vm.hostname
+        end
+      end
     end
   end
 
-  ssh_username = !data['ssh']['username'].nil? ? data['ssh']['username'] : "vagrant"
+  if data['vm']['chosen_provider'] == 'parallels'
+    ENV['VAGRANT_DEFAULT_PROVIDER'] = 'parallels'
 
-  config.vm.provision "shell" do |s|
-    s.path = "#{configDir}/shell/initial-setup.sh"
-    s.args = "/vagrant/#{configDir}"
+    config.vm.provider 'parallels' do |v|
+      data['vm']['provider']['parallels'].each do |key, value|
+        if key == 'memsize'
+          next
+        end
+        if key == 'cpus'
+          next
+        end
+
+        v.customize ['set', :id, "--#{key}", "#{value}"]
+      end
+
+      v.memory = "#{data['vm']['memory']}"
+      v.cpus   = "#{data['vm']['cpus']}"
+
+      if data['vm']['provider']['parallels']['name'].nil? ||
+        data['vm']['provider']['parallels']['name'].empty?
+        if data['vm']['hostname'].to_s.strip.length != 0
+          v.name = config.vm.hostname
+        end
+      end
+    end
   end
-  config.vm.provision "shell" do |kg|
-    kg.path = "#{configDir}/shell/ssh-keygen.sh"
+
+  ssh_username = !data['ssh']['username'].nil? ? data['ssh']['username'] : 'vagrant'
+
+  config.vm.provision 'shell' do |s|
+    s.path = "#{configDir}/shell/initial-setup.sh" # Dynamic config path. -bp
+    s.args = "/vagrant/#{configDir}" # Dynamic config path. -bp
+  end
+  config.vm.provision 'shell' do |kg|
+    kg.path = "#{configDir}/shell/ssh-keygen.sh" # Dynamic config path. -bp
     kg.args = "#{ssh_username}"
   end
-  config.vm.provision :shell, :path => "#{configDir}/shell/update-puppet.sh"
+  config.vm.provision :shell, :path => "#{configDir}/shell/install-ruby.sh" # Dynamic config path. -bp
+  config.vm.provision :shell, :path => "#{configDir}/shell/install-puppet.sh" # Dynamic config path. -bp
 
   config.vm.provision :puppet do |puppet|
     puppet.facter = {
-      "ssh_username"     => "#{ssh_username}",
-      "provisioner_type" => ENV['VAGRANT_DEFAULT_PROVIDER'],
-      "vm_target_key"    => 'vagrantfile-local',
+      'ssh_username'     => "#{ssh_username}",
+      'provisioner_type' => ENV['VAGRANT_DEFAULT_PROVIDER'],
+      'vm_target_key'    => 'vagrantfile-local',
     }
     puppet.manifests_path = "#{data['vm']['provision']['puppet']['manifests_path']}"
-    puppet.manifest_file = "#{data['vm']['provision']['puppet']['manifest_file']}"
-    puppet.module_path = "#{data['vm']['provision']['puppet']['module_path']}"
+    puppet.manifest_file  = "#{data['vm']['provision']['puppet']['manifest_file']}"
+    puppet.module_path    = "#{data['vm']['provision']['puppet']['module_path']}"
 
     if !data['vm']['provision']['puppet']['options'].empty?
       puppet.options = data['vm']['provision']['puppet']['options']
@@ -121,19 +235,35 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision :shell do |s|
-    s.path = "#{configDir}/shell/execute-files.sh"
+    s.path = "#{configDir}/shell/execute-files.sh" # Dynamic config path. -bp
     s.args = ['exec-once', 'exec-always']
   end
   config.vm.provision :shell, run: 'always' do |s|
-    s.path = "#{configDir}/shell/execute-files.sh"
+    s.path = "#{configDir}/shell/execute-files.sh" # Dynamic config path. -bp
     s.args = ['startup-once', 'startup-always']
   end
-  config.vm.provision :shell, :path => "#{configDir}/shell/important-notices.sh"
+  config.vm.provision :shell, :path => "#{configDir}/shell/important-notices.sh" # Dynamic config path. -bp
 
-  if File.file?("#{configDir}/files/dot/ssh/id_rsa")
+  customKey  = "#{configDir}/files/dot/ssh/id_rsa" # Dynamic config path. -bp
+  vagrantKey = "#{rootDir}/.vagrant/machines/default/#{ENV['VAGRANT_DEFAULT_PROVIDER']}/private_key" # Dynamic config path. -bp
+
+  if File.file?(customKey)
     config.ssh.private_key_path = [
-      "#{configDir}/files/dot/ssh/id_rsa",
+      customKey,
+      "#{ENV['HOME']}/.vagrant.d/insecure_private_key"
     ]
+
+    if File.file?(vagrantKey) and ! FileUtils.compare_file(customKey, vagrantKey)
+      File.delete(vagrantKey)
+    end
+
+    if ! File.directory?(File.dirname(vagrantKey))
+      FileUtils.mkdir_p(File.dirname(vagrantKey))
+    end
+
+    if ! File.file?(vagrantKey)
+      FileUtils.cp(customKey, vagrantKey)
+    end
   end
 
   if !data['ssh']['host'].nil?
@@ -161,8 +291,8 @@ Vagrant.configure("2") do |config|
     config.ssh.forward_x11 = data['ssh']['forward_x11']
   end
   if !data['vagrant']['host'].nil?
-    config.vagrant.host = data['vagrant']['host'].gsub(":", "").intern
+    config.vagrant.host = data['vagrant']['host'].gsub(':', '').intern
   end
-
 end
+
 
