@@ -12,8 +12,8 @@ ${0##*/}
 Usage:
     ${0##*/} <new app path> [git remote URL]
 
-	$1 = Path to the folder in which you want to create the new project.
-	$2 = Optional remote git repo URL to add as the 'origin' for the new project.
+	\$1 = Path to the folder in which you want to create the new project.
+	\$2 = Optional remote git repo URL to add as the 'origin' for the new project.
 
 
 EOT
