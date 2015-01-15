@@ -11,9 +11,6 @@ vagrantfile-local:
             private_network: 192.168.56.101
             #public_network: # '' (blank means prompt the user), 'en1: Wi-Fi (AirPort)',  'en0: Ethernet', 'en3: Thunderbolt Ethernet'
             forwarded_port:
-                ssh:
-                    host: '2222'
-                    guest: '22'
                 apache:
                     host: '8080'
                     guest: '80'
