@@ -12,6 +12,7 @@ Thumbs.db
 /Lib/Cake
 /backups
 /Config/core-local.php
+/composer.lock
 
 # Composer
 /Vendor
