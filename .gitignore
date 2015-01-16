@@ -24,8 +24,8 @@ Thumbs.db
 
 # Vagrant + puphpet
 /.vagrant
-/Lib/puphpet/files/dot/ssh/id_rsa*
-/Lib/puphpet/files/dot/ssh/root_id_rsa*
+/puphpet/files/dot/ssh/id_rsa*
+/puphpet/files/dot/ssh/root_id_rsa*
 /xhprof
 /phpmyadmin
 

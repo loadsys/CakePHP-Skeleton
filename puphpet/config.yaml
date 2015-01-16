@@ -30,12 +30,12 @@ vagrantfile-local:
                 cpus: 1
         provision:
             puppet:
-                manifests_path: Lib/puphpet/puppet
+                manifests_path: puphpet/puppet
                 manifest_file: site.pp
-                module_path: Lib/puphpet/puppet/modules
+                module_path: puphpet/puppet/modules
                 options:
                     - '--verbose'
-                    - '--hiera_config /vagrant/Lib/puphpet/puppet/hiera.yaml'
+                    - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
                     - '--parser future'
         synced_folder:
             project_root:

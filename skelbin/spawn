@@ -105,9 +105,9 @@ sed -e '1,/---/d;/---/,$p' -i '' "${DIR_NEW_APP}/README.md"
 
 #@TODO: Also run the project's README.md through a pass with m4, adding in the repo URL, project name, and anything else we already know about it from this script run.
 
-#@TODO: Also AT LEAST set the hostname in Lib/puphpet/config.yaml to prevent name conflicts in VirtualBox or VMware.
+#@TODO: Also AT LEAST set the hostname in puphpet/config.yaml to prevent name conflicts in VirtualBox or VMware.
 
-#@TODO: Really we need to run a wizard here to ask for the proper values for a bunch of the config files (composer.json[name, description], Config/env_vars.txt, Lib/puphpet/config.yaml, etc.)
+#@TODO: Really we need to run a wizard here to ask for the proper values for a bunch of the config files (composer.json[name, description], Config/env_vars.txt, puphpet/config.yaml, etc.)
 
 
 echo "## Setting up git repo for new project." >&2
@@ -133,7 +133,7 @@ echo '' >&2
 echo "## Done. You should:" >&2
 echo "##    - Run 'Console/cake schema generate -f' (from inside vagrant)." >&2
 echo "##    - Add project information to the README.md file." >&2
-echo "##    - Edit VM settings in Lib/puphpet/config.yaml file." >&2
+echo "##    - Edit VM settings in puphpet/config.yaml file." >&2
 echo "##    - Commit and push everything to the remote repo." >&2
 
 

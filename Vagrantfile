@@ -1,9 +1,8 @@
 require 'yaml'
 
-rootDir = File.dirname(File.expand_path(__FILE__)) # Set root dir for use later. -bp
-configDir = './Lib/puphpet' # Set base dir to Lib/puphpet/ for use later. -bp
+dir = File.dirname(File.expand_path(__FILE__))
 
-configValues = YAML.load_file("#{configDir}/config.yaml") # Adjust path to match updated #dir. -bp
+configValues = YAML.load_file("#{dir}/puphpet/config.yaml")
 data         = configValues['vagrantfile-local']
 
 Vagrant.require_version '>= 1.6.0'
@@ -209,15 +208,15 @@ Vagrant.configure('2') do |config|
   ssh_username = !data['ssh']['username'].nil? ? data['ssh']['username'] : 'vagrant'
 
   config.vm.provision 'shell' do |s|
-    s.path = "#{configDir}/shell/initial-setup.sh" # Dynamic config path. -bp
-    s.args = "/vagrant/#{configDir}" # Dynamic config path. -bp
+    s.path = 'puphpet/shell/initial-setup.sh'
+    s.args = '/vagrant/puphpet'
   end
   config.vm.provision 'shell' do |kg|
-    kg.path = "#{configDir}/shell/ssh-keygen.sh" # Dynamic config path. -bp
+    kg.path = 'puphpet/shell/ssh-keygen.sh'
     kg.args = "#{ssh_username}"
   end
-  config.vm.provision :shell, :path => "#{configDir}/shell/install-ruby.sh" # Dynamic config path. -bp
-  config.vm.provision :shell, :path => "#{configDir}/shell/install-puppet.sh" # Dynamic config path. -bp
+  config.vm.provision :shell, :path => 'puphpet/shell/install-ruby.sh'
+  config.vm.provision :shell, :path => 'puphpet/shell/install-puppet.sh'
 
   config.vm.provision :puppet do |puppet|
     puppet.facter = {
@@ -235,17 +234,17 @@ Vagrant.configure('2') do |config|
   end
 
   config.vm.provision :shell do |s|
-    s.path = "#{configDir}/shell/execute-files.sh" # Dynamic config path. -bp
+    s.path = 'puphpet/shell/execute-files.sh'
     s.args = ['exec-once', 'exec-always']
   end
   config.vm.provision :shell, run: 'always' do |s|
-    s.path = "#{configDir}/shell/execute-files.sh" # Dynamic config path. -bp
+    s.path = 'puphpet/shell/execute-files.sh'
     s.args = ['startup-once', 'startup-always']
   end
-  config.vm.provision :shell, :path => "#{configDir}/shell/important-notices.sh" # Dynamic config path. -bp
+  config.vm.provision :shell, :path => 'puphpet/shell/important-notices.sh'
 
-  customKey  = "#{configDir}/files/dot/ssh/id_rsa" # Dynamic config path. -bp
-  vagrantKey = "#{rootDir}/.vagrant/machines/default/#{ENV['VAGRANT_DEFAULT_PROVIDER']}/private_key" # Dynamic config path. -bp
+  customKey  = "#{dir}/files/dot/ssh/id_rsa"
+  vagrantKey = "#{dir}/.vagrant/machines/default/#{ENV['VAGRANT_DEFAULT_PROVIDER']}/private_key"
 
   if File.file?(customKey)
     config.ssh.private_key_path = [

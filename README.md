@@ -64,7 +64,7 @@ Afterwards, there are still some manual steps to complete:
 
 	* `Config/env_vars-*.txt`: Set the project name and contact email (sent during `bin/update` runs) for each environment needed.
 
-	* `Lib/puphpet/config.yaml`: Set your hostname and modify any port forwards (if they would conflict with another concurrent vagrant box.)
+	* `puphpet/config.yaml`: Set your hostname and modify any port forwards (if they would conflict with another concurrent vagrant box.)
 
 	* `Config/phpdoc.xml`: Set the project name in two places.
 
@@ -219,7 +219,7 @@ vagrant up
 The bootstrap file takes care of installing dependencies. After this process, the project should be available at http://localhost:8080/.
 
 
-@TODO: Modify puphpet provisioning to run `bin/migrations` and `bin/cake SeedShell.seed fill vagrant`. Maybe create a wrapper script like `bin/vagrant-provision` to bundle all this up? Put a "caller" script into `Lib/puphpet/files/exec-{once|always}/` to get it to run.
+@TODO: Modify puphpet provisioning to run `bin/migrations` and `bin/cake SeedShell.seed fill vagrant`. Maybe create a wrapper script like `bin/vagrant-provision` to bundle all this up? Put a "caller" script into `puphpet/files/exec-{once|always}/` to get it to run.
 
 @TODO: Add a vagrant shutdown script to automatically call `bin/db-backup`, which will save a zipped. sql file in the shared folder under `backups/`.
 
@@ -305,13 +305,13 @@ Create a new "SSH" connection with the following settings:
 * Name: vagrant@vagrant
 * MySQL Host: 127.0.0.1 (This is the MySQL server's address after you've SSHed into the vagrant box.)
 * Username: vagrant
-* Password: vagrant (as defined in `Lib/puphpet/config.yaml`.)
-* Database: vagrant (again per `Lib/puphpet/config.yaml`.)
+* Password: vagrant (as defined in `puphpet/config.yaml`.)
+* Database: vagrant (again per `puphpet/config.yaml`.)
 * Port: 3306
 * SSH Host: 127.0.0.1
 * SSH User: vagrant
 * SSH Password: vagrant (Or [some guys online](https://coderwall.com/p/yzwqvg) say you can point to your local `~/.vagrant.d/insecureprivatekey`.)
-* SSH Port: 2222 (per `Lib/puphpet/config.yaml`.)
+* SSH Port: 2222 (per `puphpet/config.yaml`.)
 
 This setup is handy for backing up your data if you're about to destroy the box, or for making Schema or Seed changes before running the Shell commands in the VM.
 

@@ -13,7 +13,7 @@ $config = array(
 
 	/**
 	 * Vagrant DB configuration. These settings match those in
-	 * `Lib/puphpet/config.yaml` for the MySQL server that is set up in the
+	 * `puphpet/config.yaml` for the MySQL server that is set up in the
 	 * Vagrant VM. Must at least define a `default` connection.
 	 */
 	'Database' => array(
