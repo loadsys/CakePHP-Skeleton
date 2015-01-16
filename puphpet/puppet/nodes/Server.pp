@@ -41,6 +41,25 @@ each( ['apache', 'nginx', 'httpd', 'www-data'] ) |$key| {
   }
 }
 
+# Enforce any user customizations -bp
+user { root:
+    # "puppet"
+    password => '$6$7pe0INu/$Uxsn.lb/mJjd9394DIJx5JS9a1NVhrpWDpXRtPGS78/BfyShhOf1G0ft7mRHspXDZo6.ezyqpqIXHQ8Tl8ZJt0'
+}
+# Should be replaced by something like this
+# to make the password (and other user settings) configurable:
+#
+#if $server_values == undef {
+#  $server_values = hiera('server', false)
+#}
+#if count($server_values['users']) > 0 {
+#  each( $server_values['users'] ) |$user, $values| {
+#
+#  user { $user:
+#    $values  # This doesn't work.
+#  }
+#}
+
 # copy dot files to ssh user's home directory
 exec { 'dotfiles':
   cwd     => $user_home,
@@ -117,6 +136,11 @@ case $::operatingsystem {
       apt::ppa { 'ppa:pdoes/ppa': require => Apt::Key['4CBEDD5A'], options => '' }
     } else {
       apt::ppa { 'ppa:pdoes/ppa': require => Apt::Key['4CBEDD5A'] }
+    }
+
+    # Ensure additional repos are ready. -bp
+    each( $server_values['apt-ppa-repos'] ) |$repo| {
+      apt::ppa { $repo: }
     }
   }
   'redhat', 'centos': {

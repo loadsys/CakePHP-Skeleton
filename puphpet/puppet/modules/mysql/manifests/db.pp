@@ -16,13 +16,6 @@ define mysql::db (
   "${ensure} is not supported for ensure. Allowed values are 'present' and 'absent'.")
   $table = "${dbname}.*"
 
-  # Detect "qualified" usernames and don't automatically append the specified host if one is present already. -bp
-  if $user =~ /@/ {
-    $userPlusHost = $user
-  } else {
-    $userPlusHost = "${user}@${host}"
-  }
-
   include '::mysql::client'
 
   $db_resource = {
@@ -40,15 +33,15 @@ define mysql::db (
     provider      => 'mysql',
     require       => Class['mysql::server'],
   }
-  ensure_resource('mysql_user', "${userPlusHost}", $user_resource)  # -bp
+  ensure_resource('mysql_user', "${user}@${host}", $user_resource)
 
   if $ensure == 'present' {
-    mysql_grant { "${userPlusHost}/${table}":  # -bp
+    mysql_grant { "${user}@${host}/${table}":
       privileges => $grant,
       provider   => 'mysql',
-      user       => "${userPlusHost}",  # -bp
+      user       => "${user}@${host}",
       table      => $table,
-      require    => [Mysql_database[$dbname], Mysql_user["${userPlusHost}"], Class['mysql::server'] ],  # -bp
+      require    => [Mysql_database[$dbname], Mysql_user["${user}@${host}"], Class['mysql::server'] ],
     }
 
     $refresh = ! $enforce_sql
@@ -59,7 +52,7 @@ define mysql::db (
         logoutput   => true,
         environment => "HOME=${::root_home}",
         refreshonly => $refresh,
-        require     => Mysql_grant["${userPlusHost}/${table}"], # -bp
+        require     => Mysql_grant["${user}@${host}/${table}"],
         subscribe   => Mysql_database[$dbname],
       }
     }

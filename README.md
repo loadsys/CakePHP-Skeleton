@@ -13,7 +13,7 @@ git clone git@github.com:loadsys/CakePHP-Skeleton.git /path/to/CakePHP-Skeleton
 cd /path/to/CakePHP-Skeleton
 composer install
 ```
-(The second line pulls a Cake core into `Vendor/cakephp/cakephp/lib/` and the Loadsys shell scripts into the `bin/` directory.)
+(The last line pulls a Cake core into `Vendor/cakephp/cakephp/lib/` and the Loadsys shell scripts into the `bin/` directory.)
 
 Note that there are two composer config files in this project.
 
@@ -40,7 +40,6 @@ The `spawn` command performs the following steps **for you**:
 * Adds _the new project's_ git repo as the 'origin' remote.
 * Chops this top section of the Skeleton's README out of the destination copy. 
 * Installs composer dependencies (Cake core, Migrations, DebugKit, Loadsys Shell Scripts) and initializes any submodules (currently none).
-* Sets up a vagrant-friendly `database.php` file.
 
 Afterwards, there are still some manual steps to complete:
 
@@ -60,15 +59,15 @@ Afterwards, there are still some manual steps to complete:
 
 	* `package.json`: Set the (nodejs) project name. (Not used for anything, but should be unique.)
 
-	* `.travis.yml`: (Probably won't need to do anything here.)
-
-	* `Config/env_vars-*.txt`: Set the project name and contact email (sent during `bin/update` runs) for each environment needed.
-
 	* `puphpet/config.yaml`: Set your hostname and modify any port forwards (if they would conflict with another concurrent vagrant box.)
 
 	* `Config/phpdoc.xml`: Set the project name in two places.
 
 	* Search project-wide for `@TODO` markers. This should reveal any additional necessary configuration.
+
+	* `.travis.yml`: (Probably won't need to do anything here.)
+
+	* `Config/env_vars-*.txt`: Set the project name and contact email (sent during `bin/update` runs) for each environment needed.
 
 1. Commit everything and push to the remote repo.
 
@@ -103,7 +102,7 @@ Updating **this repo's** skeleton files to match a new version of Cake involves 
 
 
 
-_Don't change this next divider line. Everything from here up will automatically get deleted when creating a new project using `bin/spawn`._
+_Don't change this next divider line. Everything from here up will automatically get deleted when creating a new project using `skelbin/spawn`._
 
 -------------------------------
 

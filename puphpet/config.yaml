@@ -1,15 +1,17 @@
 ---
 vagrantfile-local:
     vm:
-        hostname: loadsys-vagrant   #@FIXME: Change this to identify the project.
         box: puphpet/ubuntu1404-x64
         box_url: puphpet/ubuntu1404-x64
+        hostname: loadsys-vagrant   #@FIXME: Change this to identify the project.
         memory: '512'
         cpus: '1'
         chosen_provider: virtualbox # `virtualbox` or `vmware_fusion`. Will be overridden by `VAGRANT_DEFAULT_PROVIDER` env var if set.
         network:
-            private_network: 192.168.56.101
-            #public_network: # '' (blank means prompt the user), 'en1: Wi-Fi (AirPort)',  'en0: Ethernet', 'en3: Thunderbolt Ethernet'
+            # Make networking more flexible. -bp
+            type: private # or `public`
+            ip: 192.168.56.101
+            bridge: '' # '' (blank means prompt the user), 'en1: Wi-Fi (AirPort)',  'en0: Ethernet', 'en3: Thunderbolt Ethernet'
             forwarded_port:
                 apache:
                     host: '8080'
@@ -22,8 +24,6 @@ vagrantfile-local:
             virtualbox:
                 modifyvm:
                     natdnshostresolver1: on
-                setextradata:
-                    VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root: 1
             vmware:
                 numvcpus: 1
             parallels:
@@ -43,7 +43,7 @@ vagrantfile-local:
                 group: www-data
                 source: ./
                 target: /var/www
-                sync_type: default # Or `nfs`
+                sync_type: nfs  # Or `default` but `nfs` performs better and is (likely) required when using vmware.
                 rsync:
                     args:
                         - '--verbose'
@@ -70,21 +70,19 @@ vagrantfile-local:
 server:
     install: '1'
     apt-ppa-repos:
-        - ppa:git-core/ppa   # Provides newer git-core
-        - ppa:chris-lea/node.js  # Provides newer node and npm
+        - ppa:git-core/ppa   # Provides newer git-core. -bp
+        - ppa:chris-lea/node.js  # Provides newer node and npm. -bp
     packages:
-        - python-software-properties
-        - python
-        - g++
-        - make
-        - emacs
         - curl
-        - zip
+        - emacs
+        - g++
         - graphviz
+        - make
         - memcached
+        - zip
         - git-core  # Via ppa:git-core
         - nodejs  # Via ppa:chris-lea
-    users: #@TODO: Move into users_groups below.
+    users: #@TODO: Move into users_groups below?
         root:
             # "puppet"
             password: '$6$7pe0INu/$Uxsn.lb/mJjd9394DIJx5JS9a1NVhrpWDpXRtPGS78/BfyShhOf1G0ft7mRHspXDZo6.ezyqpqIXHQ8Tl8ZJt0'
@@ -120,18 +118,16 @@ apache:
         manage_group: false
         sendfile: 0
     modules:
-        - rewrite
+        - cache
+        - deflate
         - expires
         - headers
-        - deflate
-        - ssl
-        - cache
         - proxy
+        - rewrite
+        - ssl
     vhosts:
         vagrant_dev:
             servername: vagrant.dev
-            serveraliases:
-                - www.vagrant.dev
             docroot: /var/www
             port: '80'
             setenv:
@@ -191,53 +187,40 @@ php:
     modules:
         php:
             - cli
-            - intl
-            - mcrypt
             - curl
             - gd
             - geoip
             - imagick
+            - intl
             - mbstring
+            - mcrypt
             - memcache
             - memcached
             - mysql
-            - sqlite
-            - xsl
-            - xmlrpc
             - readline
-        pear:
-            { }
-# Left for reference. This is all installed via composer now.
-#            - PHP_CodeSniffer
-#            -
-#                name: PHPUnit
-#                repository: pear.phpunit.de
-#            -
-#                name: phpDocumentor
-#                repository: pear.phpdoc.org
+            - sqlite
+            - xmlrpc
+            - xsl
+        pear: {  }
         pecl:
-            - pecl_http
             - APC
-            - memcache
-            - memcached
-            - mongo
             - PDO
             - PDO_MYSQL
             - PDO_PGSQL
             - PDO_SQLITE
-            - redis
             - SQLite
-            - sqlite3
-            - fpdf
+            - json
+            - memcache
+            - memcached
+            - mongo
+            - oauth
+            - pdflib
+            - pecl_http
+            - redis
+            - sphinx
+            - xattr
             - yaml
             - zip
-            - xattr
-            - sphinx
-            - pdflib
-            - json
-            - oauth
-            - domxml
-            - yaml
     ini:
         display_errors: On
         error_reporting: '-1'
@@ -300,8 +283,8 @@ mysql:
             grant:
                 - ALL
             name: vagrant
-            host: localhost
-            user: vagrant@%
+            host: '%'
+            user: vagrant
             password: vagrant
             #sql_file: /var/www/Config/Schema/vagrant.sql
         test:

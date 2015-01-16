@@ -120,7 +120,7 @@ else
 fi
 
 echo "## Priming dependencies for new project." >&2
-composer install --dev --no-interaction --ignore-platform-reqs
+composer install --dev --no-interaction --ignore-platform-reqs --optimize-autoloader
 bin/deps-install
 
 # Clean up the tmp/cakeskel dir so it's easier to work with the skeleton repo.

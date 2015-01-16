@@ -16,11 +16,15 @@ Vagrant.configure('2') do |config|
   end
 
   # Provides a way for the VM to be accessible from beyond the host machine. -bp
-  if data['vm']['network']['public_network'].to_s != ''
-    config.vm.network "public_network", bridge: "#{data['vm']['network']['public_network']}"
-  elsif data['vm']['network']['public_network']
-    config.vm.network "public_network"  # Will prompt for the host machine's interface to bridge to.
-  elsif data['vm']['network']['private_network'].to_s != ''
+  if data['vm']['network']['type'].to_s.strip == 'public'
+  	if data['vm']['network']['bridge'].to_s.strip.length != 0
+      config.vm.network "public_network", ip: "#{data['vm']['network']['ip']}", bridge: "#{data['vm']['network']['bridge']}"
+    else
+      config.vm.network "public_network", bridge: "#{data['vm']['network']['bridge']}"
+    end
+  elsif data['vm']['network']['type'].to_s.strip == 'private'
+    config.vm.network "private_network", ip: "#{data['vm']['network']['ip']}"
+  elsif data['vm']['network']['private_network'].to_s.strip.length != 0
     config.vm.network "private_network", ip: "#{data['vm']['network']['private_network']}"
   end
 
@@ -90,7 +94,7 @@ Vagrant.configure('2') do |config|
       sync_group = !folder['sync_group'].nil? ? folder['sync_group'] : 'www-data'
 
       if folder['sync_type'] == 'nfs'
-        config.vm.synced_folder "#{folder['source']}", "#{folder['target']}", id: "#{i}", type: 'nfs'
+        config.vm.synced_folder "#{folder['source']}", "#{folder['target']}", id: "#{i}", type: 'nfs', :linux__nfs_options => ["rw","no_root_squash","no_subtree_check"] # Ref: https://github.com/puphpet/puphpet/wiki/Shared-Folder:-Permission-Denied -bp
         if Vagrant.has_plugin?('vagrant-bindfs')
           config.bindfs.bind_folder "#{folder['target']}", "/mnt/vagrant-#{i}"
         end
