@@ -255,7 +255,6 @@ The bootstrap file takes care of installing dependencies. After this process, th
 1. @TODO: Get puppet provisioning working using existing puphpet configs, but altered for production (no xdebug, no `vagrant` user, etc.
 
 
-
 ### Writeable Directories
 
 Writeable directories are managed by `Config/writedirs.txt`, and they can be set by running `bin/writedirs`.
@@ -299,21 +298,6 @@ Database configurations for all environments are also stored in the core configs
 
 The bundled vagrant VM automatically sets `APP_ENV=vagrant` both on the command line (via `vagrant ssh` and in the Apache context.) If you want to work with the project on your host machine locally, you need to `export APP_ENV=dev` (or whatever environment you want to match for `core-*.php`) before running `bin/cake`.
 
-### CSS Changes
-
-* CSS is managed via LESS source files.
-* LESS source files are located in `webroot/less/`.
-* Run `grunt less` to process the `webroot/less/` files and output compiled CSS files in `webroot/css/`.
-* Commit both the .less and the .css changes back to the repo as you work.
-	* (Until a CDN is set up, static assets will be served from the app server directly.)
-
-.less files of note:
-
-* `global.less` is included everywhere in the site.
-* `public.less` is referenced in only the default (public) layout and will override anything in global.
-* `admin.less` is referenced only in the admin layout and will also override global.
-
-
 ### Database Changes
 
 Because the MySQL DB runs inside of the vagrant VM, you must connect to it via SSH. The easiest way to do this is using [Sequel Pro](http://sequelpro.com/).
@@ -352,7 +336,7 @@ This setup is handy for backing up your data if you're about to destroy the box,
 * Review and commit the changes made in `Config/Seed/`.
 
 
-## Testing
+### PHP Unit Testing
 
 Unit tests should be created for all new code written in the following categories:
 
@@ -369,16 +353,10 @@ Unit tests should be created for all new code written in the following categorie
 
 CakePHP testing can be done through the browser like normal (by visiting http://localhost:8080/test.php).
 
-Command line automated test running is also possible with Grunt, which is already installed in the vagrant box.
-
-```bash
-grunt watch
-```
-
-This will block the terminal while it waits for file changes. New files should get picked up as well.
+Command line automated "test-on-save" is also possible with Grunt via: `grunt watch`. This will block the terminal while it waits for file changes. New files should get picked up as well.
 
 
-### Javascript Tests
+### Javascript Unit Testing
 
 **@TODO: Review and update this section.**
 
@@ -394,10 +372,28 @@ This will block the terminal while it waits for file changes. New files should g
 * There is a `grunt` task to auto-run these tests on change as well: `grunt test`
 ```
 
+### CSS Changes
+
+* CSS is managed via LESS source files.
+* LESS source files are located in `webroot/less/`.
+* Run `grunt less` to process the `webroot/less/` files and output compiled CSS files in `webroot/css/`.
+* **Commit both the .less and the .css changes** back to the repo as you work.
+	* (Until a CDN is set up, static assets will be served from the app server directly.)
+
+.less files of note:
+
+* `global.less` is included everywhere in the site.
+* `public.less` is referenced in only the default (public) layout and will override anything in global.
+* `admin.less` is referenced only in the admin layout and will also override global.
+* LESS resources can be broken out into logical files and `@import`ed into global, public or admin collections as appropriate.
+* By default, bootstrap is `<link>`ed separately in the default.ctp layout, but can be rolled into global.less if desired.
+
+
 ### Other grunt Commands
 
 * _(no args)_ or `watch` - Starts the file watcher and auto-executes tests for any php file that changes (and has a test file associated with it.) Also watches .less files and compiles them into CSS on change.
 * `less` - Compiles .less files into CSS.
+* `test` - Executes the Mocha Javascript test suite.
 
 
 ## Immersion

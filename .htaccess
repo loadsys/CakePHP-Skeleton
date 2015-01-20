@@ -1,6 +1,5 @@
 <IfModule mod_rewrite.c>
     RewriteEngine on
-    RewriteRule    ^assets/(.*)$  http://127.0.0.1:3333/assets/$1 [P]
     RewriteRule    ^$             webroot/                        [L]
     RewriteRule    (.*)           webroot/$1                      [L]
 </IfModule>
