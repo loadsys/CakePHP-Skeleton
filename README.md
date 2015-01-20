@@ -126,43 +126,53 @@ _Brief app description. Why does it exist? Who uses it?_
 
 _"Environment" refers to external technologies required for the app to run. Anything that the app "assumes" will be available. Memcache is part of the environment, jQuery is a library. **Always** include the minimum PHP version, PHP extensions (and versions) utilized, database software version, and any other **external** programs used. Think in particular about the production environment, even if a tool (like memcached) is not used locally in development._
 
-### Hosting ###
+### Hosting
 
 This section documents the minimum required tools for hosting this application.
 
-* [CakePHP](https://github.com/cakephp/cakephp/tree/2.5.2) v2.5.2+
-* PHP v5.4+
-	* PDO + MySQL
-	* ImageMagick (imagick) v6.0.3 / v6.7.8-10
-	* SSL2 (openssl)
-	* Memcached (memcached)
-* Apache v2.2+
+* [CakePHP](https://github.com/cakephp/cakephp/tree/2.6.1) v2.6.1+
+* PHP v5.6+
+	* intl
+	* pdo + mysql
+	* mbstring
+	* mcrypt
+	* memcached
+	* openssl
+* Apache v2.4+
 * MySQL v5+
-* Memcached (production)
+* Memcached
 
 (These tools are all provided in the bundled vagrant environment, described below.)
 
 
-### Developer-specific ###
+### Developer-specific
 
-The following tools should be installed on your development machine in order to work with this project:
+The following tools **should be installed on your development machine** in order to work with this project:
 
+* PHP v5.4+ (Mac system default should work fine.)
 * [composer](http://getcomposer.org/) for dependency management.
-* [vagrant](http://www.vagrantup.com/downloads.html) v1.6+ for dev VM hosting, along with:
+* Either of the following:
 	* [VirtualBox](https://www.virtualbox.org/) v4.3+ (free)
-	* or [VMware Fusion](http://www.vmware.com/products/fusion) v6+ plus the [vagrant VMware plugin](https://www.vagrantup.com/vmware) (not free, but **fast**)
-* [node.js](http://nodejs.org/download/) + [npm](https://npmjs.org/) + [grunt-cli](http://gruntjs.com/getting-started) for automatically running tests.
+	* [VMware Fusion](http://www.vmware.com/products/fusion) v6+ plus the [vagrant VMware plugin](https://www.vagrantup.com/vmware) (not free, but **fast**)
+* [vagrant](http://www.vagrantup.com/downloads.html) v1.6+ for dev VM hosting. The following plugins are helpful but not required:
+	* [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest)
+	* [vagrant-cachier](https://github.com/fgrehm/vagrant-cachier)
+* For automatically running tests:
+	* [node.js](http://nodejs.org/download/)
+	* [npm](https://npmjs.org/)
+	* [grunt-cli](http://gruntjs.com/getting-started)
 
-Vagrant + VirtualBox (or VMware) provide the following additional tools via a customized [PuPHPet](https://puphpet.com/)-based vagrant configuration which itself uses [puppet](http://puppetlabs.com/puppet/puppet-open-source) and [Hiera](http://docs.puppetlabs.com/hiera/1/). There are no "optional" installs. Developers must be able to run tests, generate phpDocs and run phpcs locally before committing. Thankfully, the vagrant VM provides most of the necessary tools, including:
+Vagrant + VirtualBox/VMware provide the following additional tools via a customized [PuPHPet](https://puphpet.com/)-based vagrant configuration which itself uses [puppet](http://puppetlabs.com/puppet/puppet-open-source) and [Hiera](http://docs.puppetlabs.com/hiera/1/). There are no "optional" installs. Developers must be able to run tests, generate phpDocs and run the code sniffer locally before committing. Thankfully, **the vagrant VM provides the following tools**, including:
 
 * PHP's [xdebug extension](http://xdebug.org/) v2+
+* [composer](https://getcomposer.org/)
 * [phpunit](http://phpunit.de/) v3.7
-* [nodejs](http://nodejs.org/) + [npm](https://www.npmjs.org/) (for auto-running tests)
 * [phpDocumentor](http://phpdoc.org/) v2
 * [PHP Code Sniffer](https://github.com/squizlabs/PHP_CodeSniffer) v2
-
-* @TODO: Preinstall grunt and phantomjs
-
+* [nodejs](http://nodejs.org/) + [npm](https://www.npmjs.org/)
+	* [`json`](http://trentm.com/json/) command line tool.
+	* ember-cli
+	* grunt-cli
 
 
 ### Included Libaries and Submodules
@@ -173,10 +183,12 @@ Libraries should be included with Composer whenever possible. Git submodules sho
 
 Composer-provided:
 
-* [CakePHP](https://github.com/cakephp/cakephp) v2.4.0+
-* [DebugKit](https://github.com/cakephp/debug_kit/tree/2.0) v2.0
+* [CakePHP](https://github.com/cakephp/cakephp) v2.6.0+
+* [DebugKit](https://github.com/cakephp/debug_kit/tree/2.0) v2.x
 * [CakeDC Migrations](https://github.com/cakedc/migrations)
 * [Loadsys Cake Shell Scripts](https://github.com/loadsys/CakePHP-Shell-Scripts)
+* [Loadsys Cake Serializers](https://github.com/loadsys/CakePHP-Serializers)
+* [Loadsys Cake Basic Seeds](https://github.com/loadsys/CakePHP-Basic-Seed)
 
 
 Git submodules:
@@ -211,7 +223,7 @@ Developers are expected to use the vagrant environment for all local work. Using
 
 ```bash
 git clone git@github.com:loadsys/_PROJECT_REPO_URL_.git ./
-./bootstrap.sh   #@TODO: This probably still needs some tweaking, but handles the basics.
+./bootstrap.sh
 vagrant up
 ```
 
@@ -225,16 +237,16 @@ The bootstrap file takes care of installing dependencies. After this process, th
 
 ### Production (bare metal)
 
+1. Install the dependencies listed at the top of this readme.
 1. Create a new blank database.
 1. Assign a user permissions to that database.
-1. (Locally) Update the `Config/database.php` with the new credentials and commit/push them to GitHub.
+1. (Locally) Update the `Config/core.php` with the new credentials and commit/push them to GitHub.
 1. Configure a webroot.
-1. **Critical: Set an apache environment variable with `SetEnv APP_ENV production` in the `<VirtualHost>` block** so the correct database config is used.
+1. **Set an apache environment variable with `SetEnv APP_ENV production` in the `<VirtualHost>` block** so the correct database config is used.
 1. `cd` into the webroot.
 1. Clone the project:
 		git clone https://github.com/loadsys/_PROJECT_REPO_URL_.git ./
 		./bootstrap.sh
-1. (Your `Config/database.php` file's `__construct()` method should already be updated with production DB credentials.)
 1. (Any other production-specific configs should already exist in `Config/core.php`.)
 1. Run `bin/migrations` to load the schema into the DB.
 
@@ -261,36 +273,43 @@ Things to do after pulling updates from the remote repo.
 On your host:
 
 * `bin/deps-install` (Install any changes/updated dependencies from git submodules, composer, pear, npm, etc.)
-* `vagrant provision` (Make any changes to the VM's config that may be necessary.)
+* `vagrant provision` (Make any changes to the VM's config that may be necessary, and runs associated Cake provisioning steps:)
+	* `bin/clear-cache` (Make sure temp files are reset between host/vm use.)
+	* `bin/db-backup` (Store the previous database contents before running schema/data updates.)
+	* `bin/migrations` (Set up the DB with the latest schema.)
+	* `bin/cake Seeds.seed fill vagrant` (Populate the latest set of development data from the seeds, if the plugin is available.)
 
-From inside the vagrant VM (via `vagrant ssh`):
+### Developer Workflow
 
-* `bin/clear-cache` (Make sure temp files are reset between host/vm use.)
-* `bin/migrations` (Set up the DB with the latest schema.)
-* `bin/cake Seeds.seed fill vagrant` (Populate the latest set of development data from the seeds.)
+**@TODO: Review and update this section.**
 
-**@TODO:** These final steps could really be rolled into the vagrant provisioning step.
-
+* Pull origin and get `dev` up to date.
+* Create new feature branch from `dev`.
+* Make changes and commit to your branch.
+* Rebase branch on latest `dev`.
+* Push (forced) feature branch to origin.
+* Create a PR and add the "Review" label to it. Assign to the PM.
+* PM will take it from there.
 
 ### Configuration
 
 App configuration is stored in `Config/core.php`. This configuration is then added to (or overwritten by) anything defined in the environment-specific config file, such as `Config/core-vagrant.php` or `Config/core-staging.php`.
 
-Database configurations for all environments is stored in `Config/database.php` and switched using an environment variable.
+Database configurations for all environments are also stored in the core configs and not the traditional database.php file. Instead the correct environment-specific connections are loaded via `Configure::read('Database')` in `DATABASE_CONFIG::__construct()`. To override the production connections defined in `core.php`, define your own connections in `core-whatever.php` where "whatever" matches your target `APP_ENV`.
 
-The bundled vagrant VM automatically sets `APP_ENV=vagrant` both on the command line (via `vagrant ssh` and in the Apache context.) If you want to work with the project on your machine locally, you need to `export APP_ENV=dev` (or whatever environment you want to match for `core-*.php` and in `database.php`) before running `bin/cake`.
+The bundled vagrant VM automatically sets `APP_ENV=vagrant` both on the command line (via `vagrant ssh` and in the Apache context.) If you want to work with the project on your host machine locally, you need to `export APP_ENV=dev` (or whatever environment you want to match for `core-*.php`) before running `bin/cake`.
 
 ### CSS Changes
 
-@TODO: Not set up yet.
-
 * CSS is managed via LESS source files.
 * LESS source files are located in `webroot/less/`.
-* You should set up a program like [Less](http://incident57.com/less/) to monitor the above folder, and output compiled CSS files in `webroot/css/`.
-* Commit both the .less and the .css changes back to the repo as you work. (Until the CDN is set up, static assets will be served from the app server directly.)
+* Run `grunt less` to process the `webroot/less/` files and output compiled CSS files in `webroot/css/`.
+* Commit both the .less and the .css changes back to the repo as you work.
+	* (Until a CDN is set up, static assets will be served from the app server directly.)
 
-.less files:
-* `global.less` is referenced in the layouts first and is included everywhere in the site.
+.less files of note:
+
+* `global.less` is included everywhere in the site.
 * `public.less` is referenced in only the default (public) layout and will override anything in global.
 * `admin.less` is referenced only in the admin layout and will also override global.
 
@@ -321,7 +340,9 @@ This setup is handy for backing up your data if you're about to destroy the box,
 * When prompted to update `schema.php`, choose **yes** and then choose **overwrite**.
 * Then review and commit the changes to `Config/schema.php` and the new file from `Config/Migration/`.
 
-#### Testing Data
+#### Sample Data
+
+**@TODO: Review and update this section.**
 
 @TODO: This doesn't work yet.
 
@@ -329,9 +350,6 @@ This setup is handy for backing up your data if you're about to destroy the box,
 * You can repopulate data in the VM's MySQL database by running `bin/cake Seeds.seed fill vagrant`.
 * To update a Seed dataset, make your changes in the database and run `bin/cake Seeds.seed generate vagrant`.
 * Review and commit the changes made in `Config/Seed/`.
-
-
-
 
 
 ## Testing
@@ -349,15 +367,11 @@ Unit tests should be created for all new code written in the following categorie
 * Javascript in `webroot/js/`
 * **Bundled** plugins
 
-Testing can be done through the browser like normal (by visiting http://localhost:8080/test.php).
+CakePHP testing can be done through the browser like normal (by visiting http://localhost:8080/test.php).
 
 Command line automated test running is also possible with Grunt, which is already installed in the vagrant box.
 
-@TODO: Update this to use `bin/run-in-vagrant` so the watcher can run on the host.
-
 ```bash
-vagrant ssh
-cd /var/www
 grunt watch
 ```
 
@@ -365,6 +379,8 @@ This will block the terminal while it waits for file changes. New files should g
 
 
 ### Javascript Tests
+
+**@TODO: Review and update this section.**
 
 @TODO: Get the TestJs plugin integrated into the skeleton, use abus as reference.
 
@@ -378,28 +394,15 @@ This will block the terminal while it waits for file changes. New files should g
 * There is a `grunt` task to auto-run these tests on change as well: `grunt test`
 ```
 
-
-
 ### Other grunt Commands
 
-* `watch` - Starts the file watcher and auto-executes tests for any file that changes (and has a test file associated with it.)
-* `server` - Starts an asset compilation server that does.... (ask Joey.)
-* `dev` - The same as watch+dev.
-* `build` - Ask Joey.
-* `test` - Ask Joey.
-
-
-
-## Asset Compilation
-
-If the project is using the asset server to compile assets, then it can also use `grunt build` to compile and minify a list of files that are included in the layout into a directory in webroot. Be sure to have followed the steps from the testing section to install the node dependencies. Then run the `grunt` command:
-
-``` bash
-grunt build
-```
+* _(no args)_ or `watch` - Starts the file watcher and auto-executes tests for any php file that changes (and has a test file associated with it.) Also watches .less files and compiles them into CSS on change.
+* `less` - Compiles .less files into CSS.
 
 
 ## Immersion
+
+**@TODO: Review and update this section.**
 
 _This section may make more sense to include with the "Project" documentation instead of the "repo" README..._
 
@@ -410,4 +413,4 @@ __TBD__
 
 ## License
 
-Copyright (c) 2014 _PROJECT_CLIENT_NAME_
+Copyright (c) 2015 _PROJECT_CLIENT_NAME_
