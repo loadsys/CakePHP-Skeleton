@@ -23,8 +23,8 @@ if (Configure::read('debug') > 0):
 endif;
 ?>
 <?php
-if (file_exists(WWW_ROOT . 'css' . DS . 'cake.generic.css')):
-	echo $this->Html->css('cake.generic', array('inline' => false));
+if (file_exists(WWW_ROOT . 'css' . DS . 'cake.homepage.css')):
+	echo $this->Html->css('cake.homepage', array('inline' => false));
 ?>
 <p id="url-rewriting-warning" style="background-color:#e32; color:#fff;">
 	<?php echo __d('cake_dev', 'URL rewriting is not properly configured on your server.'); ?>
