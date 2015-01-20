@@ -39,14 +39,12 @@ if (!isset($socialMetaTags)) {
 			$cssSources = array(
 				'//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css',
 				'//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css',
-				'global',
 				'public',
 			);
 		} else {
 			$cssSources = array(
 				'bootstrap-3.3.2/bootstrap.min',
 				'bootstrap-3.3.2/bootstrap-theme.min',
-				'global',
 				'public',
 			);
 		}

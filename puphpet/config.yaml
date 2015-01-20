@@ -128,7 +128,7 @@ apache:
     vhosts:
         vagrant_dev:
             servername: vagrant.dev
-            docroot: /var/www
+            docroot: /var/www/webroot
             port: '80'
             setenv:
                 - 'APP_ENV vagrant'
@@ -166,7 +166,7 @@ nginx:
             server_name: vagrant.dev
             server_aliases:
                 - www.vagrant.dev
-            www_root: /var/www
+            www_root: /var/www/webroot
             listen_port: '80'
             location: \.php$
             index_files:
