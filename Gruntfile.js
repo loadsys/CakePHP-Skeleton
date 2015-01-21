@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
   grunt.loadTasks('Console/node/tasks');
   require('load-grunt-tasks')(grunt);
-  var changedFiles = {};
+  var fs = require('fs');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -17,6 +17,9 @@ module.exports = function(grunt) {
         }
       }
     },
+    phptestfile: {
+    	target: {},
+    },
 
     watch: {
       php: {
@@ -27,8 +30,8 @@ module.exports = function(grunt) {
           '!tmp/**',
           '!.git/**/*.php'
         ],
-        tasks: 'null' // See Console/node/tasks/php_tests.js
-//         tasks: 'phptestfile',
+//         tasks: 'null', // See Console/node/tasks/php_tests.js
+        tasks: ['phptestfile'],
         options: {
           spawn: false
         }
@@ -43,27 +46,19 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['less', 'watch']);
   grunt.registerTask('test', ['jstest']); // See Console/node/tasks/js_tests.js
 
+  grunt.registerMultiTask('phptestfile', function() {
+    var files = this.filesSrc;
+    var CakeTestRunner = require('./Console/node/cake_test_runner');
+    var phpfile;
+    var vagrantHost = fs.existsSync('.vagrant');
 
+    files.forEach(function(filepath) {
+      phpfile = new CakeTestRunner(filepath);
+      phpfile.vagrantHost = vagrantHost;
+      phpfile.exists(function() { phpfile.run(); });
+    });
 
-//   grunt.event.on('watch', function(action, filepath) {
-//     if (this.name === 'watch:php') {
-//       changedFiles[filepath] = action;
-//     }
-//   });
-//
-//   grunt.registerMultiTask('phptestfile', function() {
-//     console.log(changedFiles);
-//     return true;
-//
-//     var filepath = '?';
-//     var CakeTestRunner = require('./Console/node/cake_test_runner');
-//     var file = new CakeTestRunner(filepath);
-//
-//     if (fs.existsSync('.vagrant')) {  //@TODO: This doesn't work because the folder shows up inside the VM too.
-//       file.vagrantHost = true;
-//     }
-//
-//     file.exists(function() { file.run(); });
-//   });
-
-};
+    // Otherwise, print a success message.
+    grunt.log.ok('Files tested: ' + files.length);
+  });
+}
