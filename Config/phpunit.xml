@@ -13,7 +13,7 @@
 		</blacklist>
 	</filter>
 	<logging>
-		<!-- HTML reports exported to loadsysdev for viewing. -->
+		<!-- HTML reports intended to be exported to loadsysdev for viewing. -->
 		<log
 			type="coverage-html"
 			target="../tmp/coverage/html/"
@@ -22,18 +22,13 @@
 			lowUpperBound="60"
 			highLowerBound="90"
 		/>
-		<!-- Text report used by travis helpers to generate the proper coverage badge. -->
-		<log
-			type="coverage-text"
-			target="../tmp/coverage.txt"
-			lowUpperBound="60"
-			highLowerBound="90"
-		/>
-		<!-- Not currently used, but generate it anyway so it's there already. -->
+		<!-- Not currently used, but include the config anyway so it's here already. -->
+		<!-- 
 		<log
 			type="coverage-clover"
 			target="../tmp/coverage/clover.xml"
 		/>
+		-->
 	</logging>
 	<listeners>
 		<listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />

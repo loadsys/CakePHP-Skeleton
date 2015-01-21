@@ -27,6 +27,7 @@ if (!isset($socialMetaTags)) {
 		echo $this->Html->meta(array('name' => 'description', 'content' => $descriptionForLayout));
 		echo $this->Html->meta(array('name' => 'canonical', 'content' => Router::url(null, true)));
 		echo $this->Html->meta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1.0'));
+		echo $this->Html->meta(array('name' => 'env', 'content' => Configure::read('Defaults.env')));
 
 		echo $this->element('Layouts/icons');
 		echo $this->element('Layouts/social_meta_tags', array(
@@ -35,20 +36,10 @@ if (!isset($socialMetaTags)) {
 			'title_for_layout' => $title_for_layout
 		));
 
-		if (Configure::read('CDN.enabled')) {
-			$cssSources = array(
-				'//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css',
-				'//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css',
-				'public',
-			);
-		} else {
-			$cssSources = array(
-				'bootstrap-3.3.2/bootstrap.min',
-				'bootstrap-3.3.2/bootstrap-theme.min',
-				'public',
-			);
-		}
-		echo $this->Html->css($cssSources);
+		$localCssSources = array(
+			'public',
+		);
+		echo $this->Html->css(array_merge(Configure::read('CDN.css'), $localCssSources));
 	?>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -83,22 +74,15 @@ if (!isset($socialMetaTags)) {
 	<?php echo $this->element('Layouts/footer'); ?>
 
 	<?php
-		if (Configure::read('CDN.enabled')) {
-			$scriptSources = array(
-				'//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js',
-				'//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js',
-				'public',
-			);
-		} else {
-			$scriptSources = array(
-				'jquery-1.11.2/jquery.min',
-				'bootstrap-3.3.2/bootstrap.min',
-				'public',
-			);
-		}
-		echo $this->Html->script($scriptSources, array(
-			'inline' => false
-		));
+		$localScriptSources = array(
+			'public',
+		);
+		echo $this->Html->script(
+			array_merge(Configure::read('CDN.js'), $localScriptSources),
+			array(
+				'inline' => false
+			)
+		);
 
 		echo $this->fetch('script');
 		echo $this->Js->writeBuffer(array('onDomReady' => false, 'safe' => false));

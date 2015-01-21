@@ -28,13 +28,32 @@ $config = array(
 	),
 
 	/**
-	 * Staging environment hint when debug>0. Sets the admin nav bar
-	 * background color to hint the active APP_ENV. See:
-	 * `LoadsysHtmlHelper::styleForEnv()`.
+	 * Staging environment hints.
+	 *
+	 * Sets a meta tag with the active env. When debug>0, sets the admin
+	 * nav bar background color to hint the active APP_ENV. See:
+	 * `LoadsysHtmlHelper::envHint()`.
 	 */
 	'Defaults' => array(
+		'env' => 'staging',
 		'EnvHint' => array(
 			'snippet' => 'background: #ff9999;', // yellow-ish in staging
+		),
+	),
+
+	/**
+	 * CDN Asset Configuration.
+	 *
+	 * Use local, in-repo, uncompiled files in staging.
+	 */
+	'CDN' => array(
+		'css' => array(
+			'bootstrap-3.3.2/bootstrap.min',
+			'bootstrap-3.3.2/bootstrap-theme.min',
+		),
+		'js' => array(
+			'jquery-1.11.2/jquery.min',
+			'bootstrap-3.3.2/bootstrap.min',
 		),
 	),
 );

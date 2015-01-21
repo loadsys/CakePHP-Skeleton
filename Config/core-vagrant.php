@@ -40,13 +40,32 @@ $config = array(
 	),
 
 	/**
-	 * Vagrant environment hint when debug>0. Sets the admin nav bar
-	 * background color to hint the active APP_ENV. See:
-	 * `LoadsysHtmlHelper::styleForEnv()`.
+	 * Vagrant environment hints.
+	 *
+	 * Sets a meta tag with the active env. When debug>0, sets the admin
+	 * nav bar background color to hint the active APP_ENV. See:
+	 * `LoadsysHtmlHelper::envHint()`.
 	 */
 	'Defaults' => array(
+		'env' => 'vagrant',
 		'EnvHint' => array(
 			'snippet' => 'background: #ff9999;', // red-ish in development
+		),
+	),
+
+	/**
+	 * CDN Asset Configuration.
+	 *
+	 * Use local, in-repo, uncompiled files in development.
+	 */
+	'CDN' => array(
+		'css' => array(
+			'bootstrap-3.3.2/bootstrap.min',
+			'bootstrap-3.3.2/bootstrap-theme.min',
+		),
+		'js' => array(
+			'jquery-1.11.2/jquery.min',
+			'bootstrap-3.3.2/bootstrap.min',
 		),
 	),
 );
