@@ -1,29 +1,26 @@
-<!DOCTYPE html>
+<?php
+/**
+ * Default admin page layout.
+ */
+
+?><!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
+	<?php echo $this->Html->charset(); ?>
 	<title>
-		<?php echo __('EU'); ?> -
+		<?php echo Configure::read('Defaults.long_name'); ?> -
 		<?php echo $title_for_layout; ?>
 	</title>
 	<?php
+		echo $this->Html->meta(array('http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge'));
 		echo $this->Html->meta(array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1.0'));
+		echo $this->Html->meta(array('name' => 'env', 'content' => Configure::read('Defaults.env')));
 		echo $this->element('Layouts/icons');
 
-		if (Configure::read('CDN.enabled')) {
-			$cssSources = array(
-				'//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css',
-				'//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css',
-				'admin',
-			);
-		} else {
-			$cssSources = array(
-				'bootstrap-3.3.2/bootstrap.min',
-				'bootstrap-3.3.2/bootstrap-theme.min',
-				'admin',
-			);
-		}
-		echo $this->Html->css($cssSources);
+		$localCssSources = array(
+			'admin',
+		);
+		echo $this->Html->css(array_merge(Configure::read('CDN.css'), $localCssSources));
 	?>
 
 	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -52,22 +49,15 @@
 	<?php //echo $this->element('Layouts/footer'); ?>
 
 	<?php
-		if (Configure::read('CDN.enabled')) {
-			$scriptSources = array(
-				'//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js',
-				'//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js',
-				'admin',
-			);
-		} else {
-			$scriptSources = array(
-				'jquery-1.11.2/jquery.min',
-				'bootstrap-3.3.2/bootstrap.min',
-				'admin',
-			);
-		}
-		echo $this->Html->script($scriptSources, array(
-			'inline' => false
-		));
+		$localScriptSources = array(
+			'admin',
+		);
+		echo $this->Html->script(
+			array_merge(Configure::read('CDN.js'), $localScriptSources),
+			array(
+				'inline' => false
+			)
+		);
 		echo $this->fetch('script');
 	?>
 	<?php echo $this->Js->writeBuffer(); ?>

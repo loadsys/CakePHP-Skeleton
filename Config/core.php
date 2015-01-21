@@ -126,9 +126,10 @@ Configure::write('Database', array(
  * a file, call this Configure var instead.
  */
 Configure::write('Defaults', array(
+	'env' => 'production', //APP_ENV
 	'short_name' => 'APP', //@TODO: Set the app's short name.
 	'long_name' => 'Loadsys CakePHP Skeleton', //@TODO: Set the app's long name.
-	'domain' => 'snfi.org', //@TODO: Set the app's default domain name (used for email addresses and suitable for generated docs, like PDFs.)
+	'domain' => 'loadsys.com', //@TODO: Set the app's default domain name (used for email addresses and suitable for generated docs, like PDFs.)
 	'meta_description' => 'This is a fresh baked Loadsys CakePHP site skeleton.', //@TODO: Set the app's default meta description.
 	'meta_keywords' => 'loadsys, cakephp, rapid web development', //@TODO: Set the app's default meta keywords.
 	'EnvHint' => array(
@@ -168,10 +169,24 @@ Configure::write('SSL', array(
 ));
 
 /**
- * CDN Configuration
+ * CDN Asset Configuration.
+ *
+ * Allows you to define the source of asset files on a per-environment basis.
+ * In production, you likely want to use concatenated and minified assets,
+ * possible from a CDN server. In development and staging, likely local
+ * un-compiled source files. Only define assets that have alternate sources.
+ * Assets that are **always** provided from the repo should still be defined
+ * directly in your layout.
  */
 Configure::write('CDN', array(
-	'enabled' => false,
+	'css' => array(
+		'//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css',
+		'//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css',
+	),
+	'js' => array(
+		'//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js',
+		'//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js',
+	),
 ));
 
 /**
@@ -223,7 +238,11 @@ Configure::write('SocialNetworks', array(
 /**
  * Load environment-specific overrides.
  *
- * **THIS SHOULD BE THE LAST STATEMENT IN YOUR core.php FILE.**
+ * **THIS SHOULD BE THE LAST BLOCK IN YOUR core.php FILE.**
+ */
+
+
+/**
  *
  * File such as `Config/core-production.php` can be created to match the
  * `APP_ENV` environment variable and must contain a $config = array(...);
