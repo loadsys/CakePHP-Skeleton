@@ -85,7 +85,10 @@ rm -rf "${DIR_TMP}/${DIR_SKELETON_SEED}/skelbin"
 rm -rf "${DIR_TMP}/${DIR_SKELETON_SEED}/composer.lock"
 mv -f "${DIR_TMP}/${DIR_SKELETON_SEED}/composer-skel.json" "${DIR_TMP}/${DIR_SKELETON_SEED}/composer.json"
 sed -i '' '/^\/composer.lock/d' "${DIR_TMP}/${DIR_SKELETON_SEED}/.gitignore"
+
+# Tricks to silence `cake bake project`
 echo 'dummy(__CAKE_PATH__)' > "${DIR_TMP}/${DIR_SKELETON_SEED}/Console/cake.php"
+
 
 echo "## Creating destination folder: ${DIR_NEW_APP}" >&2
 mkdir -p "${DIR_NEW_APP}"
@@ -93,7 +96,6 @@ mkdir -p "${DIR_NEW_APP}"
 
 echo "## Baking new project." >&2
 echo "   (Ignore any warnings about cache prefix, app/Console and CAKE_CORE_INCLUDE_PATH.)" >&2
-cd `dirname ${DIR_NEW_APP}`
 "${DIR}/bin/cake" bake project --skel "${DIR_TMP}/${DIR_SKELETON_SEED}" "${DIR_NEW_APP}"
 
 # Abort here if the user chose not to continue the bake process.
@@ -102,6 +104,7 @@ if [ "$?" -gt "0" ]; then
 	exit 1
 fi
 
+# Clean up our tricks.
 rm -f "${DIR_NEW_APP}/Console/cake.php"
 rm -f "${DIR_TMP}/archive.zip"
 
