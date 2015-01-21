@@ -3,7 +3,7 @@
     "description": "CakePHP project skeleton for jumpstarting greenfield projects.",
     "license": "proprietary",
     "require": {
-        "cakephp/cakephp": "2.5.*",
+        "cakephp/cakephp": "2.6.*",
         "loadsys/cakephp-shell-scripts": "dev-master"
     },
     "config": {

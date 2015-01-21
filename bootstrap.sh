@@ -6,7 +6,16 @@ usage ()
 	cat <<EOT
 
 ${0##*/}  
-    Thin script included with new projects to make it easier to bootstrap a freshly cloned repository. Initializes submodules (which if the project is based on the Loadsys/CakePHP-Skeleton will include bin/init-repo) and then calls bin/init-repo to do the rest of the setup work. Takes all of the same arguments as init-repo.
+    Thin script included with new projects to make it easier to
+    bootstrap a freshly cloned repository. This script should do
+    the bare minimum necessary to get the project in a useable state.
+    Typically this means getting CakePHP-Shell-Scripts package
+    available to do the majority of the set up work, but can be
+    customized on a per-project basis.
+    
+    At minimum, this script initializes submodules and runs composer
+    and then calls bin/init-repo to do the rest of the setup work.
+    Takes all of the same arguments as init-repo.
 
 Usage:
     bin/${0##*/} [env] [owner] [group] [db base name] [cake core path]
@@ -36,10 +45,13 @@ if [ -e "$COMPOSER_CONFIG_FILE" ]; then
 		exit 2
 	else
 		echo "## Found composer at: ${COMPOSER}"
-		"$COMPOSER" install --dev --no-interaction
+		"$COMPOSER" install --dev --no-interaction --ignore-platform-reqs --optimize-autoloader
 	fi
 fi
 
+# The above should be enough to make the general tools from
+# CakePHP-Shell-Scripts available, which can do the rest of the heavy
+# lifting for us.
 if [ -e "$INIT_SCRIPT" ]; then
 	echo "## Bootstrapping init script."
 	$INIT_SCRIPT "$@"

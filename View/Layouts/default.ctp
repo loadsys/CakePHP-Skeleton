@@ -37,16 +37,14 @@ if (!isset($socialMetaTags)) {
 
 		if (Configure::read('CDN.enabled')) {
 			$cssSources = array(
-				'//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css',
-				'//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css',
-				'global',
+				'//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css',
+				'//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css',
 				'public',
 			);
 		} else {
 			$cssSources = array(
-				'bootstrap-3.2.0/bootstrap.min',
-				'bootstrap-3.2.0/bootstrap-theme.min',
-				'global',
+				'bootstrap-3.3.2/bootstrap.min',
+				'bootstrap-3.3.2/bootstrap-theme.min',
 				'public',
 			);
 		}
@@ -87,14 +85,14 @@ if (!isset($socialMetaTags)) {
 	<?php
 		if (Configure::read('CDN.enabled')) {
 			$scriptSources = array(
-				'//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js',
-				'//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js',
+				'//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js',
+				'//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js',
 				'public',
 			);
 		} else {
 			$scriptSources = array(
-				'jquery-1.11.1/jquery.min',
-				'bootstrap-3.2.0/bootstrap.min',
+				'jquery-1.11.2/jquery.min',
+				'bootstrap-3.3.2/bootstrap.min',
 				'public',
 			);
 		}

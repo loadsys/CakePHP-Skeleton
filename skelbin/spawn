@@ -12,8 +12,8 @@ ${0##*/}
 Usage:
     ${0##*/} <new app path> [git remote URL]
 
-	$1 = Path to the folder in which you want to create the new project.
-	$2 = Optional remote git repo URL to add as the 'origin' for the new project.
+	\$1 = Path to the folder in which you want to create the new project.
+	\$2 = Optional remote git repo URL to add as the 'origin' for the new project.
 
 
 EOT
@@ -36,7 +36,7 @@ DIR_CAKE_CORE="${DIR}/${DIR_CAKE_REL}"
 if [ ! -d "$DIR_CAKE_CORE" ]; then
 	echo "!! Cake core not found in expected path: ${DIR_CAKE_CORE}"  >&2
 	echo "   Trying to run `composer install` for you..."
-	composer install --dev --no-interaction
+	composer install --dev --no-interaction --ignore-platform-reqs
 	if [ !-d "$DIR_CAKE_CORE" ]; then
 		echo "!! Couldn't run `composer install`. Aborting."  >&2
 		usage
@@ -65,38 +65,39 @@ fi
 # Clean up from a previous run.
 if [ -f "${DIR_TMP}/archive.zip" ]; then
 	echo "## Cleaning up old archive.zip from a previous run." >&2
-	rm -f ${DIR_TMP}/archive.zip
+	rm -f "${DIR_TMP}/archive.zip"
 fi
 if [ -d "${DIR_TMP}/${DIR_SKELETON_SEED}" ]; then
 	echo "## Cleaning up old skeleton seed copy from a previous run." >&2
-	rm -rf ${DIR_TMP}/${DIR_SKELETON_SEED}
+	rm -rf "${DIR_TMP}/${DIR_SKELETON_SEED}"
 fi
 
 
 echo "## Creating skeleton seed copy from git HEAD at: ${DIR_TMP}/${DIR_SKELETON_SEED}" >&2
-cd $DIR
-git archive HEAD --format=zip --output=${DIR_TMP}/archive.zip
-cd ${DIR_TMP}
-unzip -qd ${DIR_SKELETON_SEED} archive.zip
+cd "${DIR}"
+git archive HEAD --format=zip --output="${DIR_TMP}/archive.zip"
+cd "${DIR_TMP}"
+unzip -qd "${DIR_SKELETON_SEED}" archive.zip
 
 
 echo "## Tweaking the skeleton seed copy before baking." >&2
-rm -rf ${DIR_TMP}/${DIR_SKELETON_SEED}/skelbin
-rm -rf ${DIR_TMP}/${DIR_SKELETON_SEED}/composer.lock
-mv -f ${DIR_TMP}/${DIR_SKELETON_SEED}/composer-skel.json ${DIR_TMP}/${DIR_SKELETON_SEED}/composer.json
+rm -rf "${DIR_TMP}/${DIR_SKELETON_SEED}/skelbin"
+rm -rf "${DIR_TMP}/${DIR_SKELETON_SEED}/composer.lock"
+mv -f "${DIR_TMP}/${DIR_SKELETON_SEED}/composer-skel.json" "${DIR_TMP}/${DIR_SKELETON_SEED}/composer.json"
+sed -i '' '/^\/composer.lock/d' "${DIR_TMP}/${DIR_SKELETON_SEED}/.gitignore"
 
 echo "## Creating destination folder: ${DIR_NEW_APP}" >&2
-mkdir -p ${DIR_NEW_APP}
+mkdir -p "${DIR_NEW_APP}"
 
 
 echo "## Baking new project." >&2
 echo "   (Ignore any warnings about cache prefix, app/Console and CAKE_CORE_INCLUDE_PATH.)" >&2
 cd `dirname ${DIR_NEW_APP}`
-${DIR}/bin/cake bake project --skel ${DIR_TMP}/${DIR_SKELETON_SEED} ${DIR_NEW_APP}
-rm -f ${DIR_TMP}/archive.zip
+"${DIR}/bin/cake" bake project --skel "${DIR_TMP}/${DIR_SKELETON_SEED}" "${DIR_NEW_APP}"
+rm -f "${DIR_TMP}/archive.zip"
 
 # Switch into the new project's root.
-cd ${DIR_NEW_APP}
+cd "${DIR_NEW_APP}"
 
 echo "## Cleaning up new README." >&2
 sed -e '1,/---/d;/---/,$p' -i '' "${DIR_NEW_APP}/README.md"
@@ -104,7 +105,9 @@ sed -e '1,/---/d;/---/,$p' -i '' "${DIR_NEW_APP}/README.md"
 
 #@TODO: Also run the project's README.md through a pass with m4, adding in the repo URL, project name, and anything else we already know about it from this script run.
 
-#@TODO: Really we need to run a wizard here to ask for the proper values for a bunch of the config files (composer.json[name, description], Config/env_vars.txt, Lib/puphpet/config.yaml, etc.)
+#@TODO: Also AT LEAST set the hostname in puphpet/config.yaml to prevent name conflicts in VirtualBox or VMware.
+
+#@TODO: Really we need to run a wizard here to ask for the proper values for a bunch of the config files (composer.json[name, description], Config/env_vars.txt, puphpet/config.yaml, etc.)
 
 
 echo "## Setting up git repo for new project." >&2
@@ -117,23 +120,20 @@ else
 fi
 
 echo "## Priming dependencies for new project." >&2
-composer install
+composer install --dev --no-interaction --ignore-platform-reqs --optimize-autoloader
 bin/deps-install
 
 # Clean up the tmp/cakeskel dir so it's easier to work with the skeleton repo.
-rm -rf ${DIR_TMP}/${DIR_SKELETON_SEED}
-
-# @TODO: This is going to be supplanted by the new env-specific setup when the vagrant bits bundled with the skeleton are updated.
-# echo "## Adding local/vagrant DB configs." >&2
-# bin/db-writeconfig db user '' localhost
-cp "$DIR/Vendor/loadsys/cakephp-shell-scripts/templates/database.template.php" "Config/database.php"
+rm -rf "${DIR_TMP}/${DIR_SKELETON_SEED}"
 
 #@TODO: Offer to run schema generate -f. Remove #2 below when this is complete.
 #bin/run-in-vagrant 'Console/cake schema generate -f'
 
+echo '' >&2
 echo "## Done. You should:" >&2
 echo "##    - Run 'Console/cake schema generate -f' (from inside vagrant)." >&2
 echo "##    - Add project information to the README.md file." >&2
+echo "##    - Edit VM settings in puphpet/config.yaml file." >&2
 echo "##    - Commit and push everything to the remote repo." >&2
 
 

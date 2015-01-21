@@ -42,10 +42,16 @@ Configure::write('Session', array(
 	'defaults' => 'php',
 ));
 
-Configure::write('Security', array(
-	'salt' => 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi',
-	'cipherSeed' => '76859309657453542496749683645',
-));
+/**
+ * Security settings.
+ *
+ * These must remain separate keys in the Skeleton so the `bake project`
+ * Shell can rewrite them for us.
+ */
+
+Configure::write('Security.salt', 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi');
+
+Configure::write('Security.cipherSeed', '76859309657453542496749683645');
 
 //Configure::write('Asset', array(
 	//'timestamp' => true,
