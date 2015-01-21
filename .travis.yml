@@ -3,7 +3,7 @@ language: php
 
 # PHP versions to test against
 php:
-  - 5.4
+  - 5.6
 
 # Node version, if you have JS to test.
 #node_js:
@@ -15,7 +15,7 @@ env:
     - APP_ENV=travis
     # Contains a $GITHUB_TOKEN env var for use with composer to avoid API limits.
     # @TODO: Run `travis encrypt GITHUB_TOKEN=your-token-here` from the new project's root folder and paste the resulting value here:
-    - secure: "GskNShxJTSdczbddmPPIzKivDWn/YuaMFgr5UPSumPDirQQdbesRh/tQZNGiIaROXXnDs45wJCWT2ra8XdYBZouISXOoOZARQgz9JqUHAbkgtCbxa4qhp3ZwDymJMFd5eGvM99r9OCoSh2us+E2fhBb1+P5kvS6laB5TKYmwAX0="
+    - secure: ""
 
 # Services to Enable
 services:

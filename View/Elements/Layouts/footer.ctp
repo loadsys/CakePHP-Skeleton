@@ -4,9 +4,10 @@
 		<div class="navbar-brand">
 			<?php echo $this->Html->link('&copy;',
 				array(
+					'plugin' => false,
 					'controller' => 'pages',
 					'action' => 'display',
-					'dashboard',
+					'home',
 					'admin' => true,
 				),
 				array(
@@ -22,13 +23,25 @@
 			<li>
 				<?php echo $this->Html->link(
 					__('Terms of Use'),
-					UrlRef::get('ContentPage', 0) //@TODO
+					array(
+						'plugin' => false,
+						'controller' => 'pages',
+						'action' => 'display',
+						'terms',
+						'admin' => false,
+					)
 				); ?>
 			</li>
 			<li>
 				<?php echo $this->Html->link(
 					__('Privacy Policy'),
-					UrlRef::get('ContentPage', 0) //@TODO
+					array(
+						'plugin' => false,
+						'controller' => 'pages',
+						'action' => 'display',
+						'privacy',
+						'admin' => false,
+					)
 				); ?>
 			</li>
 		</ul>

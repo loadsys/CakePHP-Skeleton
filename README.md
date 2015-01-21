@@ -230,8 +230,6 @@ vagrant up
 The bootstrap file takes care of installing dependencies. After this process, the project should be available at http://localhost:8080/.
 
 
-@TODO: Modify puphpet provisioning to run `bin/migrations` and `bin/cake SeedShell.seed fill vagrant`. Maybe create a wrapper script like `bin/vagrant-provision` to bundle all this up? Put a "caller" script into `puphpet/files/exec-{once|always}/` to get it to run.
-
 @TODO: Add a vagrant shutdown script to automatically call `bin/db-backup`, which will save a zipped. sql file in the shared folder under `backups/`.
 
 
