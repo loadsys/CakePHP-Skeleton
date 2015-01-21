@@ -85,6 +85,7 @@ rm -rf "${DIR_TMP}/${DIR_SKELETON_SEED}/skelbin"
 rm -rf "${DIR_TMP}/${DIR_SKELETON_SEED}/composer.lock"
 mv -f "${DIR_TMP}/${DIR_SKELETON_SEED}/composer-skel.json" "${DIR_TMP}/${DIR_SKELETON_SEED}/composer.json"
 sed -i '' '/^\/composer.lock/d' "${DIR_TMP}/${DIR_SKELETON_SEED}/.gitignore"
+echo 'dummy(__CAKE_PATH__)' > "${DIR_TMP}/${DIR_SKELETON_SEED}/Console/cake.php"
 
 echo "## Creating destination folder: ${DIR_NEW_APP}" >&2
 mkdir -p "${DIR_NEW_APP}"
@@ -94,6 +95,14 @@ echo "## Baking new project." >&2
 echo "   (Ignore any warnings about cache prefix, app/Console and CAKE_CORE_INCLUDE_PATH.)" >&2
 cd `dirname ${DIR_NEW_APP}`
 "${DIR}/bin/cake" bake project --skel "${DIR_TMP}/${DIR_SKELETON_SEED}" "${DIR_NEW_APP}"
+
+# Abort here if the user chose not to continue the bake process.
+if [ "$?" -gt "0" ]; then
+	echo "!! Aborted. User aborted project baking. Stopping." >&2
+	exit 1
+fi
+
+rm -f "${DIR_NEW_APP}/Console/cake.php"
 rm -f "${DIR_TMP}/archive.zip"
 
 # Switch into the new project's root.
@@ -103,7 +112,7 @@ echo "## Cleaning up new README." >&2
 sed -e '1,/---/d;/---/,$p' -i '' "${DIR_NEW_APP}/README.md"
 
 
-#@TODO: Also run a bunch of files, including the project's README.md, through a pass with m4, adding in the repo URL, project name, and anything else we already know about it from this script run.
+#@TODO: Also run a bunch of files, including the project's README.md, through a pass with m4 or sed, replacing in the repo URL, project name, and anything else we already know about from this script run.
 
 #@TODO: Also AT LEAST set the hostname in puphpet/config.yaml to prevent name conflicts in VirtualBox or VMware.
 
