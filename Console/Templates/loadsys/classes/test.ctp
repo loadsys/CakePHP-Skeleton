@@ -63,9 +63,9 @@ class <?php echo $fullClassName; ?>Test extends CakeTestCase {
 	 */
 	public function tearDown() {
 		unset($this-><?php echo $className; ?>);
-
 		parent::tearDown();
 	}
+
 <?php endif; ?>
 <?php if (empty($methods)) {
 	$methods = array('placeholder');
@@ -78,7 +78,14 @@ class <?php echo $fullClassName; ?>Test extends CakeTestCase {
 	 * @return	void
 	 */
 	public function test<?php echo Inflector::camelize($method); ?>() {
+<?php if ($method == 'placeholder'): ?>
+		$this->markTestSkipped('<?php echo $fullClassName; ?> has no methods to test yet.');
+<?php else: ?>
 		$this->markTestIncomplete('test<?php echo Inflector::camelize($method); ?> not implemented.');
+<?php endif; ?>
+<?php if ($type === 'Model'): ?>
+		$dummy = $this-><?php echo $className; ?>->find('first'); // This sometimes "fixes" code coverage reports when there are no actual methods in the Model.
+<?php endif; ?>
 	}
 <?php endforeach; ?>
 }

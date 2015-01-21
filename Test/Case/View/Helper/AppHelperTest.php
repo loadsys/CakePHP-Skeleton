@@ -37,6 +37,6 @@ class AppHelperTest extends CakeTestCase {
 	 * @return void
 	 */
 	public function testIncomplete() {
-		$this->markTestIncomplete('AppHelper has no methods to test.');
+		$this->markTestSkipped('AppHelper has no methods to test.');
 	}
 }

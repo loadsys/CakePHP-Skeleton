@@ -18,6 +18,8 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
+App::uses('BakeTemplateHelper', 'Lib/Loadsys');
+
 echo "<?php\n";
 ?>
 /**
@@ -30,16 +32,6 @@ echo "App::uses('{$plugin}AppModel', '{$pluginPath}Model');\n";
 
 /**
  * <?php echo $name ?> Model
- *
-<?php
-foreach (array('hasOne', 'belongsTo', 'hasMany', 'hasAndBelongsToMany') as $assocType) {
-	if (!empty($associations[$assocType])) {
-		foreach ($associations[$assocType] as $relation) {
-			echo " * @property\t{$relation['className']}\t\${$relation['alias']}\n";
-		}
-	}
-}
-?>
  */
 class <?php echo $name ?> extends <?php echo $plugin; ?>AppModel {
 
@@ -85,8 +77,18 @@ if (!empty($actsAs)): ?>
 	 *
 	 * @var	array
 	 */
-	public $actsAs = array(<?php echo "\n\t"; foreach ($actsAs as $behavior): echo "\t"; var_export($behavior); echo ",\n\t"; endforeach; ?>);
-
+	public $actsAs = array(<?php
+foreach ($actsAs as $behavior => $settings):
+echo "\n\t\t";
+if (is_string($behavior) && is_array($settings)) {
+	echo "'{$behavior}' => " . BakeTemplateHelper::arrayToString($settings, 2);
+} else {
+	echo var_export($settings);
+}
+echo ",\n";
+endforeach;
+?>
+	);
 <?php endif;
 
 if (!empty($validate)):
@@ -114,7 +116,6 @@ if (!empty($validate)):
 endif;
 
 foreach (array('belongsTo', 'hasOne') as $assocType):
-	$typeCount = count($associations[$assocType]);
 	echo "\n\t/**\n\t * $assocType associations\n\t *\n\t * @var\tarray\n\t */";
 	if (!empty($associations[$assocType])):
 		echo "\n\tpublic \$$assocType = array(";
@@ -138,7 +139,6 @@ endforeach;
 
 echo "\n\t/**\n\t * hasMany associations\n\t *\n\t * @var\tarray\n\t */";
 if (!empty($associations['hasMany'])):
-	$belongsToCount = count($associations['hasMany']);
 	echo "\n\tpublic \$hasMany = array(";
 	foreach ($associations['hasMany'] as $i => $relation):
 		$out = "\n\t\t'{$relation['alias']}' => array(\n";
@@ -165,7 +165,6 @@ endif;
 
 echo "\n\t/**\n\t * hasAndBelongsToMany associations\n\t *\n\t * @var\tarray\n\t */";
 if (!empty($associations['hasAndBelongsToMany'])):
-	$habtmCount = count($associations['hasAndBelongsToMany']);
 	echo "\n\tpublic \$hasAndBelongsToMany = array(";
 	foreach ($associations['hasAndBelongsToMany'] as $i => $relation):
 		$out = "\n\t\t'{$relation['alias']}' => array(\n";

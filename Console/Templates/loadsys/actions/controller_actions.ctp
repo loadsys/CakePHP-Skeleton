@@ -18,21 +18,22 @@
 ?>
 
 	/**
-	 * <?php echo $admin ?>index method
+	 * <?php echo $admin; ?>paginate through the <?php echo $currentModelName; ?> records
 	 *
 	 * @return	void
 	 */
 	public function <?php echo $admin ?>index() {
-		$this-><?php echo $currentModelName ?>->recursive = 0;
+		$this->Paginator->settings = array_merge($this->paginate, array(
+		));
 		$this->set('<?php echo $pluralName ?>', $this->Paginator->paginate());
 	}
 
 	/**
-	 * <?php echo $admin ?>view method
+	 * <?php echo $admin; ?>view a single <?php echo $currentModelName; ?> record
 	 *
-	 * @throws	NotFoundException
-	 * @param	string		$id
+	 * @param	string $id the primary key for the <?php echo $currentModelName; ?>
 	 * @return	void
+	 * @throws	NotFoundException If the passed id record does not exist
 	 */
 	public function <?php echo $admin ?>view($id = null) {
 		if (!$this-><?php echo $currentModelName; ?>->exists($id)) {
@@ -44,13 +45,14 @@
 
 <?php $compact = array(); ?>
 	/**
-	 * <?php echo $admin ?>add method
+	 * <?php echo $admin; ?>add a new <?php echo $currentModelName; ?> record
 	 *
 	 * @return	void
 	 */
 	public function <?php echo $admin ?>add() {
 		if ($this->request->is('post')) {
 			$this-><?php echo $currentModelName; ?>->create();
+			//$this->request->data['<?php echo $currentModelName; ?>']['creator_id'] = $this->Auth->user('id');
 			if ($this-><?php echo $currentModelName; ?>->save($this->request->data)) {
 <?php if ($wannaUseSession): ?>
 				$this->Session->setFlash(__('The <?php echo strtolower($singularHumanName); ?> has been saved.'));
@@ -81,17 +83,19 @@
 
 <?php $compact = array(); ?>
 	/**
-	 * <?php echo $admin ?>edit method
+	 * <?php echo $admin; ?>edit a <?php echo $currentModelName; ?> record
 	 *
-	 * @throws	NotFoundException
-	 * @param	string		$id
+	 * @param 	string $id the primary key for the <?php echo $currentModelName; ?> record
 	 * @return	void
+	 * @throws	NotFoundException If the passed id record does not exist
 	 */
 	public function <?php echo $admin; ?>edit($id = null) {
 		if (!$this-><?php echo $currentModelName; ?>->exists($id)) {
 			throw new NotFoundException(__('Invalid <?php echo strtolower($singularHumanName); ?>'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
+			$this->request->data['<?php echo $currentModelName; ?>'][$this-><?php echo $currentModelName; ?>->primaryKey] = $id;
+			//$this->request->data['<?php echo $currentModelName; ?>']['modifier_id'] = $this->Auth->user('id');
 			if ($this-><?php echo $currentModelName; ?>->save($this->request->data)) {
 <?php if ($wannaUseSession): ?>
 				$this->Session->setFlash(__('The <?php echo strtolower($singularHumanName); ?> has been saved.'));
@@ -124,11 +128,11 @@
 	}
 
 	/**
-	 * <?php echo $admin ?>delete method
+	 * delete a <?php echo $currentModelName; ?> record
 	 *
-	 * @throws	NotFoundException
-	 * @param	string		$id
+	 * @param 	string $id the primary key for the <?php echo $currentModelName; ?>
 	 * @return	void
+	 * @throws	NotFoundException If the passed id record does not exist
 	 */
 	public function <?php echo $admin; ?>delete($id = null) {
 		$this-><?php echo $currentModelName; ?>->id = $id;
