@@ -38,4 +38,15 @@ $config = array(
 			'database' => ':memory:', // Or something independently reviewable, like: 'tmp/treetest.sqlite3',
 		),
 	),
+
+	/**
+	 * Vagrant environment hint when debug>0. Sets the admin nav bar
+	 * background color to hint the active APP_ENV. See:
+	 * `LoadsysHtmlHelper::styleForEnv()`.
+	 */
+	'Defaults' => array(
+		'EnvHint' => array(
+			'snippet' => 'background: #ff9999;', // red-ish in development
+		),
+	),
 );
