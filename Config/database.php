@@ -10,8 +10,7 @@
 class DATABASE_CONFIG {
 
 	/**
-	 * Default configuration. Should be suitable for production use when
-	 * no APP_ENV is set. Will be populated by `__construct()` using the
+	 * Default configuration. Will be populated by `__construct()` using the
 	 * value from `Configure::read('Database.default')`.
 	 *
 	 * @access	public
@@ -20,7 +19,7 @@ class DATABASE_CONFIG {
 	public $default = null;
 
 	/**
-	 * Loads catabase connection information from
+	 * Loads database connection information from
 	 * `Configure::read('Database')`, which should be defined in
 	 * `Config/core.php`.
 	 *

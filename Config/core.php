@@ -140,6 +140,10 @@ Configure::write('Defaults', array(
 
 /**
  * Anonymous helper function for constructing consistent email addresses.
+ *
+ * Will still be available in environment-specific configs loaded later,
+ * but overrides to `Defaults.shortname` and `Defaults.domain` defined IN
+ * those files probably won't work correctly.
  */
 $email = function($localAddress, $displayName = false) {
 	$displayName = ($displayName ?: Configure::read('Defaults.short_name'));
@@ -150,15 +154,56 @@ $email = function($localAddress, $displayName = false) {
 /**
  * Email Configuration
  *
- * Either pass the result straight to AppEmail, or unpack a config key in
- * your code like so:
+ * `Transports` is used to populate the Config/email.php class properties.
+ * The entries below will be used in production. Individual settings can
+ * be overridden in core-vagrant, etc. At least a [default] key must be
+ * defined.
  *
- * `list($name, $email) = Configure::read('Email.whatever');`
+ * To use Address slugs, either pass the result straight to AppEmail, or
+ * unpack a config key in your code like so:
+ *
+ * `list($name, $email) = Configure::read('Email.Address.slugname');`
  */
 Configure::write('Email', array(
-	'noreply' => $email('no-reply'),
-	'support' => $email('support'),
-	'contact' => $email('info'),
+	'Address' => array(
+		'noreply' => $email('no-reply'),
+		'support' => $email('support'),
+		'contact' => $email('info'),
+	),
+	'Transports' => array(
+		'default' => array(
+				'transport' => 'Mail', // Use web server's local mail routing.
+				'from' => $email('no-reply'),
+				'charset' => 'utf-8',
+				'headerCharset' => 'utf-8',
+				'emailFormat' => 'html',
+				'log' => false,
+
+				//'sender' => null,
+				//'to' => null,
+				//'cc' => null,
+				//'bcc' => null,
+				//'replyTo' => null,
+				//'readReceipt' => null,
+				//'returnPath' => null,
+				//'messageId' => true,
+				//'subject' => null,
+				//'message' => null,
+				//'headers' => null,
+				//'viewRender' => null,
+				//'template' => false,
+				//'layout' => false,
+				//'viewVars' => null,
+				//'attachments' => null,
+				//'host' => 'localhost',
+				//'port' => 25,
+				//'timeout' => 30,
+				//'username' => 'user',
+				//'password' => 'secret',
+				//'client' => null,
+			),
+		),
+	),
 ));
 
 /**

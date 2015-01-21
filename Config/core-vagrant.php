@@ -54,6 +54,19 @@ $config = array(
 	),
 
 	/**
+	 * In development, only dump emails to the log file.
+	 * @TODO: This should probably be updated to use Mailcatcher provided by puphpet.
+	 */
+	'Email' => array(
+		'Transports' => array(
+			'default' => array(
+				'transport' => 'Debug',
+				'log' => true,
+			),
+		),
+	),
+
+	/**
 	 * CDN Asset Configuration.
 	 *
 	 * Use local, in-repo, uncompiled files in development.
