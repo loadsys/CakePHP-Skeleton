@@ -131,6 +131,10 @@ Configure::write('Defaults', array(
 	'domain' => 'snfi.org', //@TODO: Set the app's default domain name (used for email addresses and suitable for generated docs, like PDFs.)
 	'meta_description' => 'This is a fresh baked Loadsys CakePHP site skeleton.', //@TODO: Set the app's default meta description.
 	'meta_keywords' => 'loadsys, cakephp, rapid web development', //@TODO: Set the app's default meta keywords.
+	'EnvHint' => array(
+		'format' => '<style> .navbar-fixed-top { %s } </style>', // Injected into your layout with `$this->Html->styleForEnv()`
+		'snippet' => '', // Blank in production, and when debug=0.
+	),
 ));
 
 /**

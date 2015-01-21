@@ -26,4 +26,15 @@ $config = array(
 			'database' => '@TODO: Enter staging DB database.',
 		),
 	),
+
+	/**
+	 * Staging environment hint when debug>0. Sets the admin nav bar
+	 * background color to hint the active APP_ENV. See:
+	 * `LoadsysHtmlHelper::styleForEnv()`.
+	 */
+	'Defaults' => array(
+		'EnvHint' => array(
+			'snippet' => 'background: #ff9999;', // yellow-ish in staging
+		),
+	),
 );

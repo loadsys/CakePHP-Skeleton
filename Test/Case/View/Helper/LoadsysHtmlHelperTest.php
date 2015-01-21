@@ -176,69 +176,55 @@ class LoadsysHtmlHelperTest extends CakeTestCase {
 	}
 
 	/**
-	 * dataProvider for testStyleForEnv method
+	 * Provide a variety of [debug level, sprintf format string, snippet,
+	 * expected string, assertion message] sets to testEnvHint().
 	 *
 	 * @return array
 	 */
-	public function provideStyleForEnvArgs() {
+	public function provideEnvHintArgs() {
 		return array(
 			array(
-				'vagrant',
-				'%a#ff9999%A',
-				'Vagrant env should produce a red background.',
+				0, 'test(%s)', 'vagrant', // debug, format, snippet
+				'', // expected
+				'When debug is disabled, expect empty string.', // msg
 			),
 			array(
-				'dev',
-				'%a#ff9999%A',
-				'Dev env should produce a red background.',
+				2, 'test(%s)', 'vagrant',
+				'test(vagrant)',
+				'When debug is enabled, expect a formatted output string.',
 			),
 			array(
-				'staging',
-				'%a#e5c627%A',
-				'Staging env should produce a yellow background.',
-			),
-			array(
-				'production',
+				2, 'test(%s)', '',
 				'',
-				'Production env should produce no special output.',
+				'When snippet string is empty, expect empty string.',
 			),
 			array(
-				'other',
+				2, '', 'vagrant',
 				'',
-				'An unidentified environment should produce proudction output (none).',
+				'When fomat string is empty, expect empty string.',
 			),
 		);
 	}
 
 	/**
-	 * testStyleForEnv
+	 * testEnvHint
 	 *
-	 * @dataProvider provideStyleForEnvArgs
+	 * @dataProvider provideEnvHintArgs
+	 * @param int $debug The Configure(debug) level to set before the test.
+	 * @param string $format The Configure(Default.EnvHint.format) to set before the test.
+	 * @param string $snippet The Configure(Default.EnvHint.style) to set before the test.
+	 * @param string $expected The expected output string.
+	 * @param string $msg Optional phpunit assertion failure message.
 	 * @return void
 	 */
-	public function testStyleForEnv($input, $format, $msg = '') {
-		$this->assertStringMatchesFormat(
-			$format,
-			$this->Helper->styleForEnv($input),
+	public function testEnvHint($debug, $format, $snippet, $expected, $msg = '') {
+		Configure::write('debug', $debug);
+		Configure::write('Defaults.EnvHint.format', $format);
+		Configure::write('Defaults.EnvHint.snippet', $snippet);
+		$this->assertEquals(
+			$expected,
+			$this->Helper->envHint(),
 			$msg
 		);
-	}
-
-	/**
-	 * Verify that styleForEnv() attempts to use $_SERVER[APP_ENV] when
-	 * non explicitly provided.
-	 *
-	 * @return void
-	 */
-	public function testStyleForEnvWithNullEnv() {
-		$envBackup = $_SERVER['APP_ENV'];
-
-		$_SERVER['APP_ENV'] = 'special';
-		$this->assertEmpty(
-			$this->Helper->styleForEnv(),
-			'Passing no argument should force styleForEnv() to read $_SERVER[APP_ENV].'
-		);
-
-		$_SERVER['APP_ENV'] = $envBackup;
 	}
 }

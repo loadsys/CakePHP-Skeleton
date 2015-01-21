@@ -71,44 +71,24 @@ class LoadsysHtmlHelper extends HtmlHelper {
 	}
 
 	/**
-	 * styleForEnv
+	 * envHint
 	 *
-	 * Spits out additional CSS <style> information for inclusion in a
-	 * Layout's <head> to override default styles based on the current
-	 * environment. (Changing the background color in staging, for example.)
-	 * See Config/env_vars.txt and Config/bootstrap.php for more. Debug MUST
-	 * be turned on for this method to return any results to prevent overrides
-	 * from affecting production environments (where debug takes precedence
-	 * over the environment variable.)
+	 * Spits out additional HTML or CSS information for inclusion in a
+	 * Layout to override default styles based on the current environment.
+	 * (Changing the background color in staging, for example.) See
+	 * Config/core.php for more. Debug MUST be turned on for this method
+	 * to return any results to prevent overrides from affecting production
+	 * environments (where the debug level takes precedence over the
+	 * environment setting.)
 	 *
-	 * @param  string	$env	A string "environment" name. Typically 'prod', 'staging' or 'dev' as obtained from Configure::read('Environment.LOADSYS_ENVIRONMENT').
-	 * @return string           A pre-formatted <style></style> tag with the appropriate overrides for the $env.
+	 * @return string           A pre-formatted HTML snippet with the appropriate style overrides for the current APP_ENV.
 	 */
-	public function styleForEnv($env = null) {
-		$format = '<style> .navbar-fixed-top { %s } </style>';
+	public function envHint() {
+		$format = (string)Configure::read('Defaults.EnvHint.format');
+		$snippet = (string)Configure::read('Defaults.EnvHint.snippet');
 
-		if (is_null($env) && isset($_SERVER['APP_ENV'])) {
-			$env = $_SERVER['APP_ENV'];
-		}
-
-		switch ($env) {
-			case 'vagrant':
-			case 'dev':
-				$css = 'background: #ff9999;';
-				break;
-
-			case 'staging':
-				$css = 'background: #e5c627;';
-				break;
-
-			case 'prod':
-			default:
-				$css = '';
-				break;
-		}
-
-		if (!empty($css) && Configure::read('debug') > 0) {
-			return sprintf($format, $css);
+		if (!empty($snippet) && Configure::read('debug') > 0) {
+			return sprintf($format, $snippet);
 		} else {
 			return '';
 		}
