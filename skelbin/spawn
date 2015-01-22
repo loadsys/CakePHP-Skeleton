@@ -140,7 +140,6 @@ rm -rf "${DIR_TMP}/${DIR_SKELETON_SEED}"
 
 echo '' >&2
 echo "## Done. You should:" >&2
-echo "##    - Run 'Console/cake schema generate -f' (from inside vagrant)." >&2
 echo "##    - Add project information to the README.md file." >&2
 echo "##    - Edit VM settings in puphpet/config.yaml file." >&2
 echo "##    - Commit and push everything to the remote repo." >&2

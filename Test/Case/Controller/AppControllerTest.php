@@ -154,6 +154,7 @@ class AppControllerTest extends ControllerTestCase {
 	 * @return void
 	 */
 	public function testEmailFactoryConfigPassed() {
+		Configure::write('Email.Transports.default.from', 'phpunit@loadsys.com');
 		$App = $this->generate('TestApp');
 		$this->assertInstanceOf("AppEmail", $App->emailFactory('default'));
 	}

@@ -29,6 +29,6 @@ class BakeTemplateHelperTest extends CakeTestCase {
 	 * @return void
 	 */
 	public function testArrayToString() {
-		$this->markTestIncomplete('testArrayToString not implemented.');
+		$this->markTestIncomplete('@TODO: testArrayToString not implemented.');
 	}
 }
