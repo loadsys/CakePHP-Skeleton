@@ -39,7 +39,7 @@ class <?php echo $name ?> extends <?php echo $plugin; ?>AppModel {
 	/**
 	 * Use database config
 	 *
-	 * @var	string
+	 * @var string
 	 */
 	public $useDbConfig = '<?php echo $useDbConfig; ?>';
 
@@ -55,7 +55,7 @@ if ($primaryKey !== 'id'): ?>
 	/**
 	 * Primary key field
 	 *
-	 * @var	string
+	 * @var string
 	 */
 	public $primaryKey = '<?php echo $primaryKey; ?>';
 
@@ -65,7 +65,7 @@ if ($displayField): ?>
 	/**
 	 * Display field
 	 *
-	 * @var	string
+	 * @var string
 	 */
 	public $displayField = '<?php echo $displayField; ?>';
 
@@ -75,7 +75,7 @@ if (!empty($actsAs)): ?>
 	/**
 	 * Behaviors
 	 *
-	 * @var	array
+	 * @var array
 	 */
 	public $actsAs = array(<?php
 foreach ($actsAs as $behavior => $settings):
@@ -93,7 +93,7 @@ endforeach;
 
 if (!empty($validate)):
 	$firstRule = true;
-	echo "\t/**\n\t * Validation rules\n\t *\n\t * @var\tarray\n\t */\n";
+	echo "\t/**\n\t * Validation rules\n\t *\n\t * @var array\n\t */\n";
 	echo "\tpublic \$validate = array(\n";
 	foreach ($validate as $field => $validations):
 		echo "\t\t'$field' => array(\n";
@@ -116,7 +116,7 @@ if (!empty($validate)):
 endif;
 
 foreach (array('belongsTo', 'hasOne') as $assocType):
-	echo "\n\t/**\n\t * $assocType associations\n\t *\n\t * @var\tarray\n\t */";
+	echo "\n\t/**\n\t * $assocType associations\n\t *\n\t * @var array\n\t */";
 	if (!empty($associations[$assocType])):
 		echo "\n\tpublic \$$assocType = array(";
 		foreach ($associations[$assocType] as $i => $relation):
@@ -137,7 +137,7 @@ foreach (array('belongsTo', 'hasOne') as $assocType):
 	endif;
 endforeach;
 
-echo "\n\t/**\n\t * hasMany associations\n\t *\n\t * @var\tarray\n\t */";
+echo "\n\t/**\n\t * hasMany associations\n\t *\n\t * @var array\n\t */";
 if (!empty($associations['hasMany'])):
 	echo "\n\tpublic \$hasMany = array(";
 	foreach ($associations['hasMany'] as $i => $relation):
@@ -163,7 +163,7 @@ else:
 	echo "\n\tpublic \$hasMany = array();\n";
 endif;
 
-echo "\n\t/**\n\t * hasAndBelongsToMany associations\n\t *\n\t * @var\tarray\n\t */";
+echo "\n\t/**\n\t * hasAndBelongsToMany associations\n\t *\n\t * @var array\n\t */";
 if (!empty($associations['hasAndBelongsToMany'])):
 	echo "\n\tpublic \$hasAndBelongsToMany = array(";
 	foreach ($associations['hasAndBelongsToMany'] as $i => $relation):

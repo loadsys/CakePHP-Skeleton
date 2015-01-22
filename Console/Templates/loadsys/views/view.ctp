@@ -1,5 +1,7 @@
 <?php
 /**
+ *
+ *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -14,8 +16,36 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 ?>
+<?php
+	$controllerUrl = Inflector::underscore($pluralVar);
+	// Stub in some breadcrumbs.
+	if (strpos($action, 'add') !== false) {
+		$actionName = "'add'";
+	} else {
+		$actionName = "";
+	}
+	echo "<?php \$this->set('breadcrumbs', array(\n";
+	echo "\t'{$pluralHumanName}' => array('controller' => '{$controllerUrl}', 'action' => 'index'),\n";
+	echo "\t'View' => array('controller' => '{$controllerUrl}', 'action' => 'view', \${$singularVar}['{$modelClass}']['{$primaryKey}']),\n";
+	echo ")); ?>\n";
+?>
+
 <div class="<?php echo $pluralVar; ?> view">
-<h2><?php echo "<?php echo __('{$singularHumanName}'); ?>"; ?></h2>
+	<div class="pull-right">
+		<?php
+		echo "<?php echo \$this->TB->buttonLink(__('Edit'),\n";
+		echo "\t\t\tarray('controller' => '{$controllerUrl}', 'action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}']),\n";
+		echo "\t\t\t'info'\n";
+		echo "\t\t); ?>\n";
+
+		echo "\t\t<?php echo \$this->TB->buttonPost(__('Delete'),\n";
+		echo "\t\t\tarray('controller' => '{$controllerUrl}', 'action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']),\n";
+		echo "\t\t\t'danger',\n";
+		echo "\t\t\t__('Are you sure you want to delete # %s?', \${$singularVar}['{$modelClass}']['{$primaryKey}'])\n";
+		echo "\t\t); ?>\n";
+		?>
+	</div>
+	<h2><?php echo "<?php echo __('{$singularHumanName}'); ?>"; ?></h2>
 	<dl>
 <?php
 foreach ($fields as $field) {
@@ -38,14 +68,11 @@ foreach ($fields as $field) {
 ?>
 	</dl>
 </div>
+<?php if (count($associations)): ?>
 <div class="actions">
 	<h3><?php echo "<?php echo __('Actions'); ?>"; ?></h3>
 	<ul>
 <?php
-	echo "\t\t<li><?php echo \$this->Html->link(__('Edit " . $singularHumanName ."'), array('action' => 'edit', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?> </li>\n";
-	echo "\t\t<li><?php echo \$this->Form->postLink(__('Delete " . $singularHumanName . "'), array('action' => 'delete', \${$singularVar}['{$modelClass}']['{$primaryKey}']), array(), __('Are you sure you want to delete # %s?', \${$singularVar}['{$modelClass}']['{$primaryKey}'])); ?> </li>\n";
-	echo "\t\t<li><?php echo \$this->Html->link(__('List " . $pluralHumanName . "'), array('action' => 'index')); ?> </li>\n";
-	echo "\t\t<li><?php echo \$this->Html->link(__('New " . $singularHumanName . "'), array('action' => 'add')); ?> </li>\n";
 
 	$done = array();
 	foreach ($associations as $type => $data) {
@@ -60,6 +87,7 @@ foreach ($fields as $field) {
 ?>
 	</ul>
 </div>
+<?php endif; ?>
 <?php
 if (!empty($associations['hasOne'])) :
 	foreach ($associations['hasOne'] as $alias => $details): ?>
@@ -98,7 +126,7 @@ foreach ($relations as $alias => $details):
 <div class="related">
 	<h3><?php echo "<?php echo __('Related " . $otherPluralHumanName . "'); ?>"; ?></h3>
 	<?php echo "<?php if (!empty(\${$singularVar}['{$alias}'])): ?>\n"; ?>
-	<table cellpadding = "0" cellspacing = "0">
+	<table class="table table-striped table-hover table-condensed">
 	<tr>
 <?php
 			foreach ($details['fields'] as $field) {
@@ -117,7 +145,7 @@ echo "\t<?php foreach (\${$singularVar}['{$alias}'] as \${$otherSingularVar}): ?
 			echo "\t\t\t<td class=\"actions\">\n";
 			echo "\t\t\t\t<?php echo \$this->Html->link(__('View'), array('controller' => '{$details['controller']}', 'action' => 'view', \${$otherSingularVar}['{$details['primaryKey']}'])); ?>\n";
 			echo "\t\t\t\t<?php echo \$this->Html->link(__('Edit'), array('controller' => '{$details['controller']}', 'action' => 'edit', \${$otherSingularVar}['{$details['primaryKey']}'])); ?>\n";
-			echo "\t\t\t\t<?php echo \$this->Form->postLink(__('Delete'), array('controller' => '{$details['controller']}', 'action' => 'delete', \${$otherSingularVar}['{$details['primaryKey']}']), array(), __('Are you sure you want to delete # %s?', \${$otherSingularVar}['{$details['primaryKey']}'])); ?>\n";
+			echo "\t\t\t\t<?php echo \$this->Form->postLink(__('Delete'), array('controller' => '{$details['controller']}', 'action' => 'delete', \${$otherSingularVar}['{$details['primaryKey']}']), null, __('Are you sure you want to delete # %s?', \${$otherSingularVar}['{$details['primaryKey']}'])); ?>\n";
 			echo "\t\t\t</td>\n";
 		echo "\t\t</tr>\n";
 

@@ -36,7 +36,7 @@ class <?php echo $fullClassName; ?>Test extends CakeTestCase {
 	/**
 	 * Fixtures
 	 *
-	 * @var	array
+	 * @var array
 	 */
 	public $fixtures = array(
 		'<?php echo join("',\n\t\t'", $fixtures); ?>',
@@ -47,7 +47,7 @@ class <?php echo $fullClassName; ?>Test extends CakeTestCase {
 	/**
 	 * setUp method
 	 *
-	 * @return	void
+	 * @return void
 	 */
 	public function setUp() {
 		parent::setUp();
@@ -59,7 +59,7 @@ class <?php echo $fullClassName; ?>Test extends CakeTestCase {
 	/**
 	 * tearDown method
 	 *
-	 * @return	void
+	 * @return void
 	 */
 	public function tearDown() {
 		unset($this-><?php echo $className; ?>);
@@ -75,13 +75,13 @@ class <?php echo $fullClassName; ?>Test extends CakeTestCase {
 	/**
 	 * test<?php echo Inflector::camelize($method); ?> method
 	 *
-	 * @return	void
+	 * @return void
 	 */
 	public function test<?php echo Inflector::camelize($method); ?>() {
 <?php if ($method == 'placeholder'): ?>
 		$this->markTestSkipped('<?php echo $fullClassName; ?> has no methods to test yet.');
 <?php else: ?>
-		$this->markTestIncomplete('test<?php echo Inflector::camelize($method); ?> not implemented.');
+		$this->markTestIncomplete('@<?php echo 'TO' . 'DO'; ?>: test<?php echo Inflector::camelize($method); ?> not implemented.');
 <?php endif; ?>
 <?php if ($type === 'Model'): ?>
 		$dummy = $this-><?php echo $className; ?>->find('first'); // This sometimes "fixes" code coverage reports when there are no actual methods in the Model.

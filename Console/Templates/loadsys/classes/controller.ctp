@@ -30,18 +30,6 @@ echo "App::uses('{$plugin}AppController', '{$pluginPath}Controller');\n";
 
 /**
  * <?php echo $controllerName; ?> Controller
- *
-<?php
-if (!$isScaffold) {
-	$defaultModel = Inflector::singularize($controllerName);
-	echo " * @property\t{$defaultModel}\t\${$defaultModel}\n";
-	if (!empty($components)) {
-		foreach ($components as $component) {
-			echo " * @property\t{$component}Component\t\${$component}\n";
-		}
-	}
-}
-?>
  */
 class <?php echo $controllerName; ?>Controller extends <?php echo $plugin; ?>AppController {
 
