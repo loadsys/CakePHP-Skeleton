@@ -68,24 +68,64 @@
 	</div>
 <?php endif; ?>
 	<h2><?php printf("<?php echo __('%s %s'); ?>", Inflector::humanize($action), $singularHumanName); ?></h2>
-<?php echo "\t<?php echo \$this->Form->create(); ?>\n"; ?>
+<?php
+	echo "\t<?php echo \$this->Form->create('{$singularHumanName}', array(\n";
+	echo "\t\t'class' => 'form-horizontal',\n";
+	echo "\t\t'inputDefaults' => array(\n";
+	echo "\t\t\t'div' => array(\n";
+	echo "\t\t\t\t'class' => 'form-group',\n";
+	echo "\t\t\t),\n";
+	echo "\t\t\t'label' => array(\n";
+	echo "\t\t\t\t'class' => 'col-sm-2 control-label',\n";
+	echo "\t\t\t),\n";
+	echo "\t\t\t'class' => 'form-control',\n";
+	echo "\t\t\t'between' => '<div class=\"col-sm-10\">',\n";
+	echo "\t\t\t'after' => '</div>',\n";
+	echo "\t\t\t'error' => array(\n";
+	echo "\t\t\t\t'class' => 'text-danger',\n";
+	echo "\t\t\t),\n";
+	echo "\t\t),\n";
+	echo "\t)); ?>\n";
+?>
 <?php
 		echo "\t<?php\n";
+
+		echo "\t\t// Use the following for checkboxes and radios:\n";
+		echo "\t\t\t// 'format' => array('before', 'between', 'input', 'label', 'after', 'error'),\n";
+		echo "\t\t\t// 'between' => '<div class=\"col-sm-offset-2 col-sm-10\"><div class=\"checkbox\"><label>',\n";
+		echo "\t\t\t// 'after' => '</label></div></div>',\n";
+		echo "\t\t\t// 'label' => array('class' => false),\n";
+		echo "\t\t\t// 'class' => false,\n";
+		echo "\n";
+
 		foreach ($fields as $field) {
 			if (strpos($action, 'add') !== false && $field == $primaryKey) {
 				continue;
 			} elseif (!in_array($field, array('created', 'modified', 'updated', 'creator_id', 'modifier_id'))) {
-				echo "\t\techo \$this->Form->input('{$field}');\n";
+				echo "\t\techo \$this->Form->input('{$field}', array(\n";
+				echo "\t\t\t//'type' => 'text',\n";
+				echo "\t\t\t//'label' => '',\n";
+				echo "\t\t));\n";
 			}
 		}
 		if (!empty($associations['hasAndBelongsToMany'])) {
 			foreach ($associations['hasAndBelongsToMany'] as $assocName => $assocData) {
-				echo "\t\techo \$this->Form->input('{$assocName}');\n";
+				echo "\t\techo \$this->Form->input('{$assocName}', array(\n";
+				echo "\t\t\t//'type' => 'text',\n";
+				echo "\t\t\t//'label' => '',\n";
+				echo "\t\t));\n";
 			}
 		}
 		echo "\t?>\n";
 ?>
 	<?php
-		echo "<?php echo \$this->Form->end(__('Save')); ?>\n";
+		$verb = (strpos($action, 'add') !== false ? 'Create' : 'Save');
+		echo "<?php echo \$this->Form->end(array(\n";
+		echo "\t\t'label' => __('{$verb}'),\n";
+		echo "\t\t'class' => 'btn btn-default',\n";
+		echo "\t\t'div' => array(\n";
+		echo "\t\t\t'class' => 'control-group col-sm-offset-2 col-sm-10',\n";
+		echo "\t\t),\n";
+		echo "\t)); ?>\n";
 	?>
 </div>

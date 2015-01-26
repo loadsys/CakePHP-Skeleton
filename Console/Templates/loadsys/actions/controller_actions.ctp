@@ -31,7 +31,7 @@
 	/**
 	 * <?php echo $admin; ?>view a single <?php echo $currentModelName; ?> record
 	 *
-	 * @param string $id the primary key for the <?php echo $currentModelName; ?>
+	 * @param string $id the primary key for the <?php echo $currentModelName; ?> record
 	 * @return void
 	 * @throws NotFoundException If the passed id record does not exist
 	 */
@@ -130,7 +130,7 @@
 	/**
 	 * Delete a <?php echo $currentModelName; ?> record
 	 *
-	 * @param string $id the primary key for the <?php echo $currentModelName; ?>
+	 * @param string $id the primary key for the <?php echo $currentModelName; ?> record
 	 * @return void
 	 * @throws NotFoundException If the passed id record does not exist
 	 */

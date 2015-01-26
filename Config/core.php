@@ -12,23 +12,21 @@ Configure::write('debug', 0);
 Configure::write('Error', array(
 	'handler' => 'ErrorHandler::handleError',
 	'level' => E_ALL & ~E_DEPRECATED,
-	'trace' => true
+	'trace' => true,
 ));
 
 Configure::write('Exception', array(
 	'handler' => 'ErrorHandler::handleException',
 	'renderer' => 'ExceptionRenderer',
-	'log' => true
+	'log' => true,
 ));
 
-//Configure::write('App', array(
-	//'encoding' => 'UTF-8',
-	//'baseUrl' => env('SCRIPT_NAME'),
-	//'fullBaseUrl' => 'http://example.com',
-	//'imageBaseUrl' => 'img/',
-	//'cssBaseUrl' => 'css/',
-	//'jsBaseUrl' => 'js/',
-//));
+Configure::write('App.encoding', 'UTF-8');
+// Configure::write('App.baseUrl', env('SCRIPT_NAME'));
+// Configure::write('App.fullBaseUrl', 'http://example.com');
+// Configure::write('App.imageBaseUrl', 'img/');
+// Configure::write('App.cssBaseUrl', 'css/');
+// Configure::write('App.jsBaseUrl', 'js/');
 
 Configure::write('Routing.prefixes', array('admin'));
 
