@@ -35,6 +35,7 @@ class AppEmailTest extends CakeTestCase {
 	 * @return void
 	 */
 	public function testSendExample() {
+		Configure::write('Email.Transports.default.from', 'phpunit@loadsys.com');
 		$recipients = array();
 		$vars = array();
 		$this->Email->expects($this->once())
@@ -67,6 +68,6 @@ class AppEmailTest extends CakeTestCase {
 			'Example Email',
 			$this->Email->subject(),
 			'The subject must match the one defined in sendExample().'
-		);		
+		);
 	}
 }

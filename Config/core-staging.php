@@ -42,6 +42,18 @@ $config = array(
 	),
 
 	/**
+	 * On staging, use the web server's local mail config, but still log.
+	 */
+	'Email' => array(
+		'Transports' => array(
+			'default' => array(
+				'transport' => 'Mail',
+				'log' => true,
+			),
+		),
+	),
+
+	/**
 	 * CDN Asset Configuration.
 	 *
 	 * Use local, in-repo, uncompiled files in staging.

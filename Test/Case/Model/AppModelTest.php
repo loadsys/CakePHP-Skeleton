@@ -407,6 +407,7 @@ class AppModelTest extends CakeTestCase {
 	 * @return void
 	 */
 	public function testEmailFactoryConfigPassed() {
+		Configure::write('Email.Transports.default.from', 'phpunit@loadsys.com');
 		$Model = new TestAppModel();
 		$this->assertInstanceOf("AppEmail", $Model->emailFactory('default'));
 	}

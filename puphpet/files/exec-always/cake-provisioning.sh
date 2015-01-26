@@ -10,8 +10,13 @@ bin/clear-cache
 # Store the previous database contents before running schema/data updates.
 bin/db-backup
 
-# Set up the DB with the latest schema.
+# Set up the DB with the _latest_ schema.
 bin/migrations
+
+# Populate a schema.php file if one does not already exist (fresh skeleton spawn).
+if [ ! -s "./Config/Schema/schema.php" ]; then
+	bin/cake schema generate -f
+fi
 
 # Populate the latest set of development data from the seeds.
 if [ -d "./Plugin/Seeds/" ]; then

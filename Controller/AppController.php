@@ -39,7 +39,7 @@ class AppController extends Controller {
 	 * @var array
 	 */
 	public $components = array(
-		'Session', // => array('className' => 'AppSession'),
+		'Session' => array('className' => 'AppSession'),
 		'DebugKit.Toolbar',
 		'Paginator',
 		'Auth' => array(
@@ -79,6 +79,7 @@ class AppController extends Controller {
 		'Session',
 		'Html' => array('className' => 'LoadsysHtml'),
 		'TB' => array('className' => 'TwitterBootstrap'),
+		'Paginator' => array('className' => 'AppPaginator'),
 	);
 
 	/**

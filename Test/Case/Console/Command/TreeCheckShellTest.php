@@ -60,7 +60,7 @@ class TreeCheckShellTest extends ShellTestCase {
 	 * @return void
 	 */
 	public function testStartup() {
-		$this->markTestIncomplete('testStartup not implemented. (Might not even be feasible.)');
+		$this->markTestIncomplete('@TODO: testStartup not implemented. (Might not even be feasible.)');
 	}
 
 	/**
@@ -69,7 +69,7 @@ class TreeCheckShellTest extends ShellTestCase {
 	 * @return void
 	 */
 	public function testMain() {
-		$this->markTestIncomplete('testMain not implemented.');
+		$this->markTestIncomplete('@TODO: testMain not implemented.');
 	}
 
 	/**
@@ -91,7 +91,7 @@ class TreeCheckShellTest extends ShellTestCase {
 	 * @return void
 	 */
 	public function testLoadRecordsToModel() {
-		$this->markTestIncomplete('testLoadRecordsToModel not implemented.');
+		$this->markTestIncomplete('@TODO: testLoadRecordsToModel not implemented.');
 	}
 
 	/**
@@ -100,7 +100,7 @@ class TreeCheckShellTest extends ShellTestCase {
 	 * @return void
 	 */
 	public function testRepairTree() {
-		$this->markTestIncomplete('testRepairTree not implemented.');
+		$this->markTestIncomplete('@TODO: testRepairTree not implemented.');
 	}
 
 	/**
@@ -109,7 +109,7 @@ class TreeCheckShellTest extends ShellTestCase {
 	 * @return void
 	 */
 	public function testPrintTree() {
-		$this->markTestIncomplete('testPrintTree not implemented.');
+		$this->markTestIncomplete('@TODO: testPrintTree not implemented.');
 	}
 
 	/**
@@ -118,6 +118,6 @@ class TreeCheckShellTest extends ShellTestCase {
 	 * @return void
 	 */
 	public function testPrintLine() {
-		$this->markTestIncomplete('testPrintLine not implemented.');
+		$this->markTestIncomplete('@TODO: testPrintLine not implemented.');
 	}
 }

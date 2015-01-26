@@ -21,7 +21,13 @@
 				<li>
 					<?php echo $this->Html->link(
 						__('About'),
-						UrlRef::get('ContentPage', 0)  //@TODO
+						array(
+							'plugin' => false,
+							'controller' => 'pages',
+							'action' => 'display',
+							'about',
+							'admin' => false,
+						)
 					); ?>
 				</li>
 				<li class="dropdown">
