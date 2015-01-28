@@ -1,6 +1,5 @@
 /vendor/*
 /config/app.php
-/logs/*
 
 # Puphpet / Vagrant ignored files
 /.vagrant/
