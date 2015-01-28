@@ -1,5 +1,8 @@
 # Loadsys Cake Skeleton #
 
+**DEPRECATION WARNING**: _The Cake 2.x version of this repo is now in "legacy" mode. The `cake-2.x` branch remains available for reference, but probably won't get updated with any new features as of January 2015. The `master` branch now contains active Cake 3.0 compatible skeleton development, using `composer create-project` as the delivery mechanism._
+
+
 This is the only section that applies to *using* this repo. The rest of this file is meant to be a template for the destination project. This whole section should be removed from the document once the skeleton has been copied into the target project following the instructions below.
 
 ## Skeleton Usage ##
