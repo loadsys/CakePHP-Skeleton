@@ -68,10 +68,15 @@ try {
     die($e->getMessage() . "\n");
 }
 
-// Load an environment local configuration file.
-// You can use a file like app_local.php to provide local overrides to your
-// shared configuration.
-//Configure::load('app_local', 'default');
+/**
+ * Load the environment config file and the local config file.
+ */
+try {
+    Configure::load('app-' . env('APP_ENV'), 'default');
+    Configure::load('app-local', 'default');
+} catch (\Exception $e) {
+    die($e->getMessage() . "\n");
+}
 
 // When debug = false the metadata cache should last
 // for a very very long time, as we don't want

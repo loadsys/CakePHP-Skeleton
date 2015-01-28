@@ -2,3 +2,7 @@
 /config/app.php
 /tmp/*
 /logs/*
+
+# Puphpet / Vagrant ignored files
+/.vagrant/
+/puphpet/files/dot/ssh/*id_rsa*
