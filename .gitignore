@@ -1,5 +1,25 @@
+# Project-Specific Ignores
+
+# Composer Dependencies
 /vendor/*
 
-# Puphpet / Vagrant ignored files
+# Puphpet and Vagrant ignored files
 /.vagrant/
 /puphpet/files/dot/ssh/*id_rsa*
+
+# Backups Folder
+/backups
+
+# OS X
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
