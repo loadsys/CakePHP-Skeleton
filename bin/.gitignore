@@ -1,0 +1,9 @@
+# Remember Cake Shells
+!.gitignore
+!.gitkeep
+/!cake
+/!cake.bat
+/!cake.php
+
+# Ignore everything else in the /bin folder
+/*
