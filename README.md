@@ -1,15 +1,15 @@
-# CakePHP Application Skeleton
+# Loadsys CakePHP 3.x App Skeleton
 
 A skeleton for creating applications with [CakePHP](http://cakephp.org) 3.0. (If you're looking
 for a 2.x compatible version you'll want to check out the
 [cake-2.x](https://github.com/loadsys/CakePHP-Skeleton/tree/cake-2.x) branch.)
 
-:warning: This is an unstable repository and should be treated as an alpha.
+:warning: This is an unstable repository and should be treated as alpha quality.
 
 :warning: This is the _Skeleton's_ Readme! To edit the README that is bundled with new projects, open `README.md.template`.
 
 
-## Requirements for working on the Skeleton
+## Requirements for Using the Skeleton
 
 * composer installed on your development machine and accessible globally as `composer`.
 * git
