@@ -4,10 +4,19 @@
 # changes you want to test to a git branch! You MUST name that branch
 # as the first argument and the destination path to set up the fresh
 # copy into as the second.
+#
+# Usage:
+#  - Place this script in your package's root directory and make it executable.
+#  - Set the PACKAGE_NAME variable below to match your composer.json's `name`.
+#  - Make changes to your package and commit them to a git branch.
+#  - Run `./composer-create-project-test.sh your-branch-name /target/dir`
+#  - The new copy of your project will be in /target/dir.
+
 
 # Capture command line args, or set defaults.
 BRANCH_NAME=${1:-master}
 DEST_DIR=${2:-~/Desktop/newapp}
+PACKAGE_NAME=loadsys/skeleton
 
 # Warn the dev if they have uncommitted changes since they won't
 # be included in the spawned project.
@@ -26,10 +35,10 @@ fi
 
 # Warn if the destination dir is non-empty, and offer to delete it.
 # Composer will fail if the directory is not empty.
-if [ "$(ls -A $DIR)" ]; then
+if [ -d "${DEST_DIR}" ] && [ "$(ls -A "${DEST_DIR}")" ]; then
 	echo "## The destination directory \`${DEST_DIR}\` is not empty."
 	while true; do
-		read -p "## Do you want to delete it and continue? [Y/n]: " yn
+		read -p "## Do you want to DELETE it and continue? [Y/n]: " yn
 		case $yn in
 			[Nn]* ) exit;;
 			[Yy]* ) rm -rf "${DEST_DIR}"; break;;
@@ -42,9 +51,9 @@ fi
 cat <<EOD > packages.json
 {
   "packages": {
-    "loadsys/skeleton": {
+    "${PACKAGE_NAME}": {
       "dev-master": {
-        "name": "loadsys/skeleton",
+        "name": "${PACKAGE_NAME}",
         "version": "dev-$BRANCH_NAME",
         "source": {
           "url": "./",
@@ -59,7 +68,7 @@ cat <<EOD > packages.json
 EOD
 
 # Execute the proper command.
-composer create-project --repository-url=./packages.json loadsys/skeleton "${DEST_DIR}" dev-${BRANCH_NAME}
+composer create-project --repository-url=./packages.json ${PACKAGE_NAME} "${DEST_DIR}" dev-${BRANCH_NAME}
 
 # Clean up after ourselves.
 rm -f packages.json
