@@ -1,7 +1,7 @@
 {
-    "name": "cakephp/app",
-    "description": "CakePHP skeleton app",
-    "homepage": "http://cakephp.org",
+    "name": "cakephp/skeleton",
+    "description": "Loadsys CakePHP 3.x app skeleton",
+    "homepage": "https://github.com/loadsys/CakePHP-Skeleton",
     "type": "project",
     "license": "MIT",
     "require": {
@@ -9,16 +9,19 @@
         "cakephp/cakephp": "3.0.*-dev",
         "mobiledetect/mobiledetectlib": "2.*",
         "cakephp/migrations": "dev-master",
-        "cakephp/plugin-installer": "*"
+        "cakephp/plugin-installer": "*",
+        "loadsys/cakephp-shell-scripts": "3.0.*",
+        "loadsys/config-read": "3.0.*"
     },
     "require-dev": {
         "d11wtq/boris": "1.0.*",
         "cakephp/debug_kit": "3.0.*-dev",
-        "cakephp/bake": "dev-master"
-    },
-    "suggest": {
-        "phpunit/phpunit": "Allows automated tests to be run without system-wide install.",
-        "cakephp/cakephp-codesniffer": "Allows to check the code against the coding standards used in CakePHP."
+        "cakephp/bake": "dev-master",
+        "phpunit/phpunit": "4.1.*",
+        "phpdocumentor/phpdocumentor": "2.*@beta",
+        "squizlabs/php_codesniffer": "2.*",
+        "loadsys/loadsys-codesniffer": "1.0.*",
+        "johnkary/phpunit-speedtrap": "~1.0@dev"
     },
     "autoload": {
         "psr-4": {
@@ -31,8 +34,11 @@
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
         }
     },
+    "config": {
+        "bin-dir": "bin"
+    },
     "scripts": {
-        "post-install-cmd": [
+        "post-create-project-cmd": [
             "App\\Console\\Installer::postInstall",
             "App\\Console\\LoadsysInstaller::postInstall"
         ],
@@ -40,4 +46,24 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true
+}
+
+
+
+{
+  "name": "loadsys/_PROJECT_NAME_",
+  "description": "_PROJECT_DESCRIPTION_",
+  "license": "proprietary",
+  "require": {
+  },
+  "require-dev": {
+    "phpunit/phpunit": "3.7.*",
+    "phpdocumentor/phpdocumentor": "2.*@beta",
+    "squizlabs/php_codesniffer": "1.*",
+    "loadsys/loadsys_codesniffer": ">=0.2.0",
+  },
+  "config": {
+    "vendor-dir": "Vendor/",
+    "bin-dir": "bin"
+  }
 }
