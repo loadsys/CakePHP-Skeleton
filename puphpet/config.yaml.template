@@ -3,13 +3,24 @@ vagrantfile-local:
     vm:
         box: puphpet/debian75-x64
         box_url: puphpet/debian75-x64
-        hostname: ''
+        hostname: '__VAGRANT_VM_HOSTNAME__'
         memory: '1024'
         cpus: '2'
         chosen_provider: virtualbox
         network:
-            private_network: 192.168.33.55
-            forwarded_port: {  }
+            private_network: __VAGRANT_VM_PRIVATE_IP__
+            forwarded_port:
+                apache:
+                    host: '8080'
+                    guest: '80'
+                mysql:
+                    host: '3307'
+                    guest: '3306'
+            # Make networking more flexible. -bp
+            type: private # or `public`
+            ip: 192.168.56.101
+            bridge: '' # '' (blank means prompt the user), 'en1: Wi-Fi (AirPort)',  'en0: Ethernet', 'en3: Thunderbolt Ethernet'
+            auto_correct_collisions: true
         post_up_message: ''
         provider:
             virtualbox:
@@ -29,12 +40,12 @@ vagrantfile-local:
                     - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
                     - '--parser future'
         synced_folder:
-            ojzQEkwjSBu8:
+            project_root:
                 owner: www-data
                 group: www-data
                 source: ./
                 target: /var/www
-                sync_type: default
+                sync_type: nfs  # Or `default` but `nfs` performs better and is (likely) required when using vmware.
                 rsync:
                     args:
                         - '--verbose'
@@ -60,10 +71,20 @@ vagrantfile-local:
         host: detect
 server:
     install: '1'
+    apt-ppa-repos:
+        - ppa:git-core/ppa   # Provides newer git-core. -bp
+        - ppa:chris-lea/node.js  # Provides newer node and npm. -bp
     packages:
-        - vim
-        - memcached
         - curl
+        - emacs
+        - g++
+        - graphviz
+        - make
+        - memcached
+        - vim
+        - zip
+        - git-core  # Via ppa:git-core
+        - nodejs  # Via ppa:chris-lea
 users_groups:
     install: '1'
     groups: {  }
@@ -79,25 +100,31 @@ apache:
     settings:
         user: www-data
         group: www-data
-        default_vhost: true
+        default_vhost: false
         manage_user: false
         manage_group: false
         sendfile: 0
     modules:
+        - cache
+        - deflate
+        - expires
+        - headers
+        - proxy
         - rewrite
+        - ssl
     vhosts:
-        snwhpze4b6vn:
-            servername: awesome.dev
+        vagrant_dev:
+            servername: vagrant.dev
             serveraliases:
-                - www.awesome.dev
-            docroot: /var/www/awesome
+                - www.vagrant.dev
+            docroot: /var/www/webroot
             port: '80'
             setenv:
-                - 'APP_ENV dev'
+                - 'APP_ENV vagrant'
             directories:
-                duosfqifgtqo:
+                var_www:
                     provider: directory
-                    path: /var/www/awesome
+                    path: /var/www
                     options:
                         - Indexes
                         - FollowSymlinks
@@ -123,11 +150,11 @@ nginx:
         proxy_buffers: '4 256k'
     upstreams: {  }
     vhosts:
-        3vclb4ezpa4h:
+        vagrant_dev:
             proxy: ''
-            server_name: awesome.dev
+            server_name: vagrant.dev
             server_aliases:
-                - www.awesome.dev
+                - www.vagrant.dev
             www_root: /var/www/webroot
             listen_port: '80'
             location: \.php$
@@ -148,14 +175,40 @@ php:
     modules:
         php:
             - cli
-            - intl
-            - mcrypt
-            - memcached
-            - sqlite
             - curl
+            - gd
+            - geoip
+            - imagick
+            - intl
+            - mbstring
+            - mcrypt
+            - memcache
+            - memcached
+            - mysql
+            - readline
+            - sqlite
+            - xmlrpc
+            - xsl
         pear: {  }
         pecl:
+            - APC
+            - PDO
+            - PDO_MYSQL
+            - PDO_PGSQL
+            - PDO_SQLITE
+            - SQLite
+            - json
+            - memcache
+            - memcached
+            - mongo
+            - oauth
+            - pdflib
             - pecl_http
+            - redis
+            - sphinx
+            - xattr
+            - yaml
+            - zip
     ini:
         display_errors: On
         error_reporting: '-1'
@@ -197,8 +250,11 @@ ruby:
         V7OFVf18MKvE:
             version: ''
 nodejs:
-    install: '0'
-    npm_packages: {  }
+    install: '1'
+    npm_packages:
+        - ember-cli
+        - grunt-cli
+        - json
 python:
     install: '1'
     packages: {  }
@@ -208,13 +264,20 @@ python:
 mysql:
     install: '1'
     override_options: {  }
-    root_password: '123'
+    root_password: password
     adminer: 0
-    databases:
-        wbp8k9gBUZUS:
+        default:
             grant:
                 - ALL
             name: vagrant
+            host: '%'
+            user: vagrant
+            password: vagrant
+            #sql_file: /var/www/Config/Schema/vagrant.sql
+        test:
+            grant:
+                - ALL
+            name: vagrant_test
             host: localhost
             user: vagrant
             password: vagrant
@@ -246,7 +309,7 @@ mongodb:
         port: '27017'
     databases: {  }
 redis:
-    install: '0'
+    install: '1'
     settings:
         conf_port: '6379'
 mailcatcher:

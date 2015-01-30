@@ -118,6 +118,10 @@ case $::operatingsystem {
     } else {
       apt::ppa { 'ppa:pdoes/ppa': require => Apt::Key['4CBEDD5A'] }
     }
+    # Ensure additional repos are ready. -bp
+    each( $server_values['apt-ppa-repos'] ) |$repo| {
+      apt::ppa { $repo: }
+    }
   }
   'redhat', 'centos': {
   }
