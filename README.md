@@ -11,7 +11,9 @@ for a 2.x compatible version you'll want to check out the
 
 ## Requirements for Using the Skeleton
 
-* composer installed on your development machine and accessible globally as `composer`.
+The following tools must be installed installed on your development machine to use the skeleton to create a new project:
+
+* composer (All instructions assume you have it accessible globally as `composer`.)
 * git
 
 Please see [README.md.template](README.md.template#Developer-specific) for system requirements necessary to work with a project _spawned from_ this skeleton.
@@ -29,9 +31,9 @@ cd local/path/for/new/project
 vagrant up
 ```
 
-After vagrant provisioning finishes, the VM will be available at http://localhost:8080.
+After vagrant provisioning finishes, the VM will be available at [http://localhost:8080](http://localhost:8080).
 
-Alternatively, you can edit your system's `hosts` file to include the VM's IP listed the `puphpet/config.yaml` file. The finished machine's webserver will respond to any domain that resolves to this IP address. if you use the [vagrant-hostmanager](https://github.com/smdahlen/vagrant-hostmanager) plugin, this should be done for you.
+Alternatively, you can edit your system's `hosts` file to include the VM's IP and hostname listed the `puphpet/config.yaml` file. The finished machine's webserver will respond to any domain that resolves to this IP address. if you use the [vagrant-hostmanager](https://github.com/smdahlen/vagrant-hostmanager) plugin, this should be done for you.
 
 You should be able to visit the homepage of the new app and see the setup "traffic lights" as green.
 
