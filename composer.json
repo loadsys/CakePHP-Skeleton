@@ -9,9 +9,7 @@
         "cakephp/cakephp": "3.0.*-dev",
         "mobiledetect/mobiledetectlib": "2.*",
         "cakephp/migrations": "dev-master",
-        "cakephp/plugin-installer": "*",
-        "loadsys/cakephp-shell-scripts": "3.0.*",
-        "loadsys/config-read": "3.0.*"
+        "cakephp/plugin-installer": "*"
     },
     "require-dev": {
         "d11wtq/boris": "1.0.*",
@@ -20,7 +18,6 @@
         "phpunit/phpunit": "4.1.*",
         "phpdocumentor/phpdocumentor": "2.*@beta",
         "squizlabs/php_codesniffer": "2.*",
-        "loadsys/loadsys-codesniffer": "1.0.*",
         "johnkary/phpunit-speedtrap": "~1.0@dev"
     },
     "autoload": {

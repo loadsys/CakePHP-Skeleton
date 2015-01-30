@@ -88,7 +88,17 @@ Additional first-time setup should be added as a post-install script. If a proce
 
 # TODO
 
-Items we need to review/convert to the tokenization system:
+@TODO: To add to composer.json require-dev:
+
+        "loadsys/loadsys-codesniffer": "1.0.*",
+
+@TODO: To add to composer.json require:
+
+        "loadsys/cakephp-shell-scripts": "3.0.*",
+        "loadsys/config-read": "3.0.*"
+
+
+@TODO: Items we need to review/convert to the tokenization system:
 
 * `README.md`: Add project information.
 
@@ -98,4 +108,4 @@ Items we need to review/convert to the tokenization system:
 
 * Search project-wide for `@TODO` markers. This should reveal any additional necessary configuration.
 
-* `.travis.yml`: (Probably won't need to do anything here.)
+* `.travis.yml`: (Probably won't need to do much here.)
