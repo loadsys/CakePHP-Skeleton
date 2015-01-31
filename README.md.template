@@ -1,7 +1,7 @@
 _This template includes more information than a typical project requires, both to provide hints on possible things to include, as well as to make the process of filling it largely a matter of deleting information that is not applicable. Specifically; **be sure to remove or replace any notes and comments in italics,** like this one. By convention, pseudo-variables you should replace are typically in ALLCAPS._
 
 
-# [{{PROJECT_TITLE:@TODO}}](http://{{PROJECT_REPO_URL:github.com/loadsys/app}})
+# [{{PROJECT_TITLE:@TODO}}]({{PROJECT_REPO_URL:https://github.com/loadsys/app}})
 
 {{PROJECT_DESCRIPTION:@TODO}}
 

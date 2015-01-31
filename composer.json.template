@@ -1,15 +1,15 @@
 {
-  "name": "loadsys/skeleton",
-  "description": "Loadsys CakePHP 3.x app skeleton",
-  "homepage": "https://github.com/loadsys/CakePHP-Skeleton",
-  "type": "project",
-  "license": "MIT",
+  "name": "loadsys/{{COMPOSER_PROJECT_NAME::@TODO}}",
+  "description": "{{COMPOSER_PROJECT_DESCRIPTION_NO_QUOTES:}}",
+  "homepage": "{{PROJECT_REPO_URL:}}",
+  "type": "library",
+  "license": "proprietary",
   "require": {
     "php": ">=5.6.19",
     "cakephp/cakephp": "3.0.*-dev",
     "cakephp/migrations": "dev-master",
     "cakephp/plugin-installer": "*",
-    "mobiledetect/mobiledetectlib": "2.*"
+    "mobiledetect/mobiledetectlib": "2.*",
     "loadsys/cakephp-shell-scripts": "3.0.*",
     "loadsys/config-read": "3.0.*"
   },
@@ -38,14 +38,10 @@
     "bin-dir": "bin"
   },
   "scripts": {
-    "post-create-project-cmd": [
-      "App\\Console\\Installer::postInstall",
-      "App\\Console\\LoadsysInstaller::postInstall"
-    ],
     "post-autoload-dump": [
       "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump"
     ],
   },
-  "minimum-stability": "dev",
+  "minimum-stability" : "dev",
   "prefer-stable": true
 }
