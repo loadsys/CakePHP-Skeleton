@@ -9,7 +9,7 @@
     "cakephp/cakephp": "3.0.*-dev",
     "cakephp/migrations": "dev-master",
     "cakephp/plugin-installer": "*",
-    "mobiledetect/mobiledetectlib": "2.*"
+    "mobiledetect/mobiledetectlib": "2.*",
     "loadsys/cakephp-shell-scripts": "3.0.*",
     "loadsys/config-read": "3.0.*"
   },
@@ -44,7 +44,7 @@
     ],
     "post-autoload-dump": [
       "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump"
-    ],
+    ]
   },
   "minimum-stability": "dev",
   "prefer-stable": true
