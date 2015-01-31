@@ -3,12 +3,12 @@ vagrantfile-local:
     vm:
         box: puphpet/debian75-x64
         box_url: puphpet/debian75-x64
-        hostname: '__VAGRANT_VM_HOSTNAME__'
+        hostname: '{{VAGRANT_VM_HOSTNAME:@TODO}}'
         memory: '1024'
         cpus: '2'
         chosen_provider: virtualbox
         network:
-            private_network: __VAGRANT_VM_PRIVATE_IP__
+            private_network: {{VAGRANT_VM_PRIVATE_IP:@TODO}}
             forwarded_port:
                 apache:
                     host: '8080'
@@ -18,7 +18,7 @@ vagrantfile-local:
                     guest: '3306'
             # Make networking more flexible. -bp
             type: private # or `public`
-            ip: 192.168.56.101
+            ip: 192.168.56.101 # Not currently used, see Vagrantfile.
             bridge: '' # '' (blank means prompt the user), 'en1: Wi-Fi (AirPort)',  'en0: Ethernet', 'en3: Thunderbolt Ethernet'
             auto_correct_collisions: true
         post_up_message: ''
