@@ -1,16 +1,16 @@
 _This template includes more information than a typical project requires, both to provide hints on possible things to include, as well as to make the process of filling it largely a matter of deleting information that is not applicable. Specifically; **be sure to remove or replace any notes and comments in italics,** like this one. By convention, pseudo-variables you should replace are typically in ALLCAPS._
 
 
-# [__PROJECT_TITLE__](http://__PROJECT_REPO_URL_WITHOUT_SCHEME__)
+# [{{PROJECT_TITLE}}](http://{{PROJECT_REPO_URL:github.com/loadsys/app}})
 
-__PROJECT_DESCRIPTION__
+{{PROJECT_DESCRIPTION}}
 
 _Brief app description. Why does it exist? Who uses it?_
 
-* Production URL: __PROJECT_PRODUCTION_URL__
-* Staging URL: __PROJECT_STAGING_URL__
-* Project Management URL: __PROJECT_MANAGEMENT_URL__
-* Loadsys Project Docs: __PROJECT_DOCUMENT_URL__
+* Production URL: {{PROJECT_PRODUCTION_URL}}
+* Staging URL: {{PROJECT_STAGING_URL}}
+* Project Management URL: {{PROJECT_MANAGEMENT_URL}}
+* Loadsys Project Docs: {{PROJECT_DOCUMENT_URL}}
 
 
 ## Environment
@@ -113,7 +113,7 @@ _In general, document the series of steps necessary to set up the project on a n
 Developers are expected to use the vagrant environment for all local work. Using a \_AMP stack on your machine directly is no longer advised or supported.
 
 ```bash
-git clone git@github.com:loadsys/__PROJECT_REPO_URL_WITHOUT_SCHEME__.git ./
+git clone git@{{PROJECT_REPO_URL}}.git ./
 ./bootstrap.sh
 vagrant up
 ```
@@ -136,7 +136,7 @@ The bootstrap file takes care of installing dependencies. After this process, th
 1. **Set an apache environment variable with `SetEnv APP_ENV production` in the `<VirtualHost>` block** so the correct database config is used.
 1. `cd` into the webroot.
 1. Clone the project:
-		git clone https://__PROJECT_REPO_URL_WITHOUT_SCHEME__.git ./
+		git clone https://{{PROJECT_REPO_URL}}.git ./
 		./bootstrap.sh
 1. (Any other production-specific configs should already exist in `Config/core.php`.)
 1. Run `bin/migrations` to load the schema into the DB.
@@ -297,4 +297,4 @@ _TBD_
 
 ## License
 
-Copyright (c) 2015 __PROJECT_CLIENT_NAME__
+Copyright (c) 2015 {{PROJECT_CLIENT_NAME}}

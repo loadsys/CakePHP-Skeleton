@@ -14,7 +14,7 @@ class FileParser
     /**
      *
      */
-    protected $tokenExpression = '/_{2}[A-Z0-9_]*_{2}/';
+    protected $tokenExpression = '/\{{2}([A-Z0-9_]+):?([^\}]*)?\}{2}/';
 
     /**
      *
@@ -57,7 +57,7 @@ class FileParser
         }
         preg_match_all($this->tokenExpression, $fileContents, $matches);
 
-        return $matches[0];
+        return array_combine($matches[1], $matches[2]);
     }
 
     /**
@@ -96,7 +96,7 @@ class FileParser
             if ($value === ' ') {
                 $value = '';
             }
-            $this->replaceInFile($token, $value, $template);
+            $this->replaceInFile($this->tokenize($token, $value), $value, $template);
         }
 
         $this->writeVerbose('Deleting `' . $file . '`');
@@ -144,6 +144,18 @@ class FileParser
         if ($this->io->isVerbose()) {
             $this->io->write('<comment>' . $string . '</comment>');
         }
+    }
+
+    /**
+     * Ensure a string matches the token format
+     */
+    public function tokenize($string, $default = null) {
+        $out = '{{' . $string . '}}';
+        if ($default != null) {
+            $out .= ':' . $default;
+        }
+
+        return $out;
     }
 
 }

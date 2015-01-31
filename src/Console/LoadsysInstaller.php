@@ -42,8 +42,8 @@ class LoadsysInstaller
 
         $tokens = $fileParser->getTokensInFiles($templates);
 
-        foreach ($tokens as $token) {
-            $value = $config->prompt($token);
+        foreach ($tokens as $token => $default) {
+            $value = $config->prompt($token, $default);
             $config->write($token, $value);
         }
 

@@ -44,35 +44,37 @@ class InstallerConfigurer
         return $this->config[$key];
     }
 
-    public function prompt($prompt)
+    public function prompt($prompt, $default = '')
     {
+        if (empty($default)) {
+            $default = $prompt;
+        }
         $value = $this->io->askAndValidate(
-            $this->formatPrompt($prompt),
+            $this->formatPrompt($prompt, $default),
             (function($input) {return $input;}),
             false,
-            $prompt
+            $default
         );
 
         return $value;
     }
 
-    protected function formatPrompt($prompt)
+    protected function formatPrompt($prompt, $default = '')
     {
-        return '<info>' . $this->humanize($prompt) . '</info>: ';
-    }
+        $out = '<info>' . $this->humanize($prompt) . '</info>';
+        if ($prompt != $default) {
+            $out .= ' [' . $default . ']';
+        }
+        $out .= ': ';
 
-    /**
-     * Ensure a string matches the token format
-     */
-    public function tokenize($string) {
-        return '_' . $string . '_';
+        return $out;
     }
 
     /**
      * Ensure a string matches the token format
      */
     public function humanize($string) {
-        return ucwords(strtolower(str_replace(['__', '_'], ['', ' '], $string)));
+        return ucwords(strtolower(str_replace(['{{', '}}', '_'], ['', '', ' '], $string)));
     }
 
 }
