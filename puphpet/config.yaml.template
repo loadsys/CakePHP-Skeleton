@@ -124,7 +124,7 @@ apache:
             directories:
                 var_www:
                     provider: directory
-                    path: /var/www
+                    path: /var/www/webroot
                     options:
                         - Indexes
                         - FollowSymlinks

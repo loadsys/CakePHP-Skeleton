@@ -5,7 +5,7 @@
   "type": "library",
   "license": "proprietary",
   "require": {
-    "php": ">=5.6.19",
+    "php": ">=5.6.0",
     "cakephp/cakephp": "3.0.*-dev",
     "cakephp/migrations": "dev-master",
     "cakephp/plugin-installer": "*",
