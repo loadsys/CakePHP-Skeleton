@@ -51,9 +51,9 @@ Because this repo is used through Packagist, it maintains semantic versioning. T
 
 ### Templates
 
-As a part of the `create-project` process, a post-install script is executed that scans the new project for `*.template` files, then scans inside them for `__TOKEN__`s. The developer running the `create-project` command is then prompted for values for each token, and those values are written into renamed files.
+As a part of the `create-project` process, a post-install script is executed that scans the new project for `*.template` files, then scans inside them for `{{TOKEN}}`s. The developer running the `create-project` command is then prompted for values for each token, and those values are written into renamed files.
 
-For example, if `README.md.template` includes a `__GIT_CLONE_URL__` token, the developer will be prompted to enter a value during setup. The value will be written back into `README.md.template` and the resulting file will replace any existing `README.md` file.
+For example, if `README.md.template` includes a `{{GIT_CLONE_URL}}` token, the developer will be prompted to enter a value during setup. The value will be written back into `README.md.template` and the resulting file will replace any existing `README.md` file.
 
 In other words: **This** repo uses README.md and composer.json, but your **generated project** will be using filled-in copies of README.md.template and composer.json.template. If you want to change the default composer packages, you need to edit `composer.json.template`.
 
@@ -65,7 +65,7 @@ Most of the magic behind the `create-project` command lies in composer's ability
 * Copy `config/app.default.php` to `config/app.php`.
 * Sets writable folder permissions.
 * Writes a random security salt into `config/app.php`.
-* Replaces `__TOKEN__`s in all `*.template` files and renames the files without `.template.`
+* Replaces `{{TOKEN}}`s in all `*.template` files and renames the files without `.template.`
 * @TODO: `git init`s _the new project's_ git repo and adds the 'origin' remote URL, if available. (`git remote add origin ${REPO_URL}`)
 * @TODO: Removes the post-install scripts since they are now irrelevant.
 * @TODO: Runs the `bin/deps-install` commands from the Shell Scripts repo, if available, to install node, git submodule, and/or PEAR dependencies.
