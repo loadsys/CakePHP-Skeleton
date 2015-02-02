@@ -99,9 +99,11 @@ class FileParser
             $this->replaceInFile($this->tokenize($token, $value), $value, $template);
         }
 
-        $this->writeVerbose('Deleting `' . $file . '`');
-        if (!unlink($file)) {
-            $this->writeVerbose('Unable to delete `' . $file . '`');
+        if (file_exists($file) {
+            $this->writeVerbose('Deleting `' . $file . '`');
+            if (!unlink($file)) {
+                $this->writeVerbose('Unable to delete `' . $file . '`');
+            }
         }
         $this->writeVerbose('Copying `' . $template . '` to `' . $file . '`');
         if (!copy($template, $file)) {
