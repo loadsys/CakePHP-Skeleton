@@ -75,16 +75,16 @@ server:
         - ppa:git-core/ppa   # Provides newer git-core. -bp
         - ppa:chris-lea/node.js  # Provides newer node and npm. -bp
     packages:
-        - curl
-        - emacs
-        - g++
-        - graphviz
-        - make
-        - memcached
-        - vim
-        - zip
-        - git-core  # Via ppa:git-core
-        - nodejs  # Via ppa:chris-lea
+        - curl # Required by CakePHP-Shell-Scripts
+        #- emacs
+        #- g++
+        #- graphviz
+        #- make
+        #- memcached
+        #- vim
+        - zip # Required by CakePHP-Shell-Scripts
+        - git-core  # Via ppa:git-core, required by CakePHP-Shell-Scripts
+        #- nodejs  # Via ppa:chris-lea
 users_groups:
     install: '1'
     groups: {  }
@@ -108,8 +108,8 @@ apache:
         - cache
         - deflate
         - expires
-        - headers
-        - proxy
+        #- headers
+        #- proxy
         - rewrite
         - ssl
     vhosts:
@@ -174,41 +174,41 @@ php:
     composer_home: ''
     modules:
         php:
-            - cli
-            - curl
-            - gd
-            - geoip
-            - imagick
-            - intl
-            - mbstring
-            - mcrypt
-            - memcache
-            - memcached
-            - mysql
-            - readline
-            - sqlite
-            - xmlrpc
-            - xsl
+            - cli # Needed for shells
+            #- curl
+            #- gd
+            #- geoip
+            #- imagick
+            - intl # Required by Cake 3.
+            - mbstring # Required by Cake 3.
+            - mcrypt # Required by Cake 3.
+            #- memcache
+            #- memcached
+            #- mysql
+            #- readline
+            #- sqlite
+            #- xmlrpc
+            #- xsl
         pear: {  }
         pecl:
-            - APC
-            - PDO
-            - PDO_MYSQL
-            - PDO_PGSQL
-            - PDO_SQLITE
-            - SQLite
-            - json
-            - memcache
-            - memcached
-            - mongo
-            - oauth
-            - pdflib
-            - pecl_http
-            - redis
-            - sphinx
-            - xattr
-            - yaml
-            - zip
+            #- APC
+            - PDO # Required by Cake 3.
+            - PDO_MYSQL # Required by Cake 3.
+            #- PDO_PGSQL
+            #- PDO_SQLITE
+            #- SQLite
+            #- json
+            #- memcache
+            #- memcached
+            #- mongo
+            #- oauth
+            #- pdflib
+            #- pecl_http
+            #- redis
+            #- sphinx
+            #- xattr
+            #- yaml
+            #- zip
     ini:
         display_errors: On
         error_reporting: '-1'
