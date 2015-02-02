@@ -68,7 +68,7 @@ cat <<EOD > packages.json
 EOD
 
 # Execute the proper command.
-composer create-project --repository-url=./packages.json ${PACKAGE_NAME} "${DEST_DIR}" dev-${BRANCH_NAME}
+composer create-project --ignore-platform-reqs --repository-url=./packages.json ${PACKAGE_NAME} "${DEST_DIR}" dev-${BRANCH_NAME}
 
 # Clean up after ourselves.
 rm -f packages.json
