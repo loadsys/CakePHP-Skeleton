@@ -85,6 +85,7 @@ class FileParser
      */
     public function parseTemplate($template, $config)
     {
+        $fs = new \Composer\Util\Filesystem;
         $this->writeVerbose('Parsing template: ' . $template);
         $template = $this->dir . $template;
         $file = str_replace('.template', '', $template);
@@ -99,22 +100,13 @@ class FileParser
             $this->replaceInFile($this->tokenize($token, $value), $value, $template);
         }
 
-        if (file_exists($file) {
-            $this->writeVerbose('Deleting `' . $file . '`');
-            if (!unlink($file)) {
-                $this->writeVerbose('Unable to delete `' . $file . '`');
-            }
-        }
-        $this->writeVerbose('Copying `' . $template . '` to `' . $file . '`');
-        if (!copy($template, $file)) {
-            $this->writeVerbose('Unable to copy `' . $template . '` to `' . $file . '`');
+        $this->writeVerbose('Replacing `' . $file . '` with `' . $template . '`');
+        if (!$fs->copyThenRemove($template, $file)) {
+            $this->writeVerbose('Failed to replace `' . $file . '` with `' . $template . '`');
             return false;
         }
-        $this->writeVerbose('Deleting `' . $template . '`');
-        if (!unlink($template)) {
-            $this->writeVerbose('Unable to delete `' . $template . '`');
-            return false;
-        }
+
+        return true;
     }
 
     /**
