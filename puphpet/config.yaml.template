@@ -8,7 +8,7 @@ vagrantfile-local:
         cpus: '2'
         chosen_provider: virtualbox
         network:
-            private_network: {{VAGRANT_VM_PRIVATE_IP:@TODO}}
+            private_network: '{{VAGRANT_VM_PRIVATE_IP:@TODO}}'
             forwarded_port:
                 apache:
                     host: '8080'
