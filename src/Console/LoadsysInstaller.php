@@ -37,19 +37,7 @@ class LoadsysInstaller
 
         static::welcome($io);
         $config = new InstallerConfigurer($event);
-        $fileParser = new FileParser($event, $rootDir);
-        $templates = $fileParser->findTemplates();
-
-        $tokens = $fileParser->getTokensInFiles($templates);
-
-        foreach ($tokens as $token => $default) {
-            $value = $config->prompt($token, $default);
-            $config->write($token, $value);
-        }
-
-        foreach ($templates as $template) {
-            $fileParser->parseTemplate($template, $config->read());
-        }
+        static::parseTemplates($config, $event, $rootDir);
 
     }
 
@@ -62,6 +50,30 @@ class LoadsysInstaller
             $io->write('If you leave a prompt blank (no input) the token will not be replaced so that you may');
             $io->write('replace it manually. If you would like the token to be removed you may enter a single space.');
             $io->write('');
+        }
+    }
+
+    /**
+     * Finds *.template files and parses tokens strings within each.
+     *
+     * @param InstallerConfigurer $config InstallerConfigurer instance.
+     * @param Composer\Script\Event $event Composer's Event instance
+     * @return void
+     */
+    protected static function parseTemplates(InstallerConfigurer $config, Event $event, $rootDir)
+    {
+        $fileParser = new FileParser($event, $rootDir);
+        $templates = $fileParser->findTemplates();
+
+        $tokens = $fileParser->getTokensInFiles($templates);
+
+        foreach ($tokens as $token => $default) {
+            $value = $config->prompt($token, $default);
+            $config->write($token, $value);
+        }
+
+        foreach ($templates as $template) {
+            $fileParser->parseTemplate($template, $config->read());
         }
     }
 
