@@ -76,5 +76,6 @@ if [ "${VAGRANT_SSH_USERNAME}" != 'root' ]; then
     chmod 600 "${VAGRANT_SSH_FOLDER}/id_rsa"
     chmod 600 "${VAGRANT_SSH_FOLDER}/authorized_keys"
 
-    passwd -d "${VAGRANT_SSH_USERNAME}" >/dev/null
+	# Don't delete the password so that we can still tunnel in via Sequel Pro with it. -bp
+	#passwd -d vagrant >/dev/null
 fi

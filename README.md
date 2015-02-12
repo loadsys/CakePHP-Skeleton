@@ -43,6 +43,18 @@ You should be able to visit the homepage of the new app and see the setup "traff
 If you would like to contribute to this project open a pull request targeted at the correct branch;
 `master` for the 3.x skeleton and `cake-2.x` for the 2.x skeleton.
 
+Testing the skeleton can be difficult because under normal circumstances, a dev would have to commit their experimental changes, push the changes to github, merge the changes into master and (optionally) tag a new release semver for packagist.org to pick up for "release". Since this is a bad situation when working on something new and untested, it would be nice to be able to run the `create-project` command using your local checked-out copy of the skeleton repo.
+
+In order to accomplish this, composer needs to be "tricked" into using the local copy, which requires a specially-crafted packages.json file. To ease this process, a `test-project.sh` script is included with the skeleton.
+
+So to test a change to the skeleton:
+
+* Clone the skeleton repo.
+* Checkout a new topic branch.
+* Make your changes **and commmit them**. (A limitation of this approach is that the changes MSUT be available from the git index.)
+* Run this command: `./test-project.sh my-branch-name /new/app/dir`
+* The new project will be set up in `/new/app/dir` and can be tested as necessary.
+
 
 ### SemVer
 
@@ -56,6 +68,12 @@ As a part of the `create-project` process, a post-install script is executed tha
 For example, if `README.md.template` includes a `{{GIT_CLONE_URL}}` token, the developer will be prompted to enter a value during setup. The value will be written back into `README.md.template` and the resulting file will replace any existing `README.md` file.
 
 In other words: **This** repo uses README.md and composer.json, but your **generated project** will be using filled-in copies of README.md.template and composer.json.template. If you want to change the default composer packages, you need to edit `composer.json.template`.
+
+When working on the skeleton's templates, it can be handy to review the list of tokens currently in use. This can be done pretty easily on the command line using `grep`.
+
+`grep -norE --include "*.template" '{{([A-Z0-9_]+):?([^}]*)?}}' .` - Lists all tokens and their defaults, including files and line numbers, but may include duplicates across files. This is useful for seeing what is used where. 
+
+`grep -horE --include "*.template" '{{([A-Z0-9_]+):?([^}]*)?}}' . | sort | uniq` - Lists all tokens and their defaults without duplicates, files or line numbers. Useful for reviewing the "reduced" list of tokens and defaults to see if they can be further consolidated.
 
 
 ### Post-Install Scripts
@@ -76,18 +94,24 @@ Additional first-time setup should be added as a post-install script. If a proce
 
 # TODO
 
-Items we need to review/convert to the tokenization system:
+@TODO: To add to composer.json require-dev:
+
+        "loadsys/loadsys-codesniffer": "1.0.*",
+
+@TODO: To add to composer.json require:
+
+        "loadsys/cakephp-shell-scripts": "3.0.*",
+        "loadsys/config-read": "3.0.*"
+
+
+@TODO: Items we need to review/convert to the tokenization system:
 
 * `README.md`: Add project information.
 
 * `composer.json`: Set the (composer) project name and description. (The name is typically not used for anything, but should be unique.) Add any additional dependencies.
 
-* `package.json`: Set the (nodejs) project name. (Not used for anything, but should be unique.)
-
-* `puphpet/config.yaml`: Set your hostname and modify any port forwards (if they would conflict with another concurrent vagrant box.)
-
 * `Config/phpdoc.xml`: Set the project name in two places.
 
 * Search project-wide for `@TODO` markers. This should reveal any additional necessary configuration.
 
-* `.travis.yml`: (Probably won't need to do anything here.)
+* `.travis.yml`: (Probably won't need to do much here.)

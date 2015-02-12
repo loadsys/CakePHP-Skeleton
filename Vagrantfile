@@ -19,9 +19,22 @@ Vagrant.configure('2') do |config|
     config.vm.network 'private_network', ip: "#{data['vm']['network']['private_network']}"
   end
 
+  # Provides a way for the VM to be accessible from beyond the host machine. -bp
+#   if data['vm']['network']['type'].to_s.strip == 'public'
+#   	if data['vm']['network']['bridge'].to_s.strip.length != 0
+#       config.vm.network "public_network", ip: "#{data['vm']['network']['ip']}", bridge: "#{data['vm']['network']['bridge']}"
+#     else
+#       config.vm.network "public_network", bridge: "#{data['vm']['network']['bridge']}"
+#     end
+#   elsif data['vm']['network']['type'].to_s.strip == 'private'
+#     config.vm.network "private_network", ip: "#{data['vm']['network']['ip']}"
+#   elsif data['vm']['network']['private_network'].to_s.strip.length != 0
+#     config.vm.network "private_network", ip: "#{data['vm']['network']['private_network']}"
+#   end
+
   data['vm']['network']['forwarded_port'].each do |i, port|
     if port['guest'] != '' && port['host'] != ''
-      config.vm.network :forwarded_port, guest: port['guest'].to_i, host: port['host'].to_i
+      config.vm.network :forwarded_port, guest: port['guest'].to_i, host: port['host'].to_i, auto_correct: data['vm']['network'].fetch('auto_correct_collisions', 'false') # Allows enabling of auto-correct to resolve port conflicts between VMs. -bp
     end
   end
 
@@ -73,15 +86,19 @@ Vagrant.configure('2') do |config|
 
   if Vagrant.has_plugin?('vagrant-cachier')
     config.cache.scope = :box
+    # Additional vagrant-cachier plugin settings. -bp
+    #config.cache.auto_detect = true
+    # If you are using VirtualBox, you might want to enable NFS for shared folders
+    #config.cache.enable_nfs  = true
   end
 
   data['vm']['synced_folder'].each do |i, folder|
     if folder['source'] != '' && folder['target'] != ''
-      sync_owner = !folder['sync_owner'].nil? ? folder['sync_owner'] : 'www-data'
-      sync_group = !folder['sync_group'].nil? ? folder['sync_group'] : 'www-data'
+      sync_owner = !folder['owner'].nil? ? folder['owner'] : 'www-data'
+      sync_group = !folder['group'].nil? ? folder['group'] : 'www-data'
 
       if folder['sync_type'] == 'nfs'
-        config.vm.synced_folder "#{folder['source']}", "#{folder['target']}", id: "#{i}", type: 'nfs'
+        config.vm.synced_folder "#{folder['source']}", "#{folder['target']}", id: "#{i}", type: 'nfs', :linux__nfs_options => ["rw","no_root_squash","no_subtree_check"] # Ref: https://github.com/puphpet/puphpet/wiki/Shared-Folder:-Permission-Denied -bp
         if Vagrant.has_plugin?('vagrant-bindfs')
           config.bindfs.bind_folder "#{folder['target']}", "/mnt/vagrant-#{i}"
         end
@@ -105,6 +122,11 @@ Vagrant.configure('2') do |config|
   end
 
   config.vm.usable_port_range = (data['vm']['usable_port_range']['start'].to_i..data['vm']['usable_port_range']['stop'].to_i)
+
+  # A pre-set env var takes precedence over the config.yaml file to allow per-developer overrides. -bp
+  unless ENV.fetch('VAGRANT_DEFAULT_PROVIDER', '').strip.empty?
+  	data['vm']['chosen_provider'] = ENV['VAGRANT_DEFAULT_PROVIDER'];
+  end
 
   if data['vm']['chosen_provider'].empty? || data['vm']['chosen_provider'] == 'virtualbox'
     ENV['VAGRANT_DEFAULT_PROVIDER'] = 'virtualbox'

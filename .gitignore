@@ -1,14 +1,14 @@
 # Project-Specific Ignores
 
-# Composer Dependencies
-/vendor/*
 
-# Puphpet and Vagrant ignored files
+# General Loadsys
+/config/app-local.php
+/backups/
 /.vagrant/
 /puphpet/files/dot/ssh/*id_rsa*
 
-# Backups Folder
-/backups
+# Composer Dependencies
+/vendor/*
 
 # OS X
 .DS_Store

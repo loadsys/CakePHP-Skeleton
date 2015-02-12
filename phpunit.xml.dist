@@ -28,6 +28,25 @@
 				<object class="\Cake\TestSuite\Fixture\FixtureManager" />
 			</arguments>
 		</listener>
+		<listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
 	</listeners>
 
+	<logging>
+		<!-- HTML reports intended to be exported to loadsysdev for viewing. -->
+		<log
+			type="coverage-html"
+			target="../tmp/coverage/html/"
+			charset="UTF-8"
+			highlight="true"
+			lowUpperBound="60"
+			highLowerBound="90"
+		/>
+		<!-- Not currently used, but include the config anyway so it's here already. -->
+		<!-- 
+		<log
+			type="coverage-clover"
+			target="../tmp/coverage/clover.xml"
+		/>
+		-->
+	</logging>
 </phpunit>
