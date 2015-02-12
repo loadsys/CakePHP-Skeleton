@@ -1,6 +1,6 @@
 ---
 dummy: 'Not having this file screws up `vagrant global-status`.'
-dummy2: 'Just have to define enough keys fo the Vagrantfile to load successfully.'
+dummy2: 'Just have to define enough keys for the Vagrantfile to load successfully.'
 vagrantfile-local:
     vm:
         box: puphpet/debian75-x64

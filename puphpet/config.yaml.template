@@ -266,6 +266,7 @@ mysql:
     override_options: {  }
     root_password: password
     adminer: 0
+    databases:
         default:
             grant:
                 - ALL
