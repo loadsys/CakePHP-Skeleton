@@ -72,8 +72,12 @@ try {
  * Load the environment config file and the local config file.
  */
 try {
-    Configure::load('app-' . env('APP_ENV'), 'default');
-    Configure::load('app-local', 'default');
+    if (is_readable(dirname(__FILE__) . '/app-' . env('APP_ENV') . '.php')) {
+        Configure::load('app-' . env('APP_ENV'), 'default');
+    }
+    if (is_readable(dirname(__FILE__) . '/app-local.php')) {
+        Configure::load('app-local', 'default');
+    }
 } catch (\Exception $e) {
     die($e->getMessage() . "\n");
 }
