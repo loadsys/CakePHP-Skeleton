@@ -69,17 +69,15 @@ try {
 }
 
 /**
- * Load the environment config file and the local config file.
+ * Load the environment-specific config file and the local config file,
+ * when present.
  */
 try {
-    if (is_readable(dirname(__FILE__) . '/app-' . env('APP_ENV') . '.php')) {
-        Configure::load('app-' . env('APP_ENV'), 'default');
-    }
-    if (is_readable(dirname(__FILE__) . '/app-local.php')) {
-        Configure::load('app-local', 'default');
-    }
+    $env = getenv('APP_ENV');
+    Configure::load("/app_{$env}", 'default');
+    Configure::load('app_local', 'default');
 } catch (\Exception $e) {
-    die($e->getMessage() . "\n");
+    // It is not an error if these files are missing.
 }
 
 // When debug = false the metadata cache should last
