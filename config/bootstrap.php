@@ -74,8 +74,8 @@ try {
  */
 try {
     $env = getenv('APP_ENV');
-    Configure::load("/app_{$env}", 'default');
-    Configure::load('app_local', 'default');
+    Configure::load("/app-{$env}", 'default');
+    Configure::load('app-local', 'default');
 } catch (\Exception $e) {
     // It is not an error if these files are missing.
 }
