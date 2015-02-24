@@ -146,7 +146,7 @@ Configure::write('Defaults', array(
 $email = function($localAddress, $displayName = false) {
 	$displayName = ($displayName ?: Configure::read('Defaults.short_name'));
 	$address = sprintf('%s@%s', $localAddress, Configure::read('Defaults.domain'));
-	return array($displayName => $address);
+	return array($address => $displayName);
 };
 
 /**
