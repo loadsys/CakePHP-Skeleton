@@ -35,9 +35,9 @@ DIR_CAKE_CORE="${DIR}/${DIR_CAKE_REL}"
 # Input checking.
 if [ ! -d "$DIR_CAKE_CORE" ]; then
 	echo "!! Cake core not found in expected path: ${DIR_CAKE_CORE}"  >&2
-	echo "   Trying to run `composer install` for you..."
-	composer install --dev --no-interaction --ignore-platform-reqs
-	if [ !-d "$DIR_CAKE_CORE" ]; then
+	echo "   Trying to run `composer install` for you..."  >&2
+	composer install --no-interaction --ignore-platform-reqs
+	if [ ! -d "$DIR_CAKE_CORE" ]; then
 		echo "!! Couldn't run `composer install`. Aborting."  >&2
 		usage
 		exit 1
@@ -132,7 +132,7 @@ else
 fi
 
 echo "## Priming dependencies for new project." >&2
-composer install --dev --no-interaction --ignore-platform-reqs --optimize-autoloader
+composer install --no-interaction --ignore-platform-reqs --optimize-autoloader
 bin/deps-install
 
 # Clean up the tmp/cakeskel dir so it's easier to work with the skeleton repo.
