@@ -94,8 +94,8 @@ Vagrant.configure('2') do |config|
 
   data['vm']['synced_folder'].each do |i, folder|
     if folder['source'] != '' && folder['target'] != ''
-      sync_owner = !folder['owner'].nil? ? folder['owner'] : 'www-data'
-      sync_group = !folder['group'].nil? ? folder['group'] : 'www-data'
+      sync_owner = !folder['sync_owner'].nil? ? folder['sync_owner'] : 'www-data'
+      sync_group = !folder['sync_group'].nil? ? folder['sync_group'] : 'www-data'
 
       if folder['sync_type'] == 'nfs'
         config.vm.synced_folder "#{folder['source']}", "#{folder['target']}", id: "#{i}", type: 'nfs', :linux__nfs_options => ["rw","no_root_squash","no_subtree_check"] # Ref: https://github.com/puphpet/puphpet/wiki/Shared-Folder:-Permission-Denied -bp
