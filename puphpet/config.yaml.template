@@ -41,8 +41,8 @@ vagrantfile-local:
                     - '--parser future'
         synced_folder:
             project_root:
-                owner: www-data
-                group: www-data
+                sync_owner: www-data
+                sync_group: www-data
                 source: ./
                 target: /var/www
                 sync_type: nfs  # Or `default` but `nfs` performs better and is (likely) required when using vmware.
