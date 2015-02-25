@@ -160,7 +160,9 @@ $email = function($localAddress, $displayName = false) {
  * To use Address slugs, either pass the result straight to AppEmail, or
  * unpack a config key in your code like so:
  *
- * `list($name, $email) = Configure::read('Email.Address.slugname');`
+ * 		$address = Configure::read('Email.Address.slugname');
+ * 		$email = key($address);
+ * 		$display = current($address);
  */
 Configure::write('Email', array(
 	'Address' => array(
