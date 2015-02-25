@@ -146,7 +146,7 @@ Configure::write('Defaults', array(
 $email = function($localAddress, $displayName = false) {
 	$displayName = ($displayName ?: Configure::read('Defaults.short_name'));
 	$address = sprintf('%s@%s', $localAddress, Configure::read('Defaults.domain'));
-	return array($displayName => $address);
+	return array($address => $displayName);
 };
 
 /**
@@ -160,7 +160,9 @@ $email = function($localAddress, $displayName = false) {
  * To use Address slugs, either pass the result straight to AppEmail, or
  * unpack a config key in your code like so:
  *
- * `list($name, $email) = Configure::read('Email.Address.slugname');`
+ * 		$address = Configure::read('Email.Address.slugname');
+ * 		$email = key($address);
+ * 		$display = current($address);
  */
 Configure::write('Email', array(
 	'Address' => array(
