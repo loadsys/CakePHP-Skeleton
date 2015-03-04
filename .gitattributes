@@ -34,3 +34,6 @@
 *.mo binary
 *.pdf binary
 *.phar binary
+
+# Mark directories as containing vendor files and ignore from Language information
+puphpet/* linguist-vendored
