@@ -36,4 +36,4 @@
 *.phar binary
 
 # Mark directories as containing vendor files and ignore from Language information
-./puphpet/* linguist-vendored
+./puphpet/* linguist-vendored=false
