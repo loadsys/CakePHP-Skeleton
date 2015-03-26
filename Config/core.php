@@ -206,6 +206,26 @@ Configure::write('Email', array(
 ));
 
 /**
+ * Enumeration lists.
+ *
+ * These replace the legacy "id,name" lookup tables. Each key should consist
+ * of a flat array of `[text-slug => __(Display Value)]` pairs. These "lists"
+ * are made available to the front end via AppModel->getList(), and are
+ * typically to populate <select> lists. The slug value is stored in the
+ * database with a fieldtype of `VARCHAR(50)` and named `something_slug` to
+ * identify it. The array keys from each list below (the slugs) will be saved
+ * into that field to represent the selected option for a given record. Keys
+ * must consist ONLY of lowercase letters, digits and dashes.
+ */
+Configure::write('Lists', array(
+	// Enumerated type for Table field usage.
+	'TableFieldSlug' => array( // `Table.field_slug`
+		'option1' => __('Option One'), // meaning.
+		'option2' => __('Option Two'), // meaning.
+	),
+));
+
+/**
  * SSL
  */
 Configure::write('SSL', array(

@@ -3,7 +3,7 @@
  * URL Dereferencing library.
  */
 App::uses('ClassRegistry', 'Utility');
-App::uses('Router', 'Core');
+App::uses('Router', 'Routing');
 App::uses('Inflector', 'Core');
 
 

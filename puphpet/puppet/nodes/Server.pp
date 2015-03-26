@@ -139,8 +139,10 @@ case $::operatingsystem {
     }
 
     # Ensure additional repos are ready. -bp
-    each( $server_values['apt-ppa-repos'] ) |$repo| {
-      apt::ppa { $repo: }
+    if is_array($server_values['apt-ppa-repos']) and count($server_values['apt-ppa-repos']) > 0 {
+      each( $server_values['apt-ppa-repos'] ) |$repo| {
+        apt::ppa { $repo: }
+      }
     }
   }
   'redhat', 'centos': {

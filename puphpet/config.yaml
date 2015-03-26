@@ -69,9 +69,7 @@ vagrantfile-local:
         host: detect
 server:
     install: '1'
-    apt-ppa-repos:
-        - ppa:git-core/ppa   # Provides newer git-core. -bp
-        - ppa:chris-lea/node.js  # Provides newer node and npm. -bp
+    apt-ppa-repos: { }
     packages:
         - curl
         - emacs
@@ -80,12 +78,8 @@ server:
         - make
         - memcached
         - zip
-        - git-core  # Via ppa:git-core
-        - nodejs  # Via ppa:chris-lea
-    users: #@TODO: Move into users_groups below?
-        root:
-            # "puppet"
-            password: '$6$7pe0INu/$Uxsn.lb/mJjd9394DIJx5JS9a1NVhrpWDpXRtPGS78/BfyShhOf1G0ft7mRHspXDZo6.ezyqpqIXHQ8Tl8ZJt0'
+        - git-core
+        - nodejs
 users_groups:
     install: '1'
     groups: {  }
