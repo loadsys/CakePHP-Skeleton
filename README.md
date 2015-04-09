@@ -371,7 +371,6 @@ Command line automated "test-on-save" is also possible with Grunt via: `grunt wa
 * These compiled assets and tests are then included in `View/Pages/test.ctp`.
 * You can run your tests in the browser by visiting http://localhost:8080/pages/testjs.
 * There is a `grunt` task to auto-run these tests on change as well: `grunt test`
-```
 
 ### CSS Changes
 
