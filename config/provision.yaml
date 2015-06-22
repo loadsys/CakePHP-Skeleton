@@ -1,10 +1,21 @@
 # This is the master project provisioning configuration file.
 #
-# Its purpose is to provide environment-specific information on external server dependencies that the project requires to run, such as server IP, hostname, installed packages, etc. It's designed to simplify the provisioning process for both vagrant dev environments and production instances. It mirrors the environment-aware `app-*.php` configs loaded by Cake in bootstrap.php
+# Its purpose is to provide environment-specific information on
+# external server dependencies that the project requires to run,
+# such as server IP, hostname, installed packages, etc. It's
+# designed to simplify the provisioning process for both vagrant
+# dev environments and production instances. It mirrors the
+# environment-aware `app-*.php` configs loaded by Cake in
+# bootstrap.php.
 #
-# The full set of config keys used in provisioning must be defined in this file. Additional override keys may be defined in separate files named after the matching APP_ENV. For example: `provision-staging.yaml` and/or `provision-local.yaml`. Values from those files will be deep-merged on top of this one during bootstrapping.
+# The full set of config keys used in provisioning must be defined
+# in this file. Additional override keys may be defined in separate
+# files named after the matching APP_ENV. For example:
+# `provision-staging.yaml` and/or `provision-local.yaml`. Values
+# from those files will be deep-merged on top of this one during
+# bootstrapping.
 ---
-dummy: "nothing is required to be present in this file. In fact, the file doesn't even have to be here!"
+readme: "Nothing is required to be present in this file. In fact, the file doesn't even have to be present!"
 vm:
    provider: 'virtualbox'
    box: 'hashicorp/precise64'
@@ -38,132 +49,3 @@ vm:
                path: 'provision/main.sh'
                args: 'vagrant'
    post_up_message: 'It works!'
-#apache:
-#    install: 0
-#    settings:
-#        user: www-data
-#        group: www-data
-#        default_vhost: false
-#        manage_user: false
-#        manage_group: false
-#        sendfile: 0
-#    modules:
-#        - cache
-#        - deflate
-#        - expires
-#        #- headers
-#        #- proxy
-#        - rewrite
-#        - ssl
-#    vhosts:
-#        vagrant_dev:
-#            servername: vagrant.dev
-#            serveraliases:
-#                - www.vagrant.dev
-#            docroot: /var/www/webroot
-#            port: '80'
-#            setenv:
-#                - 'APP_ENV vagrant'
-#            directories:
-#                var_www:
-#                    provider: directory
-#                    path: /var/www/webroot
-#                    options:
-#                        - Indexes
-#                        - FollowSymlinks
-#                        - MultiViews
-#                    allow_override:
-#                        - All
-#                    require:
-#                        - all
-#                        - granted
-#                    custom_fragment: ''
-#            engine: php
-#            custom_fragment: ''
-#            ssl_cert: ''
-#            ssl_key: ''
-#            ssl_chain: ''
-#            ssl_certs_dir: ''
-#    mod_pagespeed: 0
-#
-#php:
-#    install: '1'
-#    version: '56'
-#    composer: '1'
-#    composer_home: ''
-#    modules:
-#        php:
-#            - cli # Needed for shells
-#            #- curl
-#            #- gd
-#            #- geoip
-#            #- imagick
-#            - intl # Required by Cake 3.
-#            - mbstring # Required by Cake 3.
-#            - mcrypt # Required by Cake 3.
-#            #- memcache
-#            #- memcached
-#            #- mysql
-#            #- readline
-#            #- sqlite
-#            #- xmlrpc
-#            #- xsl
-#        pear: {  }
-#        pecl:
-#            #- APC
-#            - PDO # Required by Cake 3.
-#            - PDO_MYSQL # Required by Cake 3.
-#            #- PDO_PGSQL
-#            #- PDO_SQLITE
-#            #- SQLite
-#            #- json
-#            #- memcache
-#            #- memcached
-#            #- mongo
-#            #- oauth
-#            #- pdflib
-#            #- pecl_http
-#            #- redis
-#            #- sphinx
-#            #- xattr
-#            #- yaml
-#            #- zip
-#    ini:
-#        display_errors: On
-#        error_reporting: '-1'
-#        session.save_path: /var/lib/php/session
-#    timezone: UTC
-#    mod_php: 0
-#
-#mysql:
-#    install: '1'
-#    override_options: {  }
-#    root_password: password
-#    adminer: 0
-#    databases:
-#        default:
-#            grant:
-#                - ALL
-#            name: vagrant
-#            host: '%'
-#            user: vagrant
-#            password: vagrant
-#            #sql_file: /var/www/Config/Schema/vagrant.sql
-#        test:
-#            grant:
-#                - ALL
-#            name: vagrant_test
-#            host: localhost
-#            user: vagrant
-#            password: vagrant
-#            sql_file: ''
-#
-#mailcatcher:
-#    install: '1'
-#    settings:
-#        smtp_ip: 0.0.0.0
-#        smtp_port: 1025
-#        http_ip: 0.0.0.0
-#        http_port: '1080'
-#        mailcatcher_path: /usr/local/rvm/wrappers/default
-#        from_email_method: inline
