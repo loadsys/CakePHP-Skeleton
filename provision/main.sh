@@ -12,6 +12,9 @@
 # Set up working vars.
 APP_ENV=${1-production}
 
+# @TODO: Make this dynamic?
+TARGET_USER=vagrant
+
 if [ -r "/etc/provision_path" ]; then
 	PROVISION_DIR="$( cat "/etc/provision_path" )"
 else
@@ -31,12 +34,13 @@ sudo apt-get install -y \
  libsqlite3-dev \
  curl \
  zip \
- git-core \
  memcached
 
 sudo apt-add-repository ppa:brightbox/ruby-ng -y
 
 sudo add-apt-repository -y ppa:ondrej/php5-5.6
+
+sudo apt-add-repository ppa:git-core/ppa -y
 
 
 # Install direct requirements.
@@ -48,36 +52,42 @@ sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password passwor
 
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password password'
 
-sudo apt-get install -y mysql-server apache2 php5 php5-curl php5-intl php5-mcrypt php5-mysql ruby1.9.3
+sudo apt-get install -y git-core mysql-server apache2 php5 php5-curl php5-intl php5-mcrypt php5-mysql ruby1.9.3
 
 
 # Install Mailcatcher.
-# echo "## Installing Mailcatcher."
-#
-# sudo gem install mailcatcher
-#
-# sudo tee /etc/init/mailcatcher.conf <<-'EOINIT'
-# 	description "Mailcatcher"
-# 	start on runlevel [2345]
-# 	stop on runlevel [!2345]
-# 	respawn
-# 	exec /usr/bin/env $(which mailcatcher) --foreground --http-ip=0.0.0.0
-#
-# EOINIT
-#
-# sudo service mailcatcher start
+echo "## Installing Mailcatcher."
+
+sudo gem install mailcatcher
+
+sudo tee /etc/init/mailcatcher.conf <<-'EOINIT'
+	description "Mailcatcher"
+	start on runlevel [2345]
+	stop on runlevel [!2345]
+	respawn
+	exec /usr/bin/env $(which mailcatcher) --foreground --http-ip=0.0.0.0
+
+EOINIT
+
+sudo service mailcatcher start
 
 
 # Set up the machine's APP_ENV value.
 echo "## Setting app environment."
 
-sudo tee /etc/app_env <<-EOENV
-	APP_ENV=${APP_ENV}
-EOENV
+sudo tee /etc/app_env <<-EOAPPENV
+
+	export APP_ENV=${APP_ENV}
+
+EOAPPENV
 
 sudo chmod a+r /etc/app_env
 
-echo ". /etc/app_env" >> /home/vagrant/.profile
+echo ". /etc/app_env" >> "/home/${TARGET_USER}/.profile"
+
+sudo cp -r ${PROVISION_DIR}/dot-files/.[a-zA-Z0-9]* "/home/${TARGET_USER}/" && \
+ sudo chown -R ${TARGET_USER} /home/${TARGET_USER}/.[a-zA-Z0-9]* && \
+ sudo cp -r ${PROVISION_DIR}/dot-files/.[a-zA-Z0-9]* /root/
 
 
 # Set up Apache config.
@@ -89,6 +99,7 @@ sudo tee -a /etc/apache2/envvars <<-EOENV
 
 	## Load this machine's APP_ENV value.
 	. /etc/app_env
+
 EOENV
 
 sudo cp "${PROVISION_DIR}/010-cake.conf" /etc/apache2/sites-available/
@@ -106,16 +117,26 @@ sudo service apache2 restart
 echo "## Setting up MySQL databases, users and passwords."
 
 SQL_IMPORT_FILE="${PROVISION_DIR}/${APP_ENV}.sql"
+
 if [ -r "${SQL_IMPORT_FILE}" ]; then
 	mysql -h localhost -u root -p'password' mysql < "${SQL_IMPORT_FILE}"
 fi
 
+
 # Call the environment-specific provisioning script, if it exists.
 ENV_SPECIFIC_SCRIPT="${PROVISION_DIR}/${APP_ENV}.sh"
+
+echo "## Calling environment-specific provisioning script: \`${ENV_SPECIFIC_SCRIPT}\`"
+
 if [ -x "${ENV_SPECIFIC_SCRIPT}" ]; then
 	"${ENV_SPECIFIC_SCRIPT}"
 fi
 
+
 # @TODO: Move mysql-server install and .sql file import to vagrant.sh
 # @TODO: Add mysql-client install (for cakephp-shell-scripts like db-backup and db-login
 # @TODO: Add php5-xdebug to vagrant.sh
+# @TODO: Separate script for node.js:
+#   sudo apt-add-repository -y ppa:chris-lea/node.js
+#   sudo apt-get update -y
+#   sudo apt-get install -y nodejs
