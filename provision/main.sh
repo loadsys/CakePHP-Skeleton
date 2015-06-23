@@ -1,16 +1,43 @@
-#!/bin/bash
-# Primary provisioning script for Loadsys Cake 3 applications.
-# (Starting to be) Designed to be used both by vagrant an on any Ubuntu
-# 12.04 LTS (Precise) server. Provide the desired APP_ENV value as the
-# first argument (defaults to "production"). That value will be written
-# to `/etc/app_env` and used by both the current user's `~/.profile`
-# and `/etc/apache2/envvars` + `provision/010-cake.conf`.
-#
-# Will load `provision/$APP_ENV.sql` into the local MySQL database.
+#!/usr/bin/env bash
 
+#---------------------------------------------------------------------
+usage ()
+{
+	cat <<EOT
+
+${0##*/}
+    Primary provisioning script for Loadsys Cake 3 applications.
+
+    (Starting to be) Designed to be used both by vagrant an on any
+    Ubuntu 12.04 LTS (Precise) server. Provide the desired APP_ENV
+    value as the first argument (defaults to "production"). That
+    value will be written to \`/etc/app_env\` and used by both the
+    current user's \`~/.profile\` and
+    \`/etc/apache2/envvars\` + \`provision/010-cake.conf\`.
+
+    Will execute \`provision/$APP_ENV.sql\` against the local MySQL
+    database and call \`provision/$APP_ENV.sh\` if present.
+
+Usage:
+    provision/${0##*/} <APP_ENV_VALUE>
+
+    Provide the value for the APP_ENV environment variable that you
+    wish this server to use.
+
+
+EOT
+
+	exit 0
+}
+if [ "$1" = '-h' ]; then
+	usage
+fi
 
 # Set up working vars.
-APP_ENV=${1-production}
+if [ -z "$1" ]; then
+	usage
+fi
+APP_ENV=${1}
 
 # @TODO: Make this dynamic?
 TARGET_USER=vagrant
@@ -25,22 +52,26 @@ fi
 # Install sub-dependencies first.
 echo "## Installing dependencies."
 
+echo "UTC" | sudo tee /etc/timezone
+
+sudo dpkg-reconfigure --frontend noninteractive tzdata
+
 sudo apt-get update -y
+
+sudo apt-get upgrade -y
 
 sudo apt-get install -y \
  software-properties-common \
  python-software-properties \
  build-essential \
- libsqlite3-dev \
  curl \
  zip \
- memcached
-
-sudo apt-add-repository ppa:brightbox/ruby-ng -y
+ memcached \
+ mysql-client
 
 sudo add-apt-repository -y ppa:ondrej/php5-5.6
 
-sudo apt-add-repository ppa:git-core/ppa -y
+sudo apt-add-repository -y ppa:git-core/ppa
 
 
 # Install direct requirements.
@@ -48,28 +79,7 @@ echo "## Installing LAMP stack components."
 
 sudo apt-get update -y
 
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password password'
-
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password password'
-
-sudo apt-get install -y git-core mysql-server apache2 php5 php5-curl php5-intl php5-mcrypt php5-mysql ruby1.9.3
-
-
-# Install Mailcatcher.
-echo "## Installing Mailcatcher."
-
-sudo gem install mailcatcher
-
-sudo tee /etc/init/mailcatcher.conf <<-'EOINIT'
-	description "Mailcatcher"
-	start on runlevel [2345]
-	stop on runlevel [!2345]
-	respawn
-	exec /usr/bin/env $(which mailcatcher) --foreground --http-ip=0.0.0.0
-
-EOINIT
-
-sudo service mailcatcher start
+sudo apt-get install -y git-core apache2 php5 php5-curl php5-intl php5-mcrypt php5-mysql
 
 
 # Set up the machine's APP_ENV value.
@@ -113,30 +123,21 @@ sudo a2enmod env rewrite
 sudo service apache2 restart
 
 
-# Configure MySQL databases.
-echo "## Setting up MySQL databases, users and passwords."
-
-SQL_IMPORT_FILE="${PROVISION_DIR}/${APP_ENV}.sql"
-
-if [ -r "${SQL_IMPORT_FILE}" ]; then
-	mysql -h localhost -u root -p'password' mysql < "${SQL_IMPORT_FILE}"
-fi
-
-
 # Call the environment-specific provisioning script, if it exists.
 ENV_SPECIFIC_SCRIPT="${PROVISION_DIR}/${APP_ENV}.sh"
 
-echo "## Calling environment-specific provisioning script: \`${ENV_SPECIFIC_SCRIPT}\`"
-
 if [ -x "${ENV_SPECIFIC_SCRIPT}" ]; then
+    echo "## Calling environment-specific provisioning script: \`${ENV_SPECIFIC_SCRIPT}\`"
+
 	"${ENV_SPECIFIC_SCRIPT}"
 fi
 
 
-# @TODO: Move mysql-server install and .sql file import to vagrant.sh
-# @TODO: Add mysql-client install (for cakephp-shell-scripts like db-backup and db-login
-# @TODO: Add php5-xdebug to vagrant.sh
-# @TODO: Separate script for node.js:
-#   sudo apt-add-repository -y ppa:chris-lea/node.js
-#   sudo apt-get update -y
-#   sudo apt-get install -y nodejs
+# Install Node.js.
+# echo "## Installing node.js."
+#
+# sudo apt-add-repository -y ppa:chris-lea/node.js
+#
+# sudo apt-get update -y
+#
+# sudo apt-get install -y nodejs
