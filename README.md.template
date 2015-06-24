@@ -118,8 +118,7 @@ Developers are expected to use the vagrant environment for all local work. Using
 
 ```bash
 git clone {{PROJECT_REPO_CLONE_URL:@TODO}} ./
-bin/bootstrap.sh
-vagrant up
+./bootstrap.sh vagrant
 ```
 
 The bootstrap file takes care of installing dependencies. After this process, the project should be available at [http://localhost:8080/](http://localhost:8080/).
@@ -128,7 +127,7 @@ The bootstrap file takes care of installing dependencies. After this process, th
 @TODO: Add a vagrant shutdown script to automatically call `bin/db-backup`, which will save a zipped. sql file in the shared folder under `backups/`.
 
 
-### Production (bare metal)
+### Production, Staging (bare metal)
 
 1. Create or provision a new Memcached server.
 	* (Locally) Update the `config/app.php` with the correct credentials and commit/push them to GitHub.
@@ -138,11 +137,9 @@ The bootstrap file takes care of installing dependencies. After this process, th
 1. Create or provision a new web instance server, preferably matching the Vagrant `box` in use (or vice-versa).
 	1. Install git v1.8+
 	1. `cd` into the intended webroot (typically `/var/www`).
-	1. Clone the project:
+	1. Clone the project and provision the server:
 			git clone {{PROJECT_REPO_HTTPS_URL:@TODO}} ./
-			./bootstrap.sh
-			./provision/main.sh
-1. Run `bin/migrations` to load the schema into the DB.
+			./bootstrap.sh YOUR_APP_ENV_VALUE
 
 
 ### Writeable Directories
