@@ -66,7 +66,7 @@ sudo apt-get install -y \
  build-essential \
  curl \
  zip \
- memcached \
+ #memcached \  # This would install memcached on the production web instance, which probably not what you want, so you must manually enable this.
  mysql-client
 
 sudo add-apt-repository -y ppa:ondrej/php5-5.6
@@ -130,6 +130,8 @@ if [ -x "${ENV_SPECIFIC_SCRIPT}" ]; then
     echo "## Calling environment-specific provisioning script: \`${ENV_SPECIFIC_SCRIPT}\`"
 
 	"${ENV_SPECIFIC_SCRIPT}"
+else
+    echo "## Environment-specific provisioning script not found. Skipping: \`${ENV_SPECIFIC_SCRIPT}\`"
 fi
 
 

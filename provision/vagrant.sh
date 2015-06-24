@@ -17,6 +17,7 @@
 
 # Set up working vars.
 MYSQL_ROOT_PASS="password"
+THIS_DIR="$( cd -P "$( dirname "$0" )"/. >/dev/null 2>&1 && pwd )"
 
 
 # Install a local MySQL server.
@@ -33,21 +34,24 @@ sudo apt-get install -y mysql-server
 
 
 # Configure MySQL databases.
-SQL_IMPORT_FILE="${PROVISION_DIR}/${APP_ENV}.sql"
+SQL_IMPORT_FILE="${THIS_DIR}/${APP_ENV}.sql"
+
 
 if [ -r "${SQL_IMPORT_FILE}" ]; then
     echo "## Executing environment-specific MySQL script: \`${SQL_IMPORT_FILE}\`"
 
-	mysql -h localhost -u root -p"'""${MYSQL_ROOT_PASS}""'" mysql < "${SQL_IMPORT_FILE}"
+	mysql --host=localhost --user=root --password="$MYSQL_ROOT_PASS" mysql < "${SQL_IMPORT_FILE}"
+else
+    echo "## Environment-specific MySQL script not found. Skipping: \`${SQL_IMPORT_FILE}\`"
 fi
 
 
 # Install development-only PHP extensions.
 echo "## Installing PHP development-only extensions."
 
-sudo apt-get install -y libsqlite3-dev php5-sqlite php5-xdebug
+sudo apt-get install -y libsqlite3-dev memcached php5-memcached php5-sqlite php5-xdebug
 
-sudo php5enmod sqlite3 xdebug
+sudo php5enmod memcached sqlite3 pdo_sqlite xdebug
 
 
 # Install Mailcatcher.
