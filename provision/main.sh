@@ -24,7 +24,6 @@ Usage:
     Provide the value for the APP_ENV environment variable that you
     wish this server to use.
 
-
 EOT
 
 	exit 0
@@ -37,15 +36,15 @@ fi
 if [ -z "$1" ]; then
 	usage
 fi
-APP_ENV=${1}
+export APP_ENV=${1}
 
 # @TODO: Make this dynamic?
 TARGET_USER=vagrant
 
 if [ -r "/etc/provision_path" ]; then
-	PROVISION_DIR="$( cat "/etc/provision_path" )"
+	export PROVISION_DIR="$( cat "/etc/provision_path" )"
 else
-	PROVISION_DIR="$( cd -P "$( dirname "$0" )"/. >/dev/null 2>&1 && pwd )"
+	export PROVISION_DIR="$( cd -P "$( dirname "$0" )"/. >/dev/null 2>&1 && pwd )"
 fi
 
 
@@ -85,7 +84,7 @@ sudo apt-get install -y git-core apache2 php5 php5-curl php5-intl php5-mcrypt ph
 # Set up the machine's APP_ENV value.
 echo "## Setting app environment."
 
-sudo tee /etc/app_env <<-EOAPPENV
+sudo tee /etc/app_env <<-EOAPPENV > /dev/null
 
 	export APP_ENV=${APP_ENV}
 
@@ -105,7 +104,7 @@ echo "## Setting up Apache virtual host."
 
 sudo cp /etc/apache2/envvars /etc/apache2/envvars.bak
 
-sudo tee -a /etc/apache2/envvars <<-EOENV
+sudo tee -a /etc/apache2/envvars <<-EOENV > /dev/null
 
 	## Load this machine's APP_ENV value.
 	. /etc/app_env
@@ -143,3 +142,7 @@ fi
 # sudo apt-get update -y
 #
 # sudo apt-get install -y nodejs
+
+
+# Finish up.
+echo "## Done: `basename "$0"`"

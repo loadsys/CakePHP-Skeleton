@@ -16,6 +16,8 @@
 
 
 # Set up working vars.
+#   PROVISION_DIR must be inherited from main.sh
+#   APP_ENV must be inherited from main.sh
 MYSQL_ROOT_PASS="password"
 THIS_DIR="$( cd -P "$( dirname "$0" )"/. >/dev/null 2>&1 && pwd )"
 
@@ -34,7 +36,7 @@ sudo apt-get install -y mysql-server
 
 
 # Configure MySQL databases.
-SQL_IMPORT_FILE="${THIS_DIR}/${APP_ENV}.sql"
+SQL_IMPORT_FILE="${PROVISION_DIR}/${APP_ENV}.sql"
 
 
 if [ -r "${SQL_IMPORT_FILE}" ]; then
@@ -53,6 +55,8 @@ sudo apt-get install -y libsqlite3-dev memcached php5-memcached php5-sqlite php5
 
 sudo php5enmod memcached sqlite3 pdo_sqlite xdebug
 
+sudo service apache2 reload
+
 
 # Install Mailcatcher.
 echo "## Installing Mailcatcher."
@@ -65,7 +69,7 @@ sudo apt-get install -y ruby1.9.3
 
 sudo gem install mailcatcher
 
-sudo tee "/etc/init/mailcatcher.conf" <<-'EOINIT'
+sudo tee "/etc/init/mailcatcher.conf" <<-'EOINIT' > /dev/null
 	description "Mailcatcher"
 	start on runlevel [2345]
 	stop on runlevel [!2345]
@@ -76,3 +80,6 @@ EOINIT
 
 sudo service mailcatcher start
 
+
+# Finish up.
+echo "## Done: `basename "$0"`"
