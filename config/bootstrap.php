@@ -75,17 +75,19 @@ try {
 try {
     $env = getenv('APP_ENV');
     Configure::load("/app-{$env}", 'default');
+} catch (\Exception $e) {
+    // It is not an error if this file is missing.
+}
+try {
     Configure::load('app-local', 'default');
 } catch (\Exception $e) {
-    // It is not an error if these files are missing.
-}
-
-// When debug = false the metadata cache should last
-// for a very very long time, as we don't want
-// to refresh the cache while users are doing requests.
-if (!Configure::read('debug')) {
-    Configure::write('Cache._cake_model_.duration', '+1 years');
-    Configure::write('Cache._cake_core_.duration', '+1 years');
+    // It is not an error if this file is missing.
+    // If it needs to be, uncomment the die() below.
+    //die(
+    //    'Untracked (but mandatory) config/app-local.php missing. '
+    //    . ' Copy & review config/app-local-sample.php to start.'
+    //    . " Exception message: {$e->getMessage()}\n"
+    //);
 }
 
 /**
