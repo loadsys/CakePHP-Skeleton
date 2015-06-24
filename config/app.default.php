@@ -1,4 +1,44 @@
 <?php
+/**
+ * Define a helper function that merges default Cache configs together.
+ *
+ * The $cacheMerge() function first joins the overrides provided with a
+ * standard set of defaults. Then if an env-override or local config is
+ * loaded on top of the production config, those values with again
+ * replace production values. The enclosed $defaults array is just a
+ * quick way to avoid duplication between multiple Cache configs. You
+ * can specify a Memcached host, username, password and prefix here,
+ * then only need to define the secodary prefix for each individual
+ * Cache bucket.
+ */
+use Cake\Utility\Hash;
+$cacheMerge = function (array $overrides = []) {
+    $defaults = [
+        'className' => 'Memcached',
+        'compress' => true,
+        'duration' => '+1 years',
+        'prefix' => 'myapp_', //@TODO: Should be templated.
+        'servers' => '@TODO: Memcached server address',  // or an array like: ['127.0.0.1', '1.2.3.4'], //@TODO: Should be templated.
+        'username' => '@TODO: Memcached server username', //@TODO: Should be templated.
+        'password' => '@TODO: Memcached server password', //@TODO: Should be templated.
+        //'groups' => [],
+        //'persistent' => false,
+        //'port' => null,
+        //'probability' => 100,
+        //'serialize' => 'php',
+        //'options' => [],
+    ];
+
+    // Special case prefixes to "prepend" the default prefix.
+    if (!empty($overrides['prefix'])) {
+    	$overrides['prefix'] = $defaults['prefix'] . $overrides['prefix'];
+    }
+
+    return Hash::merge($defaults, $overrides);
+};
+
+//----
+
 return [
     /**
      * Debug Level:
@@ -80,36 +120,46 @@ return [
      * Configure the cache adapters.
      */
     'Cache' => [
-        'default' => [
-            'className' => 'File',
-            'path' => CACHE,
-        ],
+        'default' => $cacheMerge(
+            // Returns the default array above, merged with the array passed in.
+        ),
 
         /**
          * Configure the cache used for general framework caching. Path information,
          * object listings, and translation cache files are stored with this
          * configuration.
          */
-        '_cake_core_' => [
-            'className' => 'File',
-            'prefix' => 'myapp_cake_core_',
-            'path' => CACHE . 'persistent/',
-            'serialize' => true,
-            'duration' => '+2 minutes',
-        ],
+        '_cake_core_' => $cacheMerge([
+            'prefix' => 'cake_core_',
+        ]),
 
         /**
          * Configure the cache for model and datasource caches. This cache
          * configuration is used to store schema descriptions, and table listings
          * in connections.
          */
-        '_cake_model_' => [
+        '_cake_model_' => $cacheMerge([
+            'prefix' => 'cake_model_',
+        ]),
+
+        /**
+         * An example of a "simple" File config, for reference.
+         *
+         * Caching should be via Memcached by default though.
+         *
+         * The [duration] here is normally set to `+2 minutes` and
+         * then overriden in bootstrap.php to `+1 years` if debug == 0.
+         * With out env-aware configs that's unnecessary.
+         */
+        /*
+        'sample_file_config' => [
             'className' => 'File',
-            'prefix' => 'myapp_cake_model_',
-            'path' => CACHE . 'models/',
+            'prefix' => 'myapp_cake_core_',
+            'path' => CACHE . 'persistent/',
             'serialize' => true,
-            'duration' => '+2 minutes',
+            'duration' => '+1 years',
         ],
+        */
     ],
 
     /**
@@ -213,10 +263,10 @@ return [
             'persistent' => false,
             'host' => 'localhost',
             /*
-            * CakePHP will use the default DB port based on the driver selected
-            * MySQL on MAMP uses port 8889, MAMP users will want to uncomment
-            * the following line and set the port accordingly
-            */
+             * CakePHP will use the default DB port based on the driver selected
+             * MySQL on MAMP uses port 8889, MAMP users will want to uncomment
+             * the following line and set the port accordingly
+             */
             //'port' => 'nonstandard_port_number',
             'username' => 'my_app',
             'password' => 'secret',
@@ -226,22 +276,22 @@ return [
             'cacheMetadata' => true,
 
             /*
-            * Set identifier quoting to true if you are using reserved words or
-            * special characters in your table or column names. Enabling this
-            * setting will result in queries built using the Query Builder having
-            * identifiers quoted when creating SQL. It should be noted that this
-            * decreases performance because each query needs to be traversed and
-            * manipulated before being executed.
-            */
+             * Set identifier quoting to true if you are using reserved words or
+             * special characters in your table or column names. Enabling this
+             * setting will result in queries built using the Query Builder having
+             * identifiers quoted when creating SQL. It should be noted that this
+             * decreases performance because each query needs to be traversed and
+             * manipulated before being executed.
+             */
             'quoteIdentifiers' => false,
 
             /*
-            * During development, if using MySQL < 5.6, uncommenting the
-            * following line could boost the speed at which schema metadata is
-            * fetched from the database. It can also be set directly with the
-            * mysql configuration directive 'innodb_stats_on_metadata = 0'
-            * which is the recommended value in production environments
-            */
+             * During development, if using MySQL < 5.6, uncommenting the
+             * following line could boost the speed at which schema metadata is
+             * fetched from the database. It can also be set directly with the
+             * mysql configuration directive 'innodb_stats_on_metadata = 0'
+             * which is the recommended value in production environments
+             */
             //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
         ],
 

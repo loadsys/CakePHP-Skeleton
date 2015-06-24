@@ -12,6 +12,39 @@ return [
     'debug' => true,
 
     /**
+     * Configure the cache adapters.
+     *
+     * These settings will be merged with the keys from app.php. That
+     * means we don't have to redefine the [className => Memcached]
+     * key, only where to connect.
+     *
+     * In a development Vagrant box, we want to connect to the simple,
+     * unprotected daemon running on localhost, and we want caches to
+     * expire quickly.
+     */
+    'Cache' => [
+        'default' => [
+            'compress' => false,
+            'duration' => 120,
+            'servers' => 'localhost',
+            'username' => null,
+            'password' => null,
+        ],
+        '_cake_core_' => [
+            'duration' => 120,
+            'servers' => 'localhost',
+            'username' => null,
+            'password' => null,
+        ],
+        '_cake_model_' => [
+            'duration' => 120,
+            'servers' => 'localhost',
+            'username' => null,
+            'password' => null,
+        ],
+    ],
+
+    /**
      * Email configuration.
      *
      * You can configure email transports and email delivery profiles here.
