@@ -64,6 +64,9 @@ sudo apt-get install -y \
  python-software-properties \
  build-essential \
  curl \
+ bzip2 \
+ gzip \
+ unzip \
  zip \
  #memcached \  # This would install memcached on the production web instance, which probably not what you want, so you must manually enable this.
  mysql-client
@@ -79,6 +82,17 @@ echo "## Installing LAMP stack components."
 sudo apt-get update -y
 
 sudo apt-get install -y git-core apache2 php5 php5-curl php5-intl php5-mcrypt php5-mysql
+
+
+# Install Node.js, Grunt and Ember.
+# Ref: https://nodesource.com/blog/nodejs-v012-iojs-and-the-nodesource-linux-repositories
+# echo "## Installing node.js, Grunt and Ember."
+#
+# curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
+#
+# sudo apt-get install -y nodejs
+#
+# sudo npm install -g json grunt-cli ember-cli
 
 
 # Set up the machine's APP_ENV value.
@@ -122,6 +136,23 @@ sudo a2enmod env rewrite
 sudo service apache2 restart
 
 
+# Set up DB backups on reboot/shutdown.
+SHUTDOWN_DB_BACKUP_SCRIPT="/etc/init.d/k99_shutdown_db_backup"
+sudo tee "${SHUTDOWN_DB_BACKUP_SCRIPT}"  <<-EOSHL > /dev/null
+	#!/usr/bin/env bash
+	. /etc/app_env
+	cd "/var/www"
+	bin/db-backup
+
+EOSHL
+
+sudo chmod a+x "${SHUTDOWN_DB_BACKUP_SCRIPT}"
+
+sudo ln -s /etc/init.d/"${SHUTDOWN_DB_BACKUP_SCRIPT}" /etc/rc0.d/`basename "${SHUTDOWN_DB_BACKUP_SCRIPT}"`
+
+sudo ln -s /etc/init.d/"${SHUTDOWN_DB_BACKUP_SCRIPT}" /etc/rc6.d/`basename "${SHUTDOWN_DB_BACKUP_SCRIPT}"`
+
+
 # Call the environment-specific provisioning script, if it exists.
 ENV_SPECIFIC_SCRIPT="${PROVISION_DIR}/${APP_ENV}.sh"
 
@@ -134,14 +165,7 @@ else
 fi
 
 
-# Install Node.js.
-# echo "## Installing node.js."
-#
-# sudo apt-add-repository -y ppa:chris-lea/node.js
-#
-# sudo apt-get update -y
-#
-# sudo apt-get install -y nodejs
+#@TODO: run `bin/migrations` and `bin/cake SeedShell.seed fill vagrant`. Maybe create a wrapper script like `bin/vagrant-provision` to bundle all this up? Put a "caller" script into `provision/main/sh` (here)?
 
 
 # Finish up.
