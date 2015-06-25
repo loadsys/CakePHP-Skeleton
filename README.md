@@ -28,7 +28,7 @@ composer self-update # Generally a good idea to run first.
 composer create-project --prefer-dist --ignore-platform-reqs loadsys/skeleton local/path/for/new/project 3.0.*
 # (Answer wizard questions.)
 cd local/path/for/new/project
-vagrant up
+./bootstrap.sh vagrant
 ```
 
 After vagrant provisioning finishes, the VM will be available at [http://localhost:8080](http://localhost:8080).
@@ -71,7 +71,7 @@ In other words: **This** repo uses README.md and composer.json, but your **gener
 
 When working on the skeleton's templates, it can be handy to review the list of tokens currently in use. This can be done pretty easily on the command line using `grep`.
 
-`grep -norE --include "*.template" '{{([A-Z0-9_]+):?([^}]*)?}}' .` - Lists all tokens and their defaults, including files and line numbers, but may include duplicates across files. This is useful for seeing what is used where. 
+`grep -norE --include "*.template" '{{([A-Z0-9_]+):?([^}]*)?}}' .` - Lists all tokens and their defaults, including files and line numbers, but may include duplicates across files. This is useful for seeing what is used where.
 
 `grep -horE --include "*.template" '{{([A-Z0-9_]+):?([^}]*)?}}' . | sort | uniq` - Lists all tokens and their defaults without duplicates, files or line numbers. Useful for reviewing the "reduced" list of tokens and defaults to see if they can be further consolidated.
 
@@ -92,16 +92,69 @@ Most of the magic behind the `create-project` command lies in composer's ability
 Additional first-time setup should be added as a post-install script. If a process should be repeatable, consider making it part of the [loadsys/CakePHP-Shell-Scripts]() repo instead, and calling that script from a post-install hook.
 
 
+### Bundled Provisioning
+
+By default, the Cake 3 projects created by this skeleton will be [environment-aware](https://github.com/beporter/CakePHP-EnvAwareness). This approach to configuration allows the Cake app to work in multiple environments without much fuss, but the question of _creating_ those environments consistently remains.
+
+We used to use [PuPHPet](https://puphpet.com/) to handle the Vagrant side of this, but grew weary of having to include thousands of files into each of our projects that we typically didn't need. It was also difficult to engage PuPHPet's assets for a "bare metal" installation on AWS or for a dedication production server, reducing the utility even further.
+
+So we've replaced it with very slim, lightweight shell scripts. Here's how they work:
+
+
+#### "The Three Machines"
+
+In our typical setup, there are three different computers to think about:
+
+1. The developer's workstation, usually a Mac laptop, which needs to be able to push/fetch the code to/from source control (git) and run development tools like code editors, a web browser and a virtualized copy of the project's hosting environment (vagrant).
+1. The developer's running copy of the project, typically a vagrant VM, which maintains the hosting environment for the app itself that includes all necessary resources (PHP, composer, Apache, MySQL, Memcached, file storage).
+1. The client's running copy (or copies) of the app, typically implemented as dedicated physical servers or cloud instances, which also must maintain the proper hosting environment, although possibly split among different resources (EC2 web instances + ElastiCache caching + RDS database(s) + S3 file storage).
+
+In order to conserve developer resources and unify these environments as much as possible, this skeleton bundles provisioning scripts that make the setup processes repeatable and self-documents the necessary steps involved. The order of execution of this process matters, and is outlined below.
+
+![Provisioning Diagram](https://loadsys.github.io/CakePHP-Skeleton/img/provisioning_diagram.svg)
+
+
+#### Project Inception
+
+When this skeleton is used to first create a new project via `composer create-project`, it will be done from a developer's "natural" environment (typically Mac OS X). The requirements for this are `git`, `php` and `composer`. In this step, the files in this repo are copied to a new directory and `composer install` is executed along with any composer PostInstall hook scripts.
+
+This newly-created directory hasn't been _fully_ initialized yet though, so the necessary steps are encoded into a `bootstrap.sh` script. This script ensures the new project folder is a git repo by calling `git init` if necessary, makes sure `composer update` has been executed and then kicks off the "provisioning" process. In the case of a developer's Mac, this means setting up the vagrant virtual machine, so the script calls `vagrant up`, which itself executes `provision/main.sh vagrant` inside the VM to prepare it.
+
+
+#### Additional Developers
+
+The `bootstrap.sh` script serves a dual purpose. As outlined in the previous section, in the case of a freshly-spawned project it prepares everything to be committed to git and pushed to a new remote.
+
+In the case of another developer freshly cloning an existing project (the "second run"), it prepares the environment to work with the project and again runs `vagrant up` for them to prime the VM. The developer need only have `git`, `php`, `composer` and `vagrant` on their machine as pre-requisites.
+
+
+#### Deployment
+
+To handle the third machine case, the "bare metal" environments, `git` is the only pre-requisite in order to clone the repo and run `bootstrap.sh`. The bootstrapper just launches `provision/main.sh YOUR_APP_ENV_VALUE` for you.
+
+
+#### Conclusion
+
+All told, this allows us to:
+
+* Re-use the `bootstrap.sh` script to
+    * Finish the first-run initializing a branch new project.
+    * Handle the second-run case for developers and prepare the project's VM for use.
+    * Handle the second-run case for new hosting environments like staging and production, preparing the machine to host the app directly.
+* Re-use the `provision/*.sh` scripts to install and configure all environments.
+
+
+
 # TODO
 
 @TODO: To add to composer.json require-dev:
 
-        "loadsys/loadsys-codesniffer": "1.0.*",
+        "loadsys/loadsys-codesniffer": "~?.?",
 
 @TODO: To add to composer.json require:
 
-        "loadsys/cakephp-shell-scripts": "3.0.*",
-        "loadsys/config-read": "3.0.*"
+        "loadsys/cakephp-shell-scripts": "~3.0",
+        "loadsys/config-read": "~3.0"
 
 
 @TODO: Items we need to review/convert to the tokenization system:

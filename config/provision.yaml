@@ -1,0 +1,51 @@
+# This is the master project provisioning configuration file.
+#
+# Its purpose is to provide environment-specific information on
+# external server dependencies that the project requires to run,
+# such as server IP, hostname, installed packages, etc. It's
+# designed to simplify the provisioning process for both vagrant
+# dev environments and production instances. It mirrors the
+# environment-aware `app-*.php` configs loaded by Cake in
+# bootstrap.php.
+#
+# The full set of config keys used in provisioning must be defined
+# in this file. Additional override keys may be defined in separate
+# files named after the matching APP_ENV. For example:
+# `provision-staging.yaml` and/or `provision-local.yaml`. Values
+# from those files will be deep-merged on top of this one during
+# bootstrapping.
+---
+readme: "Nothing is required to be present in this file. In fact, the file doesn't even have to be present!"
+vm:
+   provider: 'virtualbox'
+   box: 'hashicorp/precise64'
+   box_url: 'hashicorp/precise64'
+   hostname: 'loadsys-cake3-skeleton'
+   memory: 2048
+   cpus: 2
+   network:
+       ip: '192.168.8.42'
+       forwarded_port:
+           apache:
+               guest: 80
+               host: 8080
+           mysql:
+               guest: 3306
+               host: 3307
+           mailcatcher:
+               guest: 1080
+               host: 1080
+       auto_correct_collisions: true
+       usable_port_range:
+           start: 10200
+           end: 10500
+   synced_folder:
+       project_root:
+           source: './'
+           target: '/var/www'
+   provision:
+       scripts:
+           main:
+               path: 'provision/main.sh'
+               args: 'vagrant'
+   post_up_message: 'It works!'

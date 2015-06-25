@@ -52,7 +52,7 @@ class InstallerConfigurer
         $value = $this->io->askAndValidate(
             $this->formatPrompt($prompt, $default),
             (function($input) {return $input;}),
-            false,
+            10,
             $default
         );
 

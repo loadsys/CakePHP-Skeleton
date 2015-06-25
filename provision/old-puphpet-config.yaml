@@ -1,0 +1,352 @@
+---
+readme: "@TODO: This is here for reference only, and should eventually be removed."
+vagrantfile-local:
+    vm:
+        box: puphpet/debian75-x64
+        box_url: puphpet/debian75-x64
+        hostname: '{{VAGRANT_VM_HOSTNAME:@TODO}}'
+        memory: '1024'
+        cpus: '2'
+        chosen_provider: virtualbox
+        network:
+            private_network: '{{VAGRANT_VM_PRIVATE_IP:@TODO}}'
+            forwarded_port:
+                apache:
+                    host: '8080'
+                    guest: '80'
+                mysql:
+                    host: '3307'
+                    guest: '3306'
+            # Make networking more flexible. -bp
+            type: private # or `public`
+            ip: 192.168.56.101 # Not currently used, see Vagrantfile.
+            bridge: '' # '' (blank means prompt the user), 'en1: Wi-Fi (AirPort)',  'en0: Ethernet', 'en3: Thunderbolt Ethernet'
+            auto_correct_collisions: true
+        post_up_message: ''
+        provider:
+            virtualbox:
+                modifyvm:
+                    natdnshostresolver1: on
+            vmware:
+                numvcpus: 1
+            parallels:
+                cpus: 1
+        provision:
+            puppet:
+                manifests_path: puphpet/puppet
+                manifest_file: site.pp
+                module_path: puphpet/puppet/modules
+                options:
+                    - '--verbose'
+                    - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
+                    - '--parser future'
+        synced_folder:
+            project_root:
+                sync_owner: www-data
+                sync_group: www-data
+                source: ./
+                target: /var/www
+                sync_type: nfs  # Or `default` but `nfs` performs better and is (likely) required when using vmware.
+                rsync:
+                    args:
+                        - '--verbose'
+                        - '--archive'
+                        - '-z'
+                    exclude:
+                        - .vagrant/
+                    auto: 'false'
+        usable_port_range:
+            start: 10200
+            stop: 10500
+    ssh:
+        host: null
+        port: null
+        private_key_path: null
+        username: vagrant
+        guest_port: null
+        keep_alive: true
+        forward_agent: false
+        forward_x11: false
+        shell: 'bash -l'
+    vagrant:
+        host: detect
+server:
+    install: '1'
+    apt-ppa-repos:
+        - ppa:git-core/ppa   # Provides newer git-core. -bp
+        - ppa:chris-lea/node.js  # Provides newer node and npm. -bp
+    packages:
+        - curl # Required by CakePHP-Shell-Scripts
+        #- emacs
+        #- g++
+        #- graphviz
+        #- make
+        #- memcached
+        #- vim
+        - zip # Required by CakePHP-Shell-Scripts
+        - git-core  # Via ppa:git-core, required by CakePHP-Shell-Scripts
+        #- nodejs  # Via ppa:chris-lea
+users_groups:
+    install: '1'
+    groups: {  }
+    users: {  }
+cron:
+    install: '1'
+    jobs: {  }
+firewall:
+    install: '1'
+    rules: null
+apache:
+    install: 0
+    settings:
+        user: www-data
+        group: www-data
+        default_vhost: false
+        manage_user: false
+        manage_group: false
+        sendfile: 0
+    modules:
+        - cache
+        - deflate
+        - expires
+        #- headers
+        #- proxy
+        - rewrite
+        - ssl
+    vhosts:
+        vagrant_dev:
+            servername: vagrant.dev
+            serveraliases:
+                - www.vagrant.dev
+            docroot: /var/www/webroot
+            port: '80'
+            setenv:
+                - 'APP_ENV vagrant'
+            directories:
+                var_www:
+                    provider: directory
+                    path: /var/www/webroot
+                    options:
+                        - Indexes
+                        - FollowSymlinks
+                        - MultiViews
+                    allow_override:
+                        - All
+                    require:
+                        - all
+                        - granted
+                    custom_fragment: ''
+            engine: php
+            custom_fragment: ''
+            ssl_cert: ''
+            ssl_key: ''
+            ssl_chain: ''
+            ssl_certs_dir: ''
+    mod_pagespeed: 0
+nginx:
+    install: '1'
+    settings:
+        default_vhost: 0
+        proxy_buffer_size: 128k
+        proxy_buffers: '4 256k'
+    upstreams: {  }
+    vhosts:
+        vagrant_dev:
+            proxy: ''
+            server_name: vagrant.dev
+            server_aliases:
+                - www.vagrant.dev
+            www_root: /var/www/webroot
+            listen_port: '80'
+            location: \.php$
+            index_files:
+                - index.html
+                - index.htm
+                - index.php
+            envvars:
+                - 'APP_ENV vagrant'
+            engine: php
+            client_max_body_size: 1m
+            ssl: '0'
+php:
+    install: '1'
+    version: '56'
+    composer: '1'
+    composer_home: ''
+    modules:
+        php:
+            - cli # Needed for shells
+            #- curl
+            #- gd
+            #- geoip
+            #- imagick
+            - intl # Required by Cake 3.
+            - mbstring # Required by Cake 3.
+            - mcrypt # Required by Cake 3.
+            #- memcache
+            #- memcached
+            #- mysql
+            #- readline
+            #- sqlite
+            #- xmlrpc
+            #- xsl
+        pear: {  }
+        pecl:
+            #- APC
+            - PDO # Required by Cake 3.
+            - PDO_MYSQL # Required by Cake 3.
+            #- PDO_PGSQL
+            #- PDO_SQLITE
+            #- SQLite
+            #- json
+            #- memcache
+            #- memcached
+            #- mongo
+            #- oauth
+            #- pdflib
+            #- pecl_http
+            #- redis
+            #- sphinx
+            #- xattr
+            #- yaml
+            #- zip
+    ini:
+        display_errors: On
+        error_reporting: '-1'
+        session.save_path: /var/lib/php/session
+    timezone: UTC
+    mod_php: 0
+hhvm:
+    install: '0'
+    nightly: 0
+    composer: '1'
+    composer_home: ''
+    settings:
+        host: 127.0.0.1
+        port: '9000'
+    ini:
+        display_errors: On
+        error_reporting: '-1'
+    timezone: null
+xdebug:
+    install: '1'
+    settings:
+        xdebug.default_enable: '1'
+        xdebug.remote_autostart: '0'
+        xdebug.remote_connect_back: '1'
+        xdebug.remote_enable: '1'
+        xdebug.remote_handler: dbgp
+        xdebug.remote_port: '9000'
+xhprof:
+    install: '0'
+wpcli:
+    install: '0'
+    version: v0.17.1
+drush:
+    install: '0'
+    version: 6.3.0
+ruby:
+    install: '1'
+    versions:
+        V7OFVf18MKvE:
+            version: ''
+nodejs:
+    install: '1'
+    npm_packages:
+        - ember-cli
+        - grunt-cli
+        - json
+python:
+    install: '1'
+    packages: {  }
+    versions:
+        ZjgyRGk1nxnp:
+            version: ''
+mysql:
+    install: '1'
+    override_options: {  }
+    root_password: password
+    adminer: 0
+    databases:
+        default:
+            grant:
+                - ALL
+            name: vagrant
+            host: '%'
+            user: vagrant
+            password: vagrant
+            #sql_file: /var/www/Config/Schema/vagrant.sql
+        test:
+            grant:
+                - ALL
+            name: vagrant_test
+            host: localhost
+            user: vagrant
+            password: vagrant
+            sql_file: ''
+postgresql:
+    install: '0'
+    settings:
+        root_password: '123'
+        user_group: postgres
+        encoding: UTF8
+        version: '9.3'
+    databases: {  }
+    adminer: 0
+mariadb:
+    install: '0'
+    override_options: {  }
+    root_password: '123'
+    adminer: 0
+    databases: {  }
+    version: '10.0'
+sqlite:
+    install: '0'
+    adminer: 0
+    databases: {  }
+mongodb:
+    install: '0'
+    settings:
+        auth: 1
+        port: '27017'
+    databases: {  }
+redis:
+    install: '1'
+    settings:
+        conf_port: '6379'
+mailcatcher:
+    install: '1'
+    settings:
+        smtp_ip: 0.0.0.0
+        smtp_port: 1025
+        http_ip: 0.0.0.0
+        http_port: '1080'
+        mailcatcher_path: /usr/local/rvm/wrappers/default
+        from_email_method: inline
+beanstalkd:
+    install: '0'
+    settings:
+        listenaddress: 0.0.0.0
+        listenport: '13000'
+        maxjobsize: '65535'
+        maxconnections: '1024'
+        binlogdir: /var/lib/beanstalkd/binlog
+        binlogfsync: null
+        binlogsize: '10485760'
+    beanstalk_console: 0
+    binlogdir: /var/lib/beanstalkd/binlog
+rabbitmq:
+    install: '0'
+    settings:
+        port: '5672'
+elastic_search:
+    install: '0'
+    settings:
+        version: 1.4.1
+        java_install: true
+solr:
+    install: '0'
+    settings:
+        version: 4.10.2
+        port: '8984'
+
