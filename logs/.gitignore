@@ -1,5 +1,0 @@
-# Keeps the folder structures with .gitkeep files, but ignores ALL files in this subdir.
-*
-!.gitignore
-!.gitkeep
-!*/
