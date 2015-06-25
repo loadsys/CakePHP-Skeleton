@@ -147,13 +147,8 @@ All told, this allows us to:
 
 # TODO
 
-@TODO: To add to composer.json require-dev:
-
-        "loadsys/loadsys-codesniffer": "~?.?",
-
 @TODO: To add to composer.json require:
 
-        "loadsys/cakephp-shell-scripts": "~3.0",
         "loadsys/config-read": "~3.0"
 
 
@@ -168,3 +163,5 @@ All told, this allows us to:
 * Search project-wide for `@TODO` markers. This should reveal any additional necessary configuration.
 
 * `.travis.yml`: (Probably won't need to do much here.)
+
+* The Codesniffer requires setting the install path for the Sniffs, this probably should be automated in some fashion, or the Shell Scripts should include setting this path?
