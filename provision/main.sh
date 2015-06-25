@@ -47,11 +47,13 @@ else
 	export PROVISION_DIR="$( cd -P "$( dirname "$0" )"/. >/dev/null 2>&1 && pwd )"
 fi
 
+echo "## Starting: `basename "$0"`."
+
 
 # Install sub-dependencies first.
 echo "## Installing dependencies."
 
-echo "UTC" | sudo tee /etc/timezone
+echo "UTC" | sudo tee /etc/timezone > /dev/null
 
 sudo dpkg-reconfigure --frontend noninteractive tzdata
 
@@ -68,7 +70,6 @@ sudo apt-get install -y \
  gzip \
  unzip \
  zip \
- #memcached \  # This would install memcached on the production web instance, which probably not what you want, so you must manually enable this.
  mysql-client
 
 sudo add-apt-repository -y ppa:ondrej/php5-5.6
@@ -82,6 +83,12 @@ echo "## Installing LAMP stack components."
 sudo apt-get update -y
 
 sudo apt-get install -y git-core apache2 php5 php5-curl php5-intl php5-mcrypt php5-mysql
+
+
+# Install composer.
+echo "## Installing composer."
+
+curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 
 
 # Install Node.js, Grunt and Ember.

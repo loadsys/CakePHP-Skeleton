@@ -33,31 +33,20 @@ NEW_APP_ENV=${1}
 
 DIR="$( cd -P "$( dirname "$0" )"/. >/dev/null 2>&1 && pwd )"
 
+echo "## Bootstrapping the project."
 
-# Init git submodules.
-echo "## Initializing submodules."
 
+# Initialize git.
 cd "${DIR}"
 
-git submodule update --init --recursive
-
-
-# Confirm (or install) composer.
-COMPOSER="$( which composer )"
-
-if [ $? -gt 0 ]; then
-    echo "!! Installing composer (enter sudo password if prompted)..."
-
-    curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
-fi
-
-
-# Install composer packages using versions specified in config/lock file.
-composer install --no-interaction --ignore-platform-reqs --optimize-autoloader
-
-if [ $? -gt 0 ]; then
-    echo "!! Composer install failed. Aborting."
-    exit 1
+if git rev-parse --git-dir > /dev/null 2>&1; then
+    echo "## Initializing git submodules."
+    git submodule update --init --recursive
+else
+    echo "## Initializing git repo."
+    git init
+    #read -t 0 -p "Enter git remote URL: " GIT_REMOTE
+    #git remote add origin $GIT_REMOTE
 fi
 
 
@@ -68,9 +57,9 @@ VAGRANT_CONFIG_FILE="$DIR/Vagrantfile"
 VAGRANT="$( which vagrant )"
 
 # Checking specifically for `vagrant` here is a magic string, but what can we do?
-if [ $? -eq 0 ] && [ -e "$VAGRANT_CONFIG_FILE" ] && [ "$NEW_APP_ENV" -ne "vagrant" ]; then
+if [ $? -eq 0 ] && [ -e "$VAGRANT_CONFIG_FILE" ] && [ "$NEW_APP_ENV" = "vagrant" ]; then
 
-    echo "## Found Vagrant: ${VAGRANT}."
+    echo "## Found Vagrant: ${VAGRANT}"
     echo "## Found Vagrant config file: $VAGRANT_CONFIG_FILE"
     echo "## Provisioning for development."
 
@@ -81,6 +70,24 @@ else
 
     echo "## Provisioning for bare metal with APP_ENV=${NEW_APP_ENV}."
 
+    read -t 60 -p "Proceed? (Ctrl-C to abort.) [ENTER] " NOOP
+
     provision/main.sh ${NEW_APP_ENV}
 
 fi
+
+
+# Install composer packages using versions specified in config/lock file.
+echo "## Running \`composer install\`."
+
+composer update --lock --no-interaction --ignore-platform-reqs && \
+ composer install --no-interaction --ignore-platform-reqs --optimize-autoloader
+
+if [ $? -gt 0 ]; then
+    echo "!! Running \`composer install\` failed. Aborting."
+    exit 1
+fi
+
+
+# Finish up.
+echo "## Done: `basename "$0"`"

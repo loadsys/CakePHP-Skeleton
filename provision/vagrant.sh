@@ -21,6 +21,8 @@
 MYSQL_ROOT_PASS="password"
 THIS_DIR="$( cd -P "$( dirname "$0" )"/. >/dev/null 2>&1 && pwd )"
 
+echo "## Starting: `basename "$0"`."
+
 
 # Install a local MySQL server.
 echo "## Installing local MySQL server."

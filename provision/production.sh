@@ -27,6 +27,8 @@ SMTP_RELAY_PASSWORD="@TODO:ses-password-here"
 echo "!! Nothing below has been tested yet!"
 exit 0
 
+echo "## Starting: `basename "$0"`."
+
 
 # Set machine hostname.
 # echo "## Setting hostname."
@@ -170,3 +172,9 @@ root: ${NOTIFY_EMAIL}
 EOF
 
 sudo postalias /etc/aliases
+
+
+
+
+# Finish up.
+echo "## Done: `basename "$0"`"
