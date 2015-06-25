@@ -1,6 +1,6 @@
 # Loadsys CakePHP 3.x App Skeleton
 
-A skeleton for creating applications with [CakePHP](http://cakephp.org) 3.0. (If you're looking
+A skeleton for creating applications with [CakePHP](http://cakephp.org) 3.x. (If you're looking
 for a 2.x compatible version you'll want to check out the
 [cake-2.x](https://github.com/loadsys/CakePHP-Skeleton/tree/cake-2.x) branch.)
 
@@ -25,7 +25,7 @@ The 3.x version of the skeleton leverages composer's `create-project` command. A
 
 ```bash
 composer self-update # Generally a good idea to run first.
-composer create-project --prefer-dist --ignore-platform-reqs loadsys/skeleton local/path/for/new/project 3.0.*
+composer create-project --prefer-dist --ignore-platform-reqs loadsys/skeleton local/path/for/new/project ~3.1
 # (Answer wizard questions.)
 cd local/path/for/new/project
 ./bootstrap.sh vagrant
