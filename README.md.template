@@ -57,6 +57,7 @@ The following tools **should be installed on your development machine** in order
 Vagrant + VirtualBox/VMware provide the following additional tools inside the VM. There are no "optional" installs. Developers must be able to run tests, generate phpDocs and run the code sniffer locally before committing. Thankfully, **the vagrant VM provides the following tools**, including:
 
 * PHP's [xdebug extension](http://xdebug.org/) v2+
+* PHP's sqlite extension (for DebugKit).
 * [composer](https://getcomposer.org/)
 
 The following tools can easily be _made_ available by uncommenting the appropriate section of the `provision/main.sh` script:
