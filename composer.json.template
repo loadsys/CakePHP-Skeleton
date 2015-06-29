@@ -2,7 +2,7 @@
   "name": "{{COMPOSER_PROJECT_NAME:loadsys/@TODO}}",
   "description": "{{COMPOSER_PROJECT_DESCRIPTION_NO_QUOTES:}}",
   "homepage": "{{PROJECT_REPO_URL:}}",
-  "type": "library",
+  "type": "project",
   "license": "proprietary",
   "require": {
     "php": ">=5.6.0",
