@@ -60,13 +60,12 @@ class LoadsysInstaller
     }
 
     /**
-     * Asks a question with a yes or no answer to the user and returns a boolean.
+     * Finds *.template files and parses tokens strings within each.
      *
-     * @param \Composer\IO\IOInterface $io IO interface to write to console.
-     * @param string $question Question to ask user with a yes or no answer.
-     * @param string $default default value. Any of 'Y', 'y', 'N', or 'n'
-     * @throws \Exception Exception raised by validator.
-     * @return bool user's aster to $question
+     * @param InstallerConfigurer $config InstallerConfigurer instance.
+     * @param Composer\Script\Event $event Composer's Event instance
+     * @param string $rootDir The application's root directory.
+     * @return void
      */
     protected static function parseTemplates(InstallerConfigurer $config, Event $event, $rootDir)
     {
@@ -88,6 +87,7 @@ class LoadsysInstaller
     /**
      * Asks a question with a yes or no answer to the user and returns a boolean.
      *
+     * @param \Composer\IO\IOInterface $io IO interface to write to console.
      * @param string $question Question to ask user with a yes or no answer.
      * @param string $default default value. Any of 'Y', 'y', 'N', or 'n'
      * @throws \Exception Exception raised by validator.
