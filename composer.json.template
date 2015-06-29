@@ -19,7 +19,8 @@
     "phpdocumentor/phpdocumentor": "2.*@beta",
     "squizlabs/php_codesniffer": "2.*",
     "johnkary/phpunit-speedtrap": "~1.0@dev",
-    "psy/psysh": "@stable"
+    "psy/psysh": "@stable",
+    "loadsys/loadsys_codesniffer": "~3.0"
   },
   "autoload": {
     "psr-4": {
