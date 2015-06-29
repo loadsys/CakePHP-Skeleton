@@ -21,7 +21,7 @@ _"Environment" refers to external technologies required for the app to run. Anyt
 
 This section documents the minimum required tools for hosting this application.
 
-* [CakePHP](https://github.com/cakephp/cakephp/tree/2.6.1) v3.0+
+* [CakePHP](https://github.com/cakephp/cakephp) v3.0+
 * PHP v5.6+
 	* intl
 	* pdo + mysql
