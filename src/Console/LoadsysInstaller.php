@@ -25,7 +25,7 @@ class LoadsysInstaller
 {
 
     /**
-     *
+     * Callback method called via composer post the installation of this application.
      *
      * @param \Composer\Script\Event $event The composer event object.
      * @return void
@@ -41,6 +41,12 @@ class LoadsysInstaller
 
     }
 
+    /**
+     * Welcome message called from the postInstall method of this class.
+     *
+     * @param \Composer\IO\IOInterface $io IO interface to write to console.
+     * @return void
+     */
     protected static function welcome($io)
     {
         $io->write('<info>Thanks for using the Loadsys CakePHP 3 project skeleton!</info>');
@@ -54,11 +60,13 @@ class LoadsysInstaller
     }
 
     /**
-     * Finds *.template files and parses tokens strings within each.
+     * Asks a question with a yes or no answer to the user and returns a boolean.
      *
-     * @param InstallerConfigurer $config InstallerConfigurer instance.
-     * @param Composer\Script\Event $event Composer's Event instance
-     * @return void
+     * @param \Composer\IO\IOInterface $io IO interface to write to console.
+     * @param string $question Question to ask user with a yes or no answer.
+     * @param string $default default value. Any of 'Y', 'y', 'N', or 'n'
+     * @throws \Exception Exception raised by validator.
+     * @return bool user's aster to $question
      */
     protected static function parseTemplates(InstallerConfigurer $config, Event $event, $rootDir)
     {
