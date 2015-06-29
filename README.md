@@ -147,9 +147,9 @@ All told, this allows us to:
 
 # TODO
 
-@TODO: To add to composer.json require:
+@TODO: To add to `composer.json.template` require once these plugins are compatible:
 
-        "loadsys/config-read": "~3.0"
+        "loadsys/cakephp-shell-scripts": "~3.0"
 
 
 @TODO: Items we need to review/convert to the tokenization system:
@@ -164,4 +164,5 @@ All told, this allows us to:
 
 * `.travis.yml`: (Probably won't need to do much here.)
 
-* The Codesniffer requires setting the install path for the Sniffs, this probably should be automated in some fashion, or the Shell Scripts should include setting this path?
+
+@TODO: The Codesniffer requires setting the install path for the Sniffs, this probably should be automated in some fashion, or the Shell Scripts should include setting this path?
