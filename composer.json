@@ -23,9 +23,6 @@
       "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
     }
   },
-  "config": {
-    "bin-dir": "bin"
-  },
   "scripts": {
     "post-create-project-cmd": [
       "App\\Console\\Installer::postInstall",
