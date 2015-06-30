@@ -6,8 +6,12 @@ This is a templated Markdown file with a few {{TOKEN:overlaps with token from su
 
 * {{NO_DEFAULT}}
 * {{SECOND_ITEM:The second thing in the list.}}
+* {{MATCHING}}
+* {{SHOULD_BE_REMOVED:default does not matter}}
 
 Other uses of the `{{` and `}}` characters should be correctly ignored.
+
+This token isn't in our test cases, so it should be left alone: {{NOT_IN_TESTS:blah}}
 
 When the tokens in this file are replaced, it should overwrite the existing README.md file.
 

@@ -26,8 +26,7 @@ class LoadsysInstaller
         $rootDir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR;
 
         static::welcome($io);
-        $config = new InstallerConfigurer($event);
-        static::parseTemplates($config, $event, $rootDir);
+        static::parseTemplates($event, $rootDir);
 
     }
 
@@ -52,13 +51,13 @@ class LoadsysInstaller
     /**
      * Finds *.template files and parses tokens strings within each.
      *
-     * @param InstallerConfigurer $config InstallerConfigurer instance.
      * @param Composer\Script\Event $event Composer's Event instance
      * @param string $rootDir The application's root directory.
      * @return void
      */
-    protected static function parseTemplates(InstallerConfigurer $config, Event $event, $rootDir)
+    protected static function parseTemplates(Event $event, $rootDir)
     {
+        $config = new InstallerConfigurer($event);
         $fileParser = new FileParser($event, $rootDir);
         $templates = $fileParser->findTemplates();
 
@@ -73,27 +72,4 @@ class LoadsysInstaller
             $fileParser->parseTemplate($template, $config->read());
         }
     }
-
-    /**
-     * Asks a question with a yes or no answer to the user and returns a boolean.
-     *
-     * @param \Composer\IO\IOInterface $io IO interface to write to console.
-     * @param string $question Question to ask user with a yes or no answer.
-     * @param string $default default value. Any of 'Y', 'y', 'N', or 'n'
-     * @throws \Exception Exception raised by validator.
-     * @return bool user's aster to $question
-     */
-    protected static function askBool($io, $question, $default = 'Y')
-    {
-        $validator = (function ($arg) {
-            if (in_array($arg, ['Y', 'y', 'N', 'n'])) {
-                return $arg;
-            }
-            throw new Exception('Please enter Y or n.');
-        });
-        $input = $io->askAndValidate($question, $validator, 10, $default);
-
-        return in_array($input,['Y', 'y']);
-    }
-
 }

@@ -110,7 +110,7 @@ class FileParserTest extends \PHPUnit_Framework_TestCase
         unset($this->io);
         unset($this->parser);
         $this->ioWriteBuffer = [];
-        //$this->wipeSampleDir($this->testDir);
+        $this->wipeSampleDir($this->testDir);
 
         parent::tearDown();
     }
@@ -204,58 +204,6 @@ class FileParserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the tokenize() method.
-     *
-     * @param string $token The token name to process.
-     * @param string $default The default token value. `null` is treated differently from empty string "".
-     * @param string $expected The expected processed string.
-     * @param string $msg Optional PHPUnit assertion failure message.
-     * @dataProvider provideTokenizeArgs
-     */
-    public function testTokenize($token, $default, $expected, $msg = '')
-    {
-        $this->assertEquals(
-            $expected,
-            $this->parser->tokenize($token, $default),
-            $msg
-        );
-    }
-
-    /**
-     * Provide data sets to testTokenize().
-     *
-     * @return array Sets of [token, default, expected, assertion failure message].
-     */
-    public function provideTokenizeArgs()
-    {
-        return [
-            [
-                '', null, // token, default
-                '{{}}', // expected
-                'Empty string should produce empty output.', // message
-            ],
-
-            [
-                'SIMPLE', null,
-                '{{SIMPLE}}',
-                'Null default value should produce simple token string.'
-            ],
-
-            [
-                'EMPTY_DEFAULT', '',
-                '{{EMPTY_DEFAULT:}}',
-                'Blank default should produce a colon with nothing after it.'
-            ],
-
-            [
-                'WITH_DEFAULT_VAL', 'fizz buzz',
-                '{{WITH_DEFAULT_VAL:fizz buzz}}',
-                'Non-empty default value should be included in output.'
-            ],
-        ];
-    }
-
-    /**
      * Test the getTokensInFiles() method.
      *
      * @param array $fileList Array of relative filenames to pass in.
@@ -303,6 +251,8 @@ class FileParserTest extends \PHPUnit_Framework_TestCase
                     'TOKEN' => 'overlaps with token from ../README.md',
                     'NO_DEFAULT' => '',
                     'SECOND_ITEM' => 'The second thing in the list.',
+                    'NOT_IN_TESTS' => 'blah',
+                    'SHOULD_BE_REMOVED' => 'default does not matter',
                 ],
                 'Produced token list must match those from the listed files.',
             ],
@@ -333,19 +283,24 @@ class FileParserTest extends \PHPUnit_Framework_TestCase
         $file = 'README.md.template';
         $expectedFileName = 'README.md';
         $expectedMessages = [
-            "Parsing template: $file",
-            "Failed to replace `$expectedFileName` with `$file`",
+            "<comment>Parsing template: $file</comment>",
+            "<comment>	Replacing `TOKEN` with `foo bar`.</comment>",
+            "<comment>	Replacing `NO_DEFAULT` with `tic tac toe`.</comment>",
+            "<comment>	Replacing `SECOND_ITEM` with `a quick brown fox`.</comment>",
+            "<comment>	Replacing `SHOULD_BE_REMOVED` with ``.</comment>",
+            "<comment>Using `{$this->testDir}{$file}` to replace `{$this->testDir}{$expectedFileName}`.</comment>",
         ];
-        $tokens = [
+        $replacements = [
             'TOKEN' => 'foo bar',
             'NO_DEFAULT' => 'tic tac toe',
             'SECOND_ITEM' => 'a quick brown fox',
-            'UNUSED' => 'UNUSED',
-            'USE_EMPTY_STR' => ' ',
+            'MATCHING' => 'MATCHING',
+            'SHOULD_BE_REMOVED' => ' ',
+            'NOT_IN_FILE' => 'This token is not in the file being processed.',
        ];
 
         $this->assertTrue(
-            $this->parser->parseTemplate($file, $tokens),
+            $this->parser->parseTemplate($file, $replacements),
             'parseTemplate() should always return true.'
         );
 
@@ -364,12 +319,18 @@ class FileParserTest extends \PHPUnit_Framework_TestCase
             $contents,
             'The contents of the pre-existing file should have been overwritten by our template.'
         );
+        $this->assertContains(
+            '{{NOT_IN_TESTS:blah}}',
+            $contents,
+            'A non-matched token should still exist in the finished file. (Technically impossible in actual use.)'
+        );
 
         $matches = [];
         preg_match_all($this->parser->tokenExpression(), $contents, $matches);
-        $this->assertEmpty(
-            $matches,
-            'The replaced file should not have any {{TOKEN}}s left in it.'
+        $this->assertContains(
+            'NOT_IN_TESTS',
+            $matches[1], // token name sub-matches
+            'The replaced file should not have a single unmatched {{TOKEN}} left in it.'
         );
 
         $this->assertEquals(
