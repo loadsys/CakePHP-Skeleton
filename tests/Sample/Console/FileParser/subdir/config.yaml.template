@@ -1,0 +1,5 @@
+---
+readme: "A sample YAML file with tokens"
+top:
+    key: "{{SOME_TOKEN:default value}}"
+    second: blah

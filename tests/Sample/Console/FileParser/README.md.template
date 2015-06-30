@@ -1,0 +1,10 @@
+# README
+
+This is a templated Markdown file with a few {{TOKEN:tokens}} in it.
+
+* {{NO_DEFAULT}}
+* {{SECOND_ITEM:The second thing in the list.}}
+
+Other uses of the `{{` and `}}` characters should be correctly ignored.
+
+When the tokens in this file are replaced, it should overwrite the existing README.md file.
