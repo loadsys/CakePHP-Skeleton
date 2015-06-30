@@ -9,9 +9,12 @@ ${0##*/}
     Thin script included with new projects to make it easier to
     bootstrap a freshly cloned repository.
 
-    At minimum, this script initializes submodules and runs composer.
+    At minimum, this script initializes git (and submodules) for
+    the project and runs \`composer install\`.
 
-    Pproject provisioning it kicked off via vagrant
+    Project provisioning is kicked off via vagrant (when present) or
+    by directly calling \`provision/main.sh\` with your selected
+    APP_ENV.
 
 Usage:
     bin/${0##*/} <APP_ENV>
@@ -80,13 +83,7 @@ fi
 # Install composer packages using versions specified in config/lock file.
 echo "## Running \`composer install\`."
 
-composer update --lock --no-interaction --ignore-platform-reqs && \
- composer install --no-interaction --ignore-platform-reqs --optimize-autoloader
-
-if [ $? -gt 0 ]; then
-    echo "!! Running \`composer install\` failed. Aborting."
-    exit 1
-fi
+composer update --lock --no-interaction --ignore-platform-reqs --optimize-autoloader
 
 
 # Finish up.

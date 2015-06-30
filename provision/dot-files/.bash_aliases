@@ -2,6 +2,10 @@ if [ -f /etc/bash_completion ]; then
     source /etc/bash_completion
 fi
 
+if [ -f ~/.bash_git ]; then
+    source ~/.bash_git
+fi
+
 __has_parent_dir () {
     # Utility function so we can test for things like .git/.hg without firing up a
     # separate process
