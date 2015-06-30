@@ -161,11 +161,7 @@ class FileParser
         }
 
         $this->writeVerbose('Replacing `' . $file . '` with `' . $template . '`');
-        if (!$fs->copyThenRemove($template, $file)) {
-            $this->writeVerbose('Failed to replace `' . $file . '` with `' . $template . '`');
-            return false;
-        }
-
+        $fs->copyThenRemove($template, $file);
         return true;
     }
 

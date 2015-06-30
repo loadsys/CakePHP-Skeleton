@@ -25,6 +25,11 @@ class TestFileParser extends FileParser
     {
         return parent::writeVerbose($string);
     }
+
+    public function tokenExpression()
+    {
+        return $this->tokenExpression;
+    }
 }
 
 /**
@@ -56,6 +61,13 @@ class FileParserTest extends \PHPUnit_Framework_TestCase
     protected $io;
 
     /**
+     * Any calls to IOInterface->write() will append to this array.
+     *
+     * @var array
+     */
+    protected $ioWriteBuffer = [];
+
+    /**
      * setUp method
      *
      * @return void
@@ -65,15 +77,22 @@ class FileParserTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         // Replacements read top-to-bottom. TestCase -> Sample, FileParserTest.php -> FileParser
-        $this->testDir = str_replace(
+        $testDir = str_replace(
             ['TestCase', basename(__FILE__)],
             ['Sample', basename(__FILE__, 'Test.php')],
             __FILE__
         );
+        $this->testDir = $this->createSampleDir($testDir) . DIRECTORY_SEPARATOR;
 
-        $this->io = $this->getMock('Composer\IO\IOInterface', ['isVerbose', 'write']);
+        $this->io = $this->getMock('Composer\IO\IOInterface', []);
+        $this->io->expects($this->any())
+            ->method('isVerbose')
+            ->will($this->returnValue(true));
+        $this->io->expects($this->any())
+            ->method('write')
+            ->will($this->returnCallback([$this, 'pushBuffer']));
 
-        $event = $this->getMock('Composer\Script\Event', ['getIO']);
+        $event = $this->getMock('Composer\Script\Event', ['getIO'], [], '', false);
         $event->expects($this->once())
             ->method('getIO')
             ->will($this->returnValue($this->io));
@@ -90,8 +109,86 @@ class FileParserTest extends \PHPUnit_Framework_TestCase
     {
         unset($this->io);
         unset($this->parser);
+        $this->ioWriteBuffer = [];
+        //$this->wipeSampleDir($this->testDir);
 
         parent::tearDown();
+    }
+
+    /**
+     * Acts as a collector for mocked calls to IOInterface::write().
+     *
+     * `::setUp()` hooks `$this->parser->io->write($s);` into this method.
+     * Any code that calls write() will append a new string to this array
+     * for inspection. Is reset with each test case by ::tearDown().
+     *
+     * @param string $s The string to be written out via the I/O interface (or in our case, cached for later inspection.)
+     * @return void
+     */
+    public function pushBuffer($s)
+    {
+        $this->ioWriteBuffer[] = $s;
+    }
+
+    /**
+     * Recursively copies the provided $source dir to the $destination.
+     *
+     * Uses a subfolder of PHP's default tmp() directory if $destination is null.
+     *
+     * Ref: https://stackoverflow.com/a/7775949/70876
+     *
+     * @param string $source File system path to the dir to clone.
+     * @param string $dest File system path to clone the dir TO.
+     * @return string The destination folder path.
+     */
+    public function createSampleDir($source, $dest = null)
+    {
+        if(is_null($dest)) {
+            $prefix = (new \ReflectionClass($this))->getShortName() . '_';
+            $uniqueFolder = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid($prefix);
+            $dest = $uniqueFolder;
+        }
+
+        mkdir($dest, 0755);
+        foreach (
+            $iterator = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
+                \RecursiveIteratorIterator::SELF_FIRST
+            ) as $item
+        ) {
+            if ($item->isDir()) {
+                mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+            } else {
+                copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+            }
+        }
+
+        return $dest;
+    }
+
+    /**
+     * Delete the entire directory structure starting at $path.
+     *
+     * Use cautiously.
+     *
+     * @param string $path File system path to the dir to delete.
+     * @return void
+     */
+    public function wipeSampleDir($path)
+    {
+        foreach (
+            $iterator = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS),
+                \RecursiveIteratorIterator::CHILD_FIRST
+            ) as $item
+        ) {
+            if ($item->isDir()) {
+                rmdir($path . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+            } else {
+                unlink($path . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+            }
+        }
+        rmdir($path);
     }
 
     /**
@@ -100,7 +197,7 @@ class FileParserTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $this->assertEquals(
-            $this->testDir . DIRECTORY_SEPARATOR,
+            $this->testDir,
             $this->parser->dir,
             'Newly created parser\'s ::$dir must include trailing dir separator.'
         );
@@ -211,5 +308,74 @@ class FileParserTest extends \PHPUnit_Framework_TestCase
             ],
         ];
     }
-}
 
+    /**
+     * Test the findTemplates() method.
+     */
+    public function testFindTemplates()
+    {
+        $expected = [
+            'README.md.template',
+            'subdir/config.yaml.template',
+        ];
+        $this->assertEquals(
+            $expected,
+            $this->parser->findTemplates(),
+            'Discovered templates should match the contents of our Sample/ directory.'
+        );
+    }
+
+    /**
+     * Test the parseTemplate() method.
+     */
+    public function testParseTemplate()
+    {
+        $file = 'README.md.template';
+        $expectedFileName = 'README.md';
+        $expectedMessages = [
+            "Parsing template: $file",
+            "Failed to replace `$expectedFileName` with `$file`",
+        ];
+        $tokens = [
+            'TOKEN' => 'foo bar',
+            'NO_DEFAULT' => 'tic tac toe',
+            'SECOND_ITEM' => 'a quick brown fox',
+            'UNUSED' => 'UNUSED',
+            'USE_EMPTY_STR' => ' ',
+       ];
+
+        $this->assertTrue(
+            $this->parser->parseTemplate($file, $tokens),
+            'parseTemplate() should always return true.'
+        );
+
+        $this->assertFalse(
+            file_exists($this->testDir . $file),
+            'The source filename we expect should no longer exist.'
+        );
+        $this->assertTrue(
+            file_exists($this->testDir . $expectedFileName),
+            'The destination filename we expect should exist.'
+        );
+
+        $contents = file_get_contents($this->testDir . $expectedFileName);
+        $this->assertContains(
+            '## Don\'t change this line, we scan for it in tests.',
+            $contents,
+            'The contents of the pre-existing file should have been overwritten by our template.'
+        );
+
+        $matches = [];
+        preg_match_all($this->parser->tokenExpression(), $contents, $matches);
+        $this->assertEmpty(
+            $matches,
+            'The replaced file should not have any {{TOKEN}}s left in it.'
+        );
+
+        $this->assertEquals(
+            $expectedMessages,
+            $this->ioWriteBuffer,
+            'The function should produce the expected output messages.'
+        );
+    }
+}

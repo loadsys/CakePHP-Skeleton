@@ -48,9 +48,9 @@ class InstallerConfigurerTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->io = $this->getMock('Composer\IO\IOInterface', ['askAndValidate']);
+        $this->io = $this->getMock('Composer\IO\IOInterface', []);
 
-        $event = $this->getMock('Composer\Script\Event', ['getIO']);
+        $event = $this->getMock('Composer\Script\Event', ['getIO'], [], '', false);
         $event->expects($this->once())
             ->method('getIO')
             ->will($this->returnValue($this->io));

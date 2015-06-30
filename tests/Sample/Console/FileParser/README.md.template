@@ -1,5 +1,7 @@
 # README
 
+## Don't change this line, we scan for it in tests.
+
 This is a templated Markdown file with a few {{TOKEN:overlaps with token from subdir/config.yaml.template}} in it.
 
 * {{NO_DEFAULT}}
@@ -8,3 +10,4 @@ This is a templated Markdown file with a few {{TOKEN:overlaps with token from su
 Other uses of the `{{` and `}}` characters should be correctly ignored.
 
 When the tokens in this file are replaced, it should overwrite the existing README.md file.
+
