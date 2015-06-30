@@ -40,7 +40,7 @@ class FileParser
      *
      * @var string
      */
-    protected $tokenExpression = '/\{{2}([A-Z0-9_]+):?([^\}]*)?\}{2}/';
+    protected $tokenMatchRegex = '/\{{2}([A-Z0-9_]+)(?::([^\}]*))?\}{2}/';
 
     /**
      * Builds a FileParser object.
@@ -90,7 +90,7 @@ class FileParser
         foreach ($files as $file) {
             $tokens = array_merge($tokens, $this->getTokensInFile($file));
         }
-        return array_unique($tokens);
+        return $tokens;
     }
 
     /**
@@ -113,7 +113,7 @@ class FileParser
         if (!$fileContents) {
             return [];
         }
-        preg_match_all($this->tokenExpression, $fileContents, $matches);
+        preg_match_all($this->tokenMatchRegex, $fileContents, $matches);
 
         return array_combine($matches[1], $matches[2]);
     }
@@ -154,7 +154,7 @@ class FileParser
             return $replacement;
         };
         $contents = file_get_contents($source);
-        $contents = preg_replace_callback($this->tokenExpression, $replacer, $contents);
+        $contents = preg_replace_callback($this->tokenMatchRegex, $replacer, $contents);
 
         // Update the template file in-place.
         if (file_put_contents($source, $contents) === false) {

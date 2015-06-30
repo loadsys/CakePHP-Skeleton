@@ -26,9 +26,9 @@ class TestFileParser extends FileParser
         return parent::writeVerbose($string);
     }
 
-    public function tokenExpression()
+    public function tokenMatchRegex()
     {
-        return $this->tokenExpression;
+        return $this->tokenMatchRegex;
     }
 }
 
@@ -253,6 +253,7 @@ class FileParserTest extends \PHPUnit_Framework_TestCase
                     'SECOND_ITEM' => 'The second thing in the list.',
                     'NOT_IN_TESTS' => 'blah',
                     'SHOULD_BE_REMOVED' => 'default does not matter',
+                    'MATCHING' => '',
                 ],
                 'Produced token list must match those from the listed files.',
             ],
@@ -326,7 +327,7 @@ class FileParserTest extends \PHPUnit_Framework_TestCase
         );
 
         $matches = [];
-        preg_match_all($this->parser->tokenExpression(), $contents, $matches);
+        preg_match_all($this->parser->tokenMatchRegex(), $contents, $matches);
         $this->assertContains(
             'NOT_IN_TESTS',
             $matches[1], // token name sub-matches
