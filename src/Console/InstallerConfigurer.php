@@ -1,16 +1,18 @@
 <?php
-
-namespace App\Console;
-
-use Composer\Script\Event;
-use Exception;
-
 /**
  * Provides a read/write interface to configuration values.
  *
  * Also provides an interface for obtaining values from console
  * prompts and user input. Used by the LoadsysInstaller to process
  * template file tokens and values.
+ */
+
+namespace App\Console;
+
+use Composer\Script\Event;
+
+/**
+ * InstallerConfigurer class
  */
 class InstallerConfigurer
 {
