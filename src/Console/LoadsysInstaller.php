@@ -101,7 +101,7 @@ class LoadsysInstaller
             }
             throw new Exception('Please enter Y or n.');
         });
-        $input = $io->askAndValidate($question, $validator, false, $default);
+        $input = $io->askAndValidate($question, $validator, 10, $default);
 
         return in_array($input,['Y', 'y']);
     }
