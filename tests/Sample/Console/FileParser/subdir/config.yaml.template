@@ -1,0 +1,5 @@
+---
+readme: "A sample YAML file with tokens"
+top:
+    key: "{{TOKEN:overlaps with token from ../README.md}}"
+    second: blah
