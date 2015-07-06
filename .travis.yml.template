@@ -1,0 +1,47 @@
+language: php
+
+sudo: false
+
+php:
+  - 5.6
+
+# Environment Variables to set
+env:
+  global:
+    - APP_ENV=travis
+    # Contains a $GITHUB_TOKEN env var for use with composer to avoid API limits.
+    # Encrypt using the Travis CLI with the command:
+    # `travis encrypt 'GITHUB_TOKEN={GITHUB-READ-ONLY-TOKEN}'`
+    # - secure: "SOME-RANDOM-STRING"
+
+# Services to Enable
+services:
+  - mysql
+  - memcached
+
+# Branches to be built or not
+branches:
+  # Blacklist these branches
+  except:
+    - master
+    - staging
+    - gh-pages
+
+before_install:
+  - sh -c "composer self-update"
+
+install:
+  - sh -c "composer config -g github-oauth.github.com $GITHUB_TOKEN"
+  - sh -c "composer install --no-interaction --dev"
+
+before_script:
+  - phpenv rehash
+  - mysql -e 'DROP DATABASE IF EXISTS `travis_app`; CREATE DATABASE `travis_app`;'
+  - bin/phpcs --config-set installed_paths vendor/loadsys/loadsys_codesniffer,vendor/cakephp/cakephp-codesniffer
+
+script:
+  - sh -c "bin/phpcs -p --extensions=php --standard=Loadsys ./src ./tests ./config ./webroot"
+  - sh -c "bin/phpunit"
+
+notifications:
+  email: false
