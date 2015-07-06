@@ -32,7 +32,7 @@ before_install:
 
 install:
   - sh -c "composer config -g github-oauth.github.com $GITHUB_TOKEN"
-  - sh -c "composer install --no-interaction --dev"
+  - sh -c "composer install --no-interaction"
 
 before_script:
   - phpenv rehash
