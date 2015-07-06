@@ -37,6 +37,7 @@ branches:
 
 before_install:
   - sh -c "composer self-update"
+  - echo "extension = memcached.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 install:
   - sh -c "composer config -g github-oauth.github.com $GITHUB_TOKEN"
