@@ -1,7 +1,9 @@
 language: php
 
+# Enable container based builds, which enables caching
 sudo: false
 
+# PHP Versions to support
 php:
   - 5.6
 
