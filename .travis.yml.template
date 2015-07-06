@@ -7,6 +7,12 @@ sudo: false
 php:
   - 5.6
 
+# Cache the composer directories, only allowed if using the container based setup
+# which depends on setting sudo to false
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 # Environment Variables to set
 env:
   global:
