@@ -266,19 +266,7 @@ Command line automated "test-on-save" is also possible with Grunt via: `grunt wa
 
 **@TODO: Review and update this section.**
 
-* CSS is managed via LESS source files.
-* LESS source files are located in `webroot/less/`.
-* Run `grunt less` to process the `webroot/less/` files and output compiled CSS files in `webroot/css/`.
-* **Commit both the .less and the .css changes** back to the repo as you work.
-	* (Until a CDN is set up, static assets will be served from the app server directly.)
-
-.less files of note:
-
-* `global.less` is included everywhere in the site.
-* `public.less` is referenced in only the default (public) layout and will override anything in global.
-* `admin.less` is referenced only in the admin layout and will also override global.
-* LESS resources can be broken out into logical files and `@import`ed into global, public or admin collections as appropriate.
-* By default, bootstrap is `<link>`ed separately in the default.ctp layout, but can be rolled into global.less if desired.
+* CSS is managed via Standard CSS files in the webroot directory
 
 
 ### Other grunt Commands
