@@ -269,15 +269,6 @@ Command line automated "test-on-save" is also possible with Grunt via: `grunt wa
 * CSS is managed via Standard CSS files in the webroot directory
 
 
-### Other grunt Commands
-
-**@TODO: Review and update this section.**
-
-* _(no args)_ or `watch` - Starts the file watcher and auto-executes tests for any php file that changes (and has a test file associated with it.) Also watches .less files and compiles them into CSS on change.
-* `less` - Compiles .less files into CSS.
-* `test` - Executes the Mocha Javascript test suite.
-
-
 ## Immersion
 
 **@TODO: Review and update this section.**
