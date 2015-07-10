@@ -36,7 +36,7 @@ branches:
     - gh-pages
 
 before_install:
-  - sh -c "composer self-update"
+  - composer self-update
   - echo "extension = memcached.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 install:
@@ -49,8 +49,8 @@ before_script:
   - bin/phpcs --config-set installed_paths vendor/loadsys/loadsys_codesniffer,vendor/cakephp/cakephp-codesniffer
 
 script:
-  - sh -c "bin/phpcs -p --extensions=php --standard=Loadsys ./src ./tests ./config ./webroot"
-  - sh -c "bin/phpunit"
+  - bin/phpcs -p --extensions=php --standard=Loadsys ./src ./tests ./config ./webroot ./plugins
+  - bin/phpunit
 
 notifications:
   email: false
