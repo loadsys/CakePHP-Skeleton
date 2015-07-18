@@ -91,6 +91,43 @@ Most of the magic behind the `create-project` command lies in composer's ability
 
 Additional first-time setup should be added as a post-install script. If a process should be repeatable, consider making it part of the [loadsys/CakePHP-Shell-Scripts]() repo instead, and calling that script from a post-install hook.
 
+## Skeleton Development
+
+### Keeping in sync with CakePHP App
+
+It's a good idea to periodically pull in `cakephp/app` changes. You can do this by creating a patch and then applying it to the skeleton. You'll need to know the `<previous-tag>` and the `<desired-tag>` (use [latest cakephp/app release](https://github.com/cakephp/app/releases)).
+
+Determine `<previous-tag>` run and find the tag after `app-update-`:
+
+    git log -1 --oneline --grep="app-update"
+
+Generate patch:
+
+    cd path/to/cakephp/app
+    git fetch
+    git format-patch <previous-tag>..<desired-tag> --stdout > app.patch
+
+Apply patch into a new branch `f/app-update-<desired-tag>` and merge it into the `cakephp-app` branch:
+
+    cd path/to/loadsys/CakePHP-Skeleton
+    git fetch
+    cp path/to/cakephp/app/app.patch path/to/loadsys/CakePHP-Skeleton/
+    git checkout cakephp-app
+    git checkout -b f/app-update-<desired-tag>
+    git apply --stat app.patch
+    git apply --check app.patch
+    git am --ignore-whitespace --signoff < app.patch
+    git checkout cakephp-app
+    git tag -f cakephp-app-previous
+    git merge f/app-update-3.0.2 --no-ff
+    git push origin cakephp-app
+
+Next it can be rebased onto `origin/master` and any conflicts can be resolved.
+
+    git rebase --onto origin/master cakephp-app-previous f/app-update-<desired-tag>
+    git push origin f/app-update-<desired-tag>
+
+Now [create a PR](https://github.com/loadsys/CakePHP-Skeleton) and merge it.
 
 ### Bundled Provisioning
 
