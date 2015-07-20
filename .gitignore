@@ -6,6 +6,7 @@
 /backups/
 /.vagrant/
 /puphpet/files/dot/ssh/*id_rsa*
+/phpunit.xml
 
 # Composer Dependencies
 /vendor/*

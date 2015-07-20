@@ -230,6 +230,8 @@ This setup is handy for backing up your data if you're about to destroy the box,
 
 ### PHP Unit Testing
 
+A project-wide phpunit configuration file is provided as `phpunit.xml.dist`. Changes to this file will be used during Travis testing and should be considered the "baseline" for the app. Developers may create a local `phpunit.xml` file which will be ignore by the repo if they wish to use or test more precise local configs.
+
 Unit tests should be created for all new code written in the following categories:
 
 * Model methods
