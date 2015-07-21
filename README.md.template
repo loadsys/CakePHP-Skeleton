@@ -190,7 +190,24 @@ The bundled vagrant VM automatically sets `APP_ENV=vagrant` both on the command 
 
 ### Database Changes
 
-Because the MySQL DB runs inside of the vagrant VM, you must connect to it via SSH. The easiest way to do this is using [Sequel Pro](http://sequelpro.com/).
+The app assumes that every table will have the following fields by default. These fields are handled by the TimestampBehavior and the CreatorModifierBehavior, which are engaged via a custom [App]Table class automatically. See `src/Model/Table/Table.php` for details.
+
+```sql
+  `id` char(36) NOT NULL COMMENT 'UUID primary key.', -- First field in table.
+  -- Foreign keys next.
+
+  -- All other fields here.
+
+  -- Last 4 fields in table:
+  `created`     datetime DEFAULT NULL COMMENT 'Creation datetime.',
+  `creator_id`  char(36) DEFAULT NULL COMMENT 'User.id that created the record.',
+  `modified`    datetime DEFAULT NULL COMMENT 'Last modification datetime.',
+  `modifier_id` char(36) DEFAULT NULL COMMENT 'User.id that last modified the record.'
+```
+
+#### Connecting
+
+Because the development MySQL DB runs inside of the vagrant VM, you must connect to it via SSH. The easiest way to do this is using [Sequel Pro](http://sequelpro.com/).
 
 Create a new "SSH" connection with the following settings:
 
@@ -203,7 +220,7 @@ Create a new "SSH" connection with the following settings:
 * SSH Host: 127.0.0.1
 * SSH User: vagrant
 * SSH Password: vagrant (Or [some guys online](https://coderwall.com/p/yzwqvg) say you can point to your local `~/.vagrant.d/insecureprivatekey`.)
-* SSH Port: 2222 (per `puphpet/config.yaml`.)
+* SSH Port: 2222 (per `config/provision.yaml`.)
 
 This setup is handy for backing up your data if you're about to destroy the box, or for making Schema or Seed changes before running the Shell commands in the VM.
 
