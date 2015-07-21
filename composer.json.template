@@ -10,6 +10,7 @@
     "cakephp/migrations": "~1.0",
     "cakephp/plugin-installer": "*",
     "mobiledetect/mobiledetectlib": "2.*",
+    "loadsys/cakephp-creatormodifier": "~1.0",
     "loadsys/cakephp-config-read": "~3.0"
   },
   "require-dev": {
