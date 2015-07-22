@@ -149,7 +149,7 @@ return [
             //'port' => 'nonstandard_port_number',
             'username' => 'vagrant',
             'password' => 'vagrant',
-            'database' => 'test_vagrant',
+            'database' => 'vagrant_test',
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'cacheMetadata' => true,

@@ -10,6 +10,8 @@
     "cakephp/migrations": "~1.0",
     "cakephp/plugin-installer": "*",
     "mobiledetect/mobiledetectlib": "2.*",
+    "psy/psysh": "@stable",
+    "loadsys/cakephp-creatormodifier": "~1.0",
     "loadsys/cakephp-config-read": "~3.0"
   },
   "require-dev": {
@@ -19,7 +21,6 @@
     "phpdocumentor/phpdocumentor": "2.*@beta",
     "squizlabs/php_codesniffer": "2.*",
     "johnkary/phpunit-speedtrap": "~1.0@dev",
-    "psy/psysh": "@stable",
     "loadsys/loadsys_codesniffer": "~3.0",
     "loadsys/cakephp-loadsys-theme": "dev-master"
   },
