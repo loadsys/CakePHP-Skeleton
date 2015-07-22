@@ -172,7 +172,20 @@ else
 fi
 
 
-#@TODO: run `bin/migrations` and `bin/cake SeedShell.seed fill vagrant`. Maybe create a wrapper script like `bin/vagrant-provision` to bundle all this up? Put a "caller" script into `provision/main/sh` (here)?
+#@TODO: run `bin/migrations` and `bin/cake SeedShell.seed fill vagrant`. Maybe create a wrapper script like `bin/vagrant-provision` to bundle all this up? Put a "caller" script into `provision/main.sh` (here)?
+
+# Populate MySQL databases.
+# if [ -x "bin/migrations-run" ]; then
+#     echo "## Running migrations script."
+#
+# 	bin/migrations
+# fi
+#
+# if [ -x "@todo" ]; then
+#     echo "## Running Seed plugin."
+#
+# 	bin/cake basic_seed.basic_seed -f "config/seeds/${APP_ENV}.php"
+# fi
 
 
 # Finish up.

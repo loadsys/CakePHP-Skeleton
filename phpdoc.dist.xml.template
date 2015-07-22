@@ -4,7 +4,10 @@
 
     <files>
 		<!-- Create docs for everything in project root's src/ folder. -->
-		<directory>../src/</directory>
+		<directory>./src</directory>
+		<directory>./config</directory>
+		<directory>./plugins</directory>
+		<directory>./webroot</directory>
 
 		<!-- Except for these folders (relative to "root" defined above.) -->
 		<!-- <ignore>example/*</ignore> -->
@@ -14,13 +17,13 @@
     </files>
 
     <parser>
-        <default-package-name>{{PROJECT_NAME:@TODO}}</default-package-name>
+        <default-package-name>{{PROJECT_DEFAULT_NAMESPACE:App}}</default-package-name>
 
         <encoding>utf-8</encoding>
-        <target>../tmp/docs-build</target>
+        <target>./tmp/docs-build</target>
         <markers>
-            <item>@TODO</item>
-            <item>@FIXME</item>
+            <item>TODO</item>
+            <item>FIXME</item>
         </markers>
         <extensions>
             <extension>php</extension>
@@ -29,7 +32,7 @@
     </parser>
 
     <transformer>
-        <target>../tmp/docs/</target>
+        <target>./tmp/docs</target>
     </transformer>
 
     <transformations>
@@ -38,7 +41,7 @@
 
     <logging>
         <level>error</level>
-        <default>../logs/phpdoc.log</default>
-        <errors>../logs/phpdoc_errors.log</errors>
+        <default>./logs/phpdoc.log</default>
+        <errors>./logs/phpdoc_errors.log</errors>
     </logging>
 </phpdoc>
