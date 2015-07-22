@@ -288,6 +288,11 @@ Command line automated "test-on-save" is also possible with Grunt via: `grunt wa
 * CSS is managed via Standard CSS files in the webroot directory
 
 
+### Command Line Scripts
+
+Any command line scripts written to support **this project specifically** should be placed in the `/scripts` root-level folder. Composer dependencies and the `cake` executables will continue to live in `/bin`. For more details, see loadsys/CakePHP-Skeleton#130.
+
+
 ## Immersion
 
 **@TODO: Review and update this section.**
