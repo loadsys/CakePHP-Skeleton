@@ -189,6 +189,9 @@ Request::addDetector('tablet', function ($request) {
  *
  */
 
+Plugin::load('ConfigRead');
+Plugin::load('CreatorModifier');
+Plugin::load('LoadsysTheme');
 Plugin::load('Migrations');
 
 // Only try to load DebugKit in development mode
