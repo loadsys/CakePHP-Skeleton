@@ -50,7 +50,7 @@ before_script:
 
 script:
   # Note you may want to use the -n option for the CodeSniffer to ignore warnings
-  - bin/phpcs -p --extensions=php --standard=Loadsys ./src ./tests ./config ./webroot ./plugins
+  - bin/phpcs -ps --extensions=php --standard=Loadsys ./src ./tests ./config ./webroot ./plugins
   - bin/phpunit
 
 notifications:
