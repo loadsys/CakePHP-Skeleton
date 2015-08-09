@@ -205,7 +205,7 @@ The app assumes that every table will have the following fields by default. Thes
   `modifier_id` char(36) DEFAULT NULL COMMENT 'User.id that last modified the record.'
 ```
 
-#### Connecting
+#### Connecting to MySQL
 
 Because the development MySQL DB runs inside of the vagrant VM, you must connect to it via SSH. The easiest way to do this is using [Sequel Pro](http://sequelpro.com/).
 
@@ -224,6 +224,16 @@ Create a new "SSH" connection with the following settings:
 
 This setup is handy for backing up your data if you're about to destroy the box, or for making Schema or Seed changes before running the Shell commands in the VM.
 
+#### Connecting to Mailcatcher
+
+* ClassName: Smtp
+* Host: 127.0.0.1
+* Port: 1025
+* Username: null
+* Password: null
+* Client: null
+* TLS: null
+* Web Interface: http://localhost:1080/
 
 #### Schema Migrations
 
