@@ -265,6 +265,14 @@ Unit tests should be created for all new code written in the following categorie
 
 Command line automated "test-on-save" is also possible with Grunt via: `grunt watch`. This will block the terminal while it waits for file changes. New files should get picked up as well.
 
+The full testsuite is run using `./bin/phpunit` from the root of the project.
+
+There are three testsuites setup as part of the phpunit.xml.dist file.
+
+* `./bin/phpunit --testsuite app` - The default testsuite, runs all tests available for the application. Equivalent to `./bin/phpunit`.
+* `./bin/phpunit --testsuite unit` - Runs all tests excluding the `./tests/TestCase/Controller` path.
+* `./bin/phpunit --testsuite integration` - Runs only the tests in the `./tests/TestCase/Controller` path.
+
 
 ### Javascript Unit Testing
 
