@@ -155,9 +155,9 @@ EOSHL
 
 sudo chmod a+x "${SHUTDOWN_DB_BACKUP_SCRIPT}"
 
-sudo ln -s /etc/init.d/"${SHUTDOWN_DB_BACKUP_SCRIPT}" /etc/rc0.d/`basename "${SHUTDOWN_DB_BACKUP_SCRIPT}"`
+sudo ln -s "${SHUTDOWN_DB_BACKUP_SCRIPT}" /etc/rc0.d/`basename "${SHUTDOWN_DB_BACKUP_SCRIPT}"`
 
-sudo ln -s /etc/init.d/"${SHUTDOWN_DB_BACKUP_SCRIPT}" /etc/rc6.d/`basename "${SHUTDOWN_DB_BACKUP_SCRIPT}"`
+sudo ln -s "${SHUTDOWN_DB_BACKUP_SCRIPT}" /etc/rc6.d/`basename "${SHUTDOWN_DB_BACKUP_SCRIPT}"`
 
 
 # Call the environment-specific provisioning script, if it exists.
