@@ -224,17 +224,6 @@ Create a new "SSH" connection with the following settings:
 
 This setup is handy for backing up your data if you're about to destroy the box, or for making Schema or Seed changes before running the Shell commands in the VM.
 
-#### Connecting to Mailcatcher
-
-* ClassName: Smtp
-* Host: 127.0.0.1
-* Port: 1025
-* Username: null
-* Password: null
-* Client: null
-* TLS: null
-* Web Interface: http://localhost:1080/
-
 #### Schema Migrations
 
 * The database schema is maintained using the Migrations plugin.
@@ -253,6 +242,21 @@ This setup is handy for backing up your data if you're about to destroy the box,
 * You can repopulate data in the VM's MySQL database by running `bin/cake Seeds.seed fill vagrant`.
 * To update a Seed dataset, make your changes in the database and run `bin/cake Seeds.seed generate vagrant`.
 * Review and commit the changes made in `Config/Seed/`.
+
+
+### Email Debugging
+
+The VM comes with Mailcatcher pre-installed and port-forwarded. The stock `config/app-vagrant.php` config file is set up to route email to Mailcatcher automatically.
+
+* ClassName: `Smtp`
+* Host: `127.0.0.1`
+* Port: `1025`
+* Username: `null`
+* Password: `null`
+* Client: `null`
+* TLS: `null`
+
+* Web Interface: http://192.168.8.42:1080 (the vagrant VM's local IP, or port-forwarded: http://localhost:1080/ )
 
 
 ### PHP Unit Testing
