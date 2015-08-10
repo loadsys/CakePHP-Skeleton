@@ -205,7 +205,7 @@ The app assumes that every table will have the following fields by default. Thes
   `modifier_id` char(36) DEFAULT NULL COMMENT 'User.id that last modified the record.'
 ```
 
-#### Connecting
+#### Connecting to MySQL
 
 Because the development MySQL DB runs inside of the vagrant VM, you must connect to it via SSH. The easiest way to do this is using [Sequel Pro](http://sequelpro.com/).
 
@@ -223,7 +223,6 @@ Create a new "SSH" connection with the following settings:
 * SSH Port: 2222 (per `config/provision.yaml`.)
 
 This setup is handy for backing up your data if you're about to destroy the box, or for making Schema or Seed changes before running the Shell commands in the VM.
-
 
 #### Schema Migrations
 
@@ -243,6 +242,21 @@ This setup is handy for backing up your data if you're about to destroy the box,
 * You can repopulate data in the VM's MySQL database by running `bin/cake Seeds.seed fill vagrant`.
 * To update a Seed dataset, make your changes in the database and run `bin/cake Seeds.seed generate vagrant`.
 * Review and commit the changes made in `Config/Seed/`.
+
+
+### Email Debugging
+
+The VM comes with Mailcatcher pre-installed and port-forwarded. The stock `config/app-vagrant.php` config file is set up to route email to Mailcatcher automatically.
+
+* ClassName: `Smtp`
+* Host: `127.0.0.1`
+* Port: `1025`
+* Username: `null`
+* Password: `null`
+* Client: `null`
+* TLS: `null`
+
+* Web Interface: http://192.168.8.42:1080 (the vagrant VM's local IP, or port-forwarded: http://localhost:1080/ )
 
 
 ### PHP Unit Testing
