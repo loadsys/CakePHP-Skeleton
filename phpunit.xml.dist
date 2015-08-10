@@ -13,8 +13,15 @@
 
 	<!-- Add any additional test suites you want to run here -->
 	<testsuites>
-		<testsuite name="App Test Suite">
+		<testsuite name="app">
 			<directory>./tests/TestCase</directory>
+		</testsuite>
+		<testsuite name="unit">
+			<directory>./tests/TestCase</directory>
+			<exclude>./tests/TestCase/Controller</exclude>
+		</testsuite>
+		<testsuite name="integration">
+			<directory>./tests/TestCase/Controller</directory>
 		</testsuite>
 		<!-- Add plugin test suites here. -->
 	</testsuites>
@@ -30,6 +37,30 @@
 		</listener>
 		<listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
 	</listeners>
+
+	<filter>
+		<!--
+		<blacklist>
+			<directory suffix=".php">/path/to/files</directory>
+			<file>/path/to/file</file>
+			<exclude>
+				<directory suffix=".php">/path/to/files</directory>
+				<file>/path/to/file</file>
+			</exclude>
+		</blacklist>
+		-->
+		<whitelist processUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">./src</directory>
+			<directory suffix=".php">./plugins</directory>
+			<!--
+			<file>/path/to/file</file>
+			<exclude>
+				<directory suffix=".php">/path/to/files</directory>
+				<file>/path/to/file</file>
+			</exclude>
+			-->
+		</whitelist>
+	</filter>
 
 	<logging>
 		<!-- HTML reports intended to be exported to loadsysdev for viewing. -->
