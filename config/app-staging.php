@@ -45,18 +45,22 @@ return [
 	/**
 	 * Email configuration.
 	 *
-	 * When running on Travis, never try to generate actual emails.
-	 * Only log them.
+	 * @TODO: When running in staging, actually try to generate and deliver emails, **but override destinations**.
 	 */
 	'EmailTransport' => [
 		'default' => [
-			'className' => 'Debug',
+			'className' => 'Stmp',
+			'host' => 'localhost',
+			'port' => 25,
+			'timeout' => 30,
+			'username' => null,
+			'password' => null,
 		],
 	],
 
 	'Email' => [
 		'default' => [
-			'from' => 'travis@localhost',
+			'from' => 'travis@staging',
 		],
 	],
 
@@ -64,24 +68,24 @@ return [
 	 * Connection information used by the ORM to connect
 	 * to your application's datastores.
 	 *
-	 * Connect to the local MySQL instance running on the travis build box.
+	 * Connect to the local MySQL instance running on the staging box.
 	 */
 	'Datasources' => [
 		'default' => [
-			'host' => '0.0.0.0',
-			'username' => 'travis',
+			'host' => '',
+			'username' => '',
 			'password' => '',
-			'database' => 'travis_app',
+			'database' => '',
 		],
 
 		/**
 		 * The test connection is used during the test suite.
 		 */
 		'test' => [
-			'host' => '0.0.0.0',
-			'username' => 'travis',
+			'host' => '',
+			'username' => '',
 			'password' => '',
-			'database' => 'travis_app',
+			'database' => '',
 		],
 	],
 
@@ -90,16 +94,16 @@ return [
 	 */
 
 	/**
-	 * Development Site Configuration
+	 * Staging Site Configuration
 	 *
 	 * Any time you'd be tempted to type one of these strings directly into
 	 * a file, call this Configure var instead.
 	 */
 	'Defaults' => [
 		'Env' => [
-			'Token' => 'travis',
+			'Token' => 'staging',
 			'Hint' => [
-				'Snippet' => 'background: #9999ff;',
+				'Snippet' => 'background: #e5c627;',
 			],
 		],
 	],
