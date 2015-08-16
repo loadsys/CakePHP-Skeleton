@@ -2,7 +2,7 @@
 /**
  * Tests for the InstallerConfigurer composer library.
  */
-namespace Skel\Test\TestCase\Console;
+namespace Skel\Test\TestCase;
 
 use Skel\InstallerConfigurer;
 use Composer\Composer;

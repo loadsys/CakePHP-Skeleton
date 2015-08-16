@@ -2,7 +2,7 @@
 /**
  * Tests for the FileParser composer library.
  */
-namespace Skel\Test\TestCase\Console;
+namespace Skel\Test\TestCase;
 
 use Skel\FileParser;
 use Composer\Composer;

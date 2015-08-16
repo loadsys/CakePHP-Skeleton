@@ -2,7 +2,7 @@
 /**
  * Tests for the LoadsysInstaller composer library.
  */
-namespace Skel\Test\TestCase\Console;
+namespace Skel\Test\TestCase;
 
 use Skel\Console\LoadsysInstaller;
 use Composer\Composer;
