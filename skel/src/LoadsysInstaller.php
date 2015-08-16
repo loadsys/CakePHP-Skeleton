@@ -2,7 +2,7 @@
 /**
  *
  */
-namespace App\Console;
+namespace Skel;
 
 use Composer\Script\Event;
 use Exception;

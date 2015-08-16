@@ -9,7 +9,7 @@
 # bootstrap.php.
 #
 # The full set of config keys used in provisioning must be defined
-# in this file. Additional override keys may be defined in separate
+# in this file. @TODO: Additional override keys may be defined in separate
 # files named after the matching APP_ENV. For example:
 # `provision-staging.yaml` and/or `provision-local.yaml`. Values
 # from those files will be deep-merged on top of this one during

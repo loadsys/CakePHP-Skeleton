@@ -35,7 +35,7 @@ require CORE_PATH . 'config' . DS . 'bootstrap.php';
 
 // You can remove this if you are confident you have intl installed.
 if (!extension_loaded('intl')) {
-    trigger_error('You must enable the intl extension to use CakePHP.', E_USER_ERROR);
+	trigger_error('You must enable the intl extension to use CakePHP.', E_USER_ERROR);
 }
 
 use Cake\Cache\Cache;
@@ -63,10 +63,10 @@ use Cake\Utility\Security;
  * that changes from configuration that does not. This makes deployment simpler.
  */
 try {
-    Configure::config('default', new PhpConfig());
-    Configure::load('app', 'default', false);
+	Configure::config('default', new PhpConfig());
+	Configure::load('app', 'default', false);
 } catch (\Exception $e) {
-    die($e->getMessage() . "\n");
+	die($e->getMessage() . "\n");
 }
 
 /**
@@ -74,21 +74,22 @@ try {
  * when present.
  */
 try {
-    $env = getenv('APP_ENV');
-    Configure::load("/app-{$env}", 'default');
+	$env = getenv('APP_ENV');
+	Configure::load("/app-{$env}", 'default');
 } catch (\Exception $e) {
-    // It is not an error if this file is missing.
+	// It is not an error if this file is missing.
 }
+
 try {
-    Configure::load('app-local', 'default');
+	Configure::load('app-local', 'default');
 } catch (\Exception $e) {
-    // It is not an error if this file is missing.
-    // If it needs to be, uncomment the die() below.
-    //die(
-    //    'Untracked (but mandatory) config/app-local.php missing. '
-    //    . ' Copy & review config/app-local-sample.php to start.'
-    //    . " Exception message: {$e->getMessage()}\n"
-    //);
+	// It is not an error if this file is missing.
+	// If it needs to be, uncomment the die() below.
+	//die(
+	//	'Untracked (but mandatory) config/app-local.php missing. '
+	//	. ' Copy & review config/app-local-sample.php to start.'
+	//	. " Exception message: {$e->getMessage()}\n"
+	//);
 }
 
 /**
@@ -113,14 +114,14 @@ ini_set('intl.default_locale', 'en_US');
  */
 $isCli = php_sapi_name() === 'cli';
 if ($isCli) {
-    (new ConsoleErrorHandler(Configure::read('Error')))->register();
+	(new ConsoleErrorHandler(Configure::read('Error')))->register();
 } else {
-    (new ErrorHandler(Configure::read('Error')))->register();
+	(new ErrorHandler(Configure::read('Error')))->register();
 }
 
 // Include the CLI bootstrap overrides.
 if ($isCli) {
-    require __DIR__ . '/bootstrap_cli.php';
+	require __DIR__ . '/bootstrap_cli.php';
 }
 
 /**
@@ -130,16 +131,17 @@ if ($isCli) {
  * If you define fullBaseUrl in your config file you can remove this.
  */
 if (!Configure::read('App.fullBaseUrl')) {
-    $s = null;
-    if (env('HTTPS')) {
-        $s = 's';
-    }
+	$s = null;
+	if (env('HTTPS')) {
+		$s = 's';
+	}
 
-    $httpHost = env('HTTP_HOST');
-    if (isset($httpHost)) {
-        Configure::write('App.fullBaseUrl', 'http' . $s . '://' . $httpHost);
-    }
-    unset($httpHost, $s);
+	$httpHost = env('HTTP_HOST');
+	if (isset($httpHost)) {
+		Configure::write('App.fullBaseUrl', 'http' . $s . '://' . $httpHost);
+	}
+
+	unset($httpHost, $s);
 }
 
 Cache::config(Configure::consume('Cache'));
@@ -160,12 +162,12 @@ Security::salt(Configure::consume('Security.salt'));
  * Setup detectors for mobile and tablet.
  */
 Request::addDetector('mobile', function ($request) {
-    $detector = new \Detection\MobileDetect();
-    return $detector->isMobile();
+	$detector = new \Detection\MobileDetect();
+	return $detector->isMobile();
 });
 Request::addDetector('tablet', function ($request) {
-    $detector = new \Detection\MobileDetect();
-    return $detector->isTablet();
+	$detector = new \Detection\MobileDetect();
+	return $detector->isTablet();
 });
 
 /**
@@ -197,7 +199,7 @@ Plugin::load('Migrations');
 // Only try to load DebugKit in development mode
 // Debug Kit should not be installed on a production system
 if (Configure::read('debug')) {
-    Plugin::load('DebugKit', ['bootstrap' => true]);
+	Plugin::load('DebugKit', ['bootstrap' => true]);
 }
 
 /**

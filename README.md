@@ -45,14 +45,14 @@ If you would like to contribute to this project open a pull request targeted at 
 
 Testing the skeleton can be difficult because under normal circumstances, a dev would have to commit their experimental changes, push the changes to github, merge the changes into master and (optionally) tag a new release semver for packagist.org to pick up for "release". Since this is a bad situation when working on something new and untested, it would be nice to be able to run the `create-project` command using your local checked-out copy of the skeleton repo.
 
-In order to accomplish this, composer needs to be "tricked" into using the local copy, which requires a specially-crafted packages.json file. To ease this process, a `test-project.sh` script is included with the skeleton.
+In order to accomplish this, composer needs to be "tricked" into using the local copy, which requires a specially-crafted `packages.json` file. To ease this process, a `skel/test-project.sh [branch-name] [dest/dir]` script is included with the skeleton.
 
 So to test a change to the skeleton:
 
 * Clone the skeleton repo.
 * Checkout a new topic branch.
 * Make your changes **and commmit them**. (A limitation of this approach is that the changes MSUT be available from the git index.)
-* Run this command: `./test-project.sh my-branch-name /new/app/dir`
+* Run this command: `./skel/test-project.sh my-branch-name /new/app/dir`
 * The new project will be set up in `/new/app/dir` and can be tested as necessary.
 
 
@@ -78,7 +78,7 @@ When working on the skeleton's templates, it can be handy to review the list of 
 
 ### Post-Install Scripts
 
-Most of the magic behind the `create-project` command lies in composer's ability to execute PHP scripts on the new project. These scripts traditionally live in `src/Console/` and are wired into the `composer.json:scripts:post-install-cmd` array. The current tasks that are performed during setup:
+Most of the magic behind the `create-project` command lies in composer's ability to execute PHP scripts on the new project. These scripts traditionally live in `skel/src/` and are wired into the `composer.json:scripts:post-create-project-cmd` array. The current tasks that are performed during setup:
 
 * Copy `config/app.default.php` to `config/app.php`.
 * Sets writable folder permissions.
@@ -90,6 +90,16 @@ Most of the magic behind the `create-project` command lies in composer's ability
 * @TODO: Prompts the user to commit and push the project.
 
 Additional first-time setup should be added as a post-install script. If a process should be repeatable, consider making it part of the [loadsys/CakePHP-Shell-Scripts]() repo instead, and calling that script from a post-install hook.
+
+#### Running Tests
+
+The composer scripts have their own unit tests. To execute them, run:
+
+```shell
+$ composer install
+$ bin/phpunit --bootstrap skel/tests/bootstrap.php skel/tests/TestCase/
+```
+
 
 ## Skeleton Development
 

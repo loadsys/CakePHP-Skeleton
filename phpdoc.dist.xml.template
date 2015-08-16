@@ -2,7 +2,7 @@
 <phpdoc>
 	<title><![CDATA[{{PROJECT_TITLE:@TODO}}]]></title>
 
-    <files>
+	<files>
 		<!-- Create docs for everything in project root's src/ folder. -->
 		<directory>./src</directory>
 		<directory>./config</directory>
@@ -12,36 +12,36 @@
 		<!-- Except for these folders (relative to "root" defined above.) -->
 		<!-- <ignore>example/*</ignore> -->
 
-        <ignore-hidden>true</ignore-hidden>
-        <ignore-symlinks>true</ignore-symlinks>
-    </files>
+		<ignore-hidden>true</ignore-hidden>
+		<ignore-symlinks>true</ignore-symlinks>
+	</files>
 
-    <parser>
-        <default-package-name>{{PROJECT_DEFAULT_NAMESPACE:App}}</default-package-name>
+	<parser>
+		<default-package-name>{{PROJECT_DEFAULT_NAMESPACE:App}}</default-package-name>
 
-        <encoding>utf-8</encoding>
-        <target>./tmp/docs-build</target>
-        <markers>
-            <item>TODO</item>
-            <item>FIXME</item>
-        </markers>
-        <extensions>
-            <extension>php</extension>
-        </extensions>
-        <visibility></visibility>
-    </parser>
+		<encoding>utf-8</encoding>
+		<target>./tmp/docs-build</target>
+		<markers>
+			<item>TODO</item>
+			<item>FIXME</item>
+		</markers>
+		<extensions>
+			<extension>php</extension>
+		</extensions>
+		<visibility></visibility>
+	</parser>
 
-    <transformer>
-        <target>./tmp/docs</target>
-    </transformer>
+	<transformer>
+		<target>./tmp/docs</target>
+	</transformer>
 
-    <transformations>
-        <template name="responsive-twig"/>
-    </transformations>
+	<transformations>
+		<template name="responsive-twig"/>
+	</transformations>
 
-    <logging>
-        <level>error</level>
-        <default>./logs/phpdoc.log</default>
-        <errors>./logs/phpdoc_errors.log</errors>
-    </logging>
+	<logging>
+		<level>error</level>
+		<default>./logs/phpdoc.log</default>
+		<errors>./logs/phpdoc_errors.log</errors>
+	</logging>
 </phpdoc>

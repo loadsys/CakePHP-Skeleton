@@ -4,7 +4,7 @@
  * with `{{TOKEN}}`s in them.
  */
 
-namespace App\Console;
+namespace Skel;
 
 use Composer\Script\Event;
 
@@ -71,6 +71,12 @@ class FileParser
 
         foreach ($Regex as $file) {
             $template = str_replace($this->dir, '', $file[0]);
+
+			// Skip anything from our own skel/ tooling directory.
+            if (strpos($template, 'skel/') === 0) {
+            	continue;
+            }
+
             $templates[] = $template;
             $this->writeVerbose('Found template: `' . $template . '`');
         }
