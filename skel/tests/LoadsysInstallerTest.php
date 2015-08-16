@@ -2,9 +2,9 @@
 /**
  * Tests for the LoadsysInstaller composer library.
  */
-namespace App\Test\TestCase\Console;
+namespace Skel\Test\TestCase\Console;
 
-use App\Console\LoadsysInstaller;
+use Skel\Console\LoadsysInstaller;
 use Composer\Composer;
 use Composer\Config;
 use Composer\Installer\InstallationManager;

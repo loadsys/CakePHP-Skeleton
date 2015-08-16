@@ -2,9 +2,9 @@
 /**
  * Tests for the InstallerConfigurer composer library.
  */
-namespace App\Test\TestCase\Console;
+namespace Skel\Test\TestCase\Console;
 
-use App\Console\InstallerConfigurer;
+use Skel\InstallerConfigurer;
 use Composer\Composer;
 use Composer\Config;
 use Composer\Script\Event;

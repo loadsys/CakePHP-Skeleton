@@ -4,7 +4,7 @@
  * with `{{TOKEN}}`s in them.
  */
 
-namespace App\Console;
+namespace Skel;
 
 use Composer\Script\Event;
 

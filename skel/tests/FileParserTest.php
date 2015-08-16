@@ -2,9 +2,9 @@
 /**
  * Tests for the FileParser composer library.
  */
-namespace App\Test\TestCase\Console;
+namespace Skel\Test\TestCase\Console;
 
-use App\Console\FileParser;
+use Skel\FileParser;
 use Composer\Composer;
 use Composer\Config;
 use Composer\Installer\InstallationManager;

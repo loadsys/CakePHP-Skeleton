@@ -22,13 +22,15 @@
     "psr-4": {
       "App\\Test\\": "tests",
       "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
-      "Composer\\": "./vendor/composer/composer/src/Composer"
+      "Composer\\": "./vendor/composer/composer/src/Composer",
+      "Skel\\": "skel/src",
+      "Skel\\Test\\": "skel/tests"
     }
   },
   "scripts": {
     "post-create-project-cmd": [
-      "App\\Console\\Installer::postInstall",
-      "App\\Console\\LoadsysInstaller::postInstall"
+      "Skel\\Installer::postInstall",
+      "Skel\\LoadsysInstaller::postInstall"
     ],
     "post-autoload-dump": [
       "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump"

@@ -7,7 +7,7 @@
  * template file tokens and values.
  */
 
-namespace App\Console;
+namespace Skel;
 
 use Composer\Script\Event;
 
