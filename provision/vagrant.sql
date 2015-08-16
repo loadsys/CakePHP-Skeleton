@@ -9,3 +9,8 @@ GRANT ALL ON `vagrant_test`.* TO "vagrant"@"%" IDENTIFIED BY "vagrant";
 -- Flush all the things.
 FLUSH TABLES;
 FLUSH PRIVILEGES;
+
+-- Load data into the DB, the old fashioned way.
+
+-- USE `vagrant`;
+-- SOURCE /vagrant/provision/vagrant-seed.sql

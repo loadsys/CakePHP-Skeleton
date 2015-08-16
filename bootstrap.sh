@@ -83,7 +83,13 @@ fi
 # Install composer packages using versions specified in config/lock file.
 echo "## Running \`composer install\`."
 
-composer update --lock --no-interaction --ignore-platform-reqs --optimize-autoloader
+composer update --lock --no-interaction --ignore-platform-reqs && \
+ composer install --no-interaction --ignore-platform-reqs --optimize-autoloader
+
+if [ $? -gt 0 ]; then
+    echo "!! Running \`composer install\` failed. Aborting."
+    exit 1
+fi
 
 
 # Finish up.
