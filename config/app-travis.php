@@ -1,4 +1,7 @@
 <?php
+
+use App\Lib\ConfigClosures;
+
 return [
     /**
      * Debug Level:
