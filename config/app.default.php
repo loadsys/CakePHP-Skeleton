@@ -108,6 +108,15 @@ return [
 		]),
 
 		/**
+		 * Configure the cache for session caching. This cache configuration
+		 * is used to store the session information. To update where Sessions
+		 * are stored modify this array.
+		 */
+		'sessions' => ConfigClosures::cacheMerge([
+			'prefix' => 'sessions_',
+		]),
+
+		/**
 		 * An example of a "simple" File config, for reference.
 		 *
 		 * Caching should be via Memcached by default though.
@@ -335,7 +344,12 @@ return [
 	 * To use database sessions, load the SQL file located at config/Schema/sessions.sql
 	 */
 	'Session' => [
+		// The Default Session configuration uses the Caching Engine
+		// (Memchached) with the `sessions` Cache config.
 		'defaults' => 'cache',
+		'handler' => [
+			'config' => 'sessions'
+		]
 	],
 
 	/**

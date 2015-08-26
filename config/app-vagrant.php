@@ -41,6 +41,13 @@ return [
 			'username' => null,
 			'password' => null,
 		],
+		'sessions' =>[
+			'compress' => false,
+			'duration' => 120,
+			'servers' => 'localhost',
+			'username' => null,
+			'password' => null,
+		],
 	],
 
 	/**
