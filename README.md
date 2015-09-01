@@ -25,7 +25,7 @@ The 3.x version of the skeleton leverages composer's `create-project` command. A
 
 ```bash
 composer self-update # Generally a good idea to run first.
-composer create-project --prefer-dist --ignore-platform-reqs loadsys/skeleton local/path/for/new/project ~3.1
+composer create-project --prefer-dist --ignore-platform-reqs loadsys/skeleton local/path/for/new/project ~3.2
 # (Answer wizard questions.)
 cd local/path/for/new/project
 ./bootstrap.sh vagrant

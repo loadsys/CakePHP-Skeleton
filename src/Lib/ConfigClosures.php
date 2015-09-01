@@ -32,7 +32,7 @@ class ConfigClosures {
 			'className' => 'Memcached',
 			'compress' => true,
 			'duration' => '+1 years',
-			'prefix' => 'eu_',
+			'prefix' => '@TODO_',
 			'servers' => '@TODO: Default (prod) Memcached server address',
 			'username' => '@TODO: Default (prod) Memcached server username',
 			'password' => '@TODO: Default (prod) Memcached server password',

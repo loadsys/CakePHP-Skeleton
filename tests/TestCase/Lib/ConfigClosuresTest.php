@@ -1,11 +1,14 @@
 <?php
+/**
+ * Tests for the ConfigClosures Lib Class.
+ */
 namespace App\Test\TestCase\Lib;
 
 use App\Lib\ConfigClosures;
 use Cake\TestSuite\TestCase;
 
 /**
- * ConfigClosures tests
+ * \App\Test\TestCase\Lib\ConfigClosuresTest
  */
 class ConfigClosuresTest extends TestCase {
 	/**
