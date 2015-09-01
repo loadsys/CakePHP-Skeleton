@@ -1,7 +1,6 @@
 <?php
 
 use App\Lib\ConfigClosures;
-use Cake\Utility\Hash;
 
 return [
 	/**
@@ -28,8 +27,8 @@ return [
 	 * - baseUrl - To configure CakePHP to *not* use mod_rewrite and to
 	 *   use CakePHP pretty URLs, remove these .htaccess
 	 *   files:
-	 *	  /.htaccess
-	 *	  /webroot/.htaccess
+	 *      /.htaccess
+	 *      /webroot/.htaccess
 	 *   And uncomment the baseUrl key below.
 	 * - fullBaseUrl - A base URL to use for absolute links.
 	 * - imageBaseUrl - Web path to the public images directory under webroot.
@@ -95,7 +94,7 @@ return [
 		 * configuration.
 		 */
 		'_cake_core_' => ConfigClosures::cacheMerge([
-			'prefix' => 'cake_core_',
+			'prefix' => '_cake_core_',
 		]),
 
 		/**
@@ -104,7 +103,7 @@ return [
 		 * in connections.
 		 */
 		'_cake_model_' => ConfigClosures::cacheMerge([
-			'prefix' => 'cake_model_',
+			'prefix' => '_cake_model_',
 		]),
 
 		/**
@@ -321,13 +320,13 @@ return [
 	 * - `cookiePath` - The url path for which session cookie is set. Maps to the
 	 *   `session.cookie_path` php.ini config. Defaults to base path of app.
 	 * - `timeout` - The time in minutes the session should be valid for.
-	 *	Pass 0 to disable checking timeout.
+	 *    Pass 0 to disable checking timeout.
 	 * - `defaults` - The default configuration set to use as a basis for your session.
-	 *	There are four built-in options: php, cake, cache, database.
+	 *    There are four built-in options: php, cake, cache, database.
 	 * - `handler` - Can be used to enable a custom session handler. Expects an
-	 *	array with at least the `engine` key, being the name of the Session engine
-	 *	class to use for managing the session. CakePHP bundles the `CacheSession`
-	 *	and `DatabaseSession` engines.
+	 *    array with at least the `engine` key, being the name of the Session engine
+	 *    class to use for managing the session. CakePHP bundles the `CacheSession`
+	 *    and `DatabaseSession` engines.
 	 * - `ini` - An associative array of additional ini values to set.
 	 *
 	 * The built-in `defaults` options are:
@@ -375,5 +374,17 @@ return [
 				'Snippet' => '',
 			],
 		],
+	],
+
+	/**
+	 * Define a number of static lookup [slug => Display Value] lists.
+	 *
+	 * These should be kept small since they will be loaded into memory
+	 * with every request.
+	 *
+	 * Top-level keys should match the Entity/Table, second-level keys
+	 * should match `*_slug` field names.
+	 */
+	'Lists' => [
 	],
 ];

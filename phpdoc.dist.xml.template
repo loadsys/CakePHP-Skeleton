@@ -17,7 +17,7 @@
 	</files>
 
 	<parser>
-		<default-package-name>{{PROJECT_DEFAULT_NAMESPACE:App}}</default-package-name>
+		<default-package-name>App</default-package-name>
 
 		<encoding>utf-8</encoding>
 		<target>./tmp/docs-build</target>

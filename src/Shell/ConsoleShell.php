@@ -7,6 +7,8 @@
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
+ * @codeCoverageIgnore
+ *
  * @copyright Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link      http://cakephp.org CakePHP(tm) Project
  * @since     3.0.0

@@ -120,6 +120,10 @@ sudo cp -r ${PROVISION_DIR}/dot-files/.[a-zA-Z0-9]* "/home/${TARGET_USER}/" && \
  sudo cp -r ${PROVISION_DIR}/dot-files/.[a-zA-Z0-9]* /root/
 
 
+# Automatically switch to the webroot when logging in.
+echo "cd /var/www" >> "/home/${TARGET_USER}/.profile"
+
+
 # Set up Apache config.
 echo "## Setting up Apache virtual host."
 
