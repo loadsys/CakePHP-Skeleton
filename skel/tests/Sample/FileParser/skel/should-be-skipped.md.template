@@ -1,0 +1,3 @@
+# Skip Test
+
+This file has a {{TOKEN:token}} and has the correct extension, but the FileParser should skip anything inside a `skel/` folder.

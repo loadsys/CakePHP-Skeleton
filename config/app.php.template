@@ -63,7 +63,7 @@ return [
 	 *   You should treat it as extremely sensitive data.
 	 */
 	'Security' => [
-		'salt' => '__SALT__',
+		'salt' => '{{__SALT__}}',
 	],
 
 	/**
@@ -306,11 +306,11 @@ return [
 	 * a file, call this Configure var instead.
 	 */
 	'Defaults' => [
-		'short_name' => '{{APP_DISPLAY_SHORT_NAME}}', //@TODO: Set the app's short name.
-		'long_name' => '{{APP_NAME}}', //@TODO: Set the app's long name.
-		'domain' => '{{APP_DOMAIN}}', //@TODO: Set the app's default domain name (used for email addresses and suitable for generated docs, like PDFs.)
-		'meta_description' => '{{APP_META_DESCRIPTION}}', //@TODO: Set the app's default meta description.
-		'meta_keywords' => '{{APP_META_KEYWORDS}}', //@TODO: Set the app's default meta keywords.
+		'short_name' => '{{APP_DISPLAY_SHORT_NAME:@TODO Set app short name.}}',
+		'long_name' => '{{PROJECT_TITLE}}',
+		'domain' => '{{APP_DOMAIN_ONLY:acme.com}}',
+		'meta_description' => '{{APP_META_DESCRIPTION:@TODO Set default meta description.}}',
+		'meta_keywords' => '{{APP_META_KEYWORDS:@TODO:Set default meta keywords.}}',
 		'Env' => [
 			'Token' => 'prod',
 			'Hint' => [

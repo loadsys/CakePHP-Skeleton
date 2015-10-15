@@ -30,7 +30,6 @@
   },
   "scripts": {
     "post-create-project-cmd": [
-      "Skel\\Installer::postInstall",
       "Skel\\LoadsysInstaller::postInstall"
     ],
     "post-autoload-dump": [
