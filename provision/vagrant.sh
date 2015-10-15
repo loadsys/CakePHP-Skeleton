@@ -14,40 +14,16 @@
 # necessary to be different should be included here. Everything else must
 # go in main.sh so that it applies to all environments equally.
 
-
 # Set up working vars.
 #   PROVISION_DIR must be inherited from main.sh
 #   APP_ENV must be inherited from main.sh
-MYSQL_ROOT_PASS="password"
 
 
 echo "## Starting: `basename "$0"`."
 
 
-# Install a local MySQL server.
-echo "## Installing local MySQL server."
-
-sudo debconf-set-selections <<< "mysql-server mysql-server/root_password password ${MYSQL_ROOT_PASS}"
-
-sudo debconf-set-selections <<< "mysql-server mysql-server/root_password_again password ${MYSQL_ROOT_PASS}"
-
-sudo apt-get install -y mysql-server
-
-# You should probably run this yourself as it can't be automated.
-#mysql_secure_installation
-
-
-# Configure MySQL databases.
-SQL_IMPORT_FILE="${PROVISION_DIR}/${APP_ENV}.sql"
-
-
-if [ -r "${SQL_IMPORT_FILE}" ]; then
-    echo "## Executing environment-specific MySQL script: \`${SQL_IMPORT_FILE}\`"
-
-	mysql --host=localhost --user=root --password="$MYSQL_ROOT_PASS" mysql < "${SQL_IMPORT_FILE}"
-else
-    echo "## Environment-specific MySQL script not found. Skipping: \`${SQL_IMPORT_FILE}\`"
-fi
+# Farm out local MySQL server install to the common "mysql_server" script.
+"${PROVISION_DIR}/mysql_server.sh"
 
 
 # Install development-only PHP extensions.

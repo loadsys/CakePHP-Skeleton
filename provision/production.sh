@@ -17,7 +17,6 @@
 # Set up working vars.
 #   PROVISION_DIR must be inherited from main.sh
 #   APP_ENV must be inherited from main.sh
-THIS_DIR="$( cd -P "$( dirname "$0" )"/. >/dev/null 2>&1 && pwd )"
 
 FQDN="@TODO:hostname.domain.com"
 NOTIFY_EMAIL="@TODO:serveradmin@domain.com"
@@ -29,7 +28,7 @@ echo "## Starting: `basename "$0"`."
 
 
 # Farm most everything out to the common "bare metal" script.
-"${THIS_DIR}/baremetal.sh"
+"${PROVISION_DIR}/baremetal.sh"
 
 
 

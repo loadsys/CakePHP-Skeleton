@@ -84,20 +84,20 @@ return [
 	 */
 	'Datasources' => [
 		'default' => [
-			'host' => '',
-			'username' => '',
-			'password' => '',
-			'database' => '',
+			'host' => 'localhost',
+			'username' => 'staging',
+			'password' => 'staging',
+			'database' => 'staging',
 		],
 
 		/**
 		 * The test connection is used during the test suite.
 		 */
 		'test' => [
-			'host' => '',
-			'username' => '',
-			'password' => '',
-			'database' => '',
+			'host' => 'localhost',
+			'username' => 'staging',
+			'password' => 'staging',
+			'database' => 'staging_test',
 		],
 	],
 

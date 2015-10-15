@@ -18,7 +18,7 @@
 #   PROVISION_DIR must be inherited from main.sh
 #   APP_ENV must be inherited from main.sh
 
-export FQDN="staging.educationunlimited.com"
+export FQDN="@TODO: staging.domain-name.com"
 
 
 echo "## Starting: `basename "$0"`."
@@ -26,6 +26,10 @@ echo "## Starting: `basename "$0"`."
 
 # Farm most everything out to:
 "${PROVISION_DIR}/baremetal.sh"
+
+
+# Farm out local MySQL server install to the common "mysql_server" script.
+"${PROVISION_DIR}/mysql_server.sh"
 
 
 # Set strict limits on Apache in staging to prevent running out of memory on EC2 t2.micros.
