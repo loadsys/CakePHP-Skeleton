@@ -289,7 +289,11 @@ return [
 	],
 
 	/**
-	 * Configures logging options
+	 * Configures logging options.
+	 *
+	 * Note: The skeleton is configured to rotate logs in staging and
+	 * production instances at the system level using logrotated. It is
+	 * recommended NOT to enable Cake-based log rotation here.
 	 */
 	'Log' => [
 		'debug' => [

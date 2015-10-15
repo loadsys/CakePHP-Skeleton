@@ -48,9 +48,18 @@ if git rev-parse --git-dir > /dev/null 2>&1; then
 else
     echo "## Initializing git repo."
     git init
-    #read -t 0 -p "Enter git remote URL: " GIT_REMOTE
+    #read -t 0 -p ">> Enter git remote URL: " GIT_REMOTE
     #git remote add origin $GIT_REMOTE
 fi
+
+
+#@TODO: BUT WE CAN'T PROMPT HERE. When provisioning vagrant, we don't have tty access to this script's execution. Needs to be already available in the env somehow...
+# echo ">> Composer needs a GitHub auth token to fetch dependencies via the"
+# echo ">> API without being rate limited. This token can (and should) be"
+# echo ">> read-only, and public-only."
+# read -p ">> Enter a GitHub read-only, public-only auth token: " COMPOSER_TOKEN
+#@TODO: Set a Github auth token (read-only, public-only) to install into composer.
+# composer config --global github-oauth.github.com $COMPOSER_TOKEN
 
 
 # If we have a Vagrantfile, the `vagrant` command and APP_ENV=vagrant,
