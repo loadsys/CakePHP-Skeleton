@@ -54,7 +54,7 @@ echo "## Starting: `basename "$0"`."
 # Prevent sometimes-troublesome packages from...causing trouble.
 echo "## Holding packages that cause trouble..."
 
-sudo apt-mark hold grub-common grub-pc grub-pc-bin grub2-common
+sudo apt-mark hold grub-common grub-pc grub-pc-bin grub2-common grub-legacy-ec2
 
 
 # Install sub-dependencies first.

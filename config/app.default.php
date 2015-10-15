@@ -289,7 +289,7 @@ return [
 	'Session' => [
 		'defaults' => 'cache',
 		'timeout' => 120,
-		'cookie' => 'CakeApp', //@TODO: Customize session cookie name.
+		'cookie' => '{{APP_COOKIE:CakeApp}}',
 		'handler' => [
 			'config' => 'sessions',
 		],

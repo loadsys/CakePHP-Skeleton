@@ -48,7 +48,7 @@ if git rev-parse --git-dir > /dev/null 2>&1; then
     git checkout -- composer.lock
 else
     echo "## Cleaning up skeleton files."
-    rm -rf skel composer.lock config/app.default.php
+    rm -rfv skel composer.lock
 
     echo "## Initializing git repo."
     git init
@@ -84,6 +84,8 @@ else
 
     provision/main.sh ${NEW_APP_ENV}
 
+	# Bring APP_ENV into scope immediately.
+	. ~/.profile
 fi
 
 
