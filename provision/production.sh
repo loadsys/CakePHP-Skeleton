@@ -21,8 +21,8 @@
 FQDN="@TODO:hostname.domain.com"
 NOTIFY_EMAIL="@TODO:serveradmin@domain.com"
 SMTP_RELAY_HOST_AND_PORT="@TODO:ses.hostname.here:587"
-SMTP_RELAY_PASSWORD="@TODO:ses-password-here"
-
+SMTP_RELAY_USERNAME="@TODO:ses.username-here"
+SMTP_RELAY_PASSWORD="@TODO:ses.password-here"
 
 echo "## Starting: `basename "$0"`."
 
@@ -60,13 +60,13 @@ echo "## Starting: `basename "$0"`."
 
 DEBIAN_FRONTEND=noninteractive sudo apt-get install -y postfix  # Choose "no configuration" from the menu if it appears.
 
-tee /etc/mailname <<EOF > /dev/null
+sudo tee /etc/mailname <<EOF > /dev/null
 ${FQDN}
 
 EOF
 
 
-tee /etc/postfix/main.cf <<EOF > /dev/null
+sudo tee /etc/postfix/main.cf <<EOF > /dev/null
 relayhost = ${SMTP_RELAY_HOST_AND_PORT}
 smtp_sasl_auth_enable = yes
 smtp_sasl_security_options = noanonymous
@@ -79,15 +79,16 @@ smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
 EOF
 
 
-tee /etc/postfix/sasl_passwd <<'EOF' > /dev/null
-${SMTP_RELAY_HOST_AND_PORT} ${SMTP_RELAY_PASSWORD}
+sudo tee /etc/postfix/sasl_passwd <<EOF > /dev/null
+${SMTP_RELAY_HOST_AND_PORT} ${SMTP_RELAY_USERNAME}:${SMTP_RELAY_PASSWORD}
 
 EOF
 
+sudo postmap /etc/postfix/sasl_passwd
 
 sudo cp /etc/aliases /etc/alises.bak
 
-tee /etc/aliases <<EOF > /dev/null
+sudo tee /etc/aliases <<EOF > /dev/null
 # See man 5 aliases for format
 #
 # Forward local accounts to root's mailbox.
