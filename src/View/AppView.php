@@ -7,7 +7,7 @@ namespace App\View;
 use Cake\View\View;
 
 /**
- * \App\View\AppView
+ * App View class
  */
 class AppView extends View {
 	/**
@@ -19,8 +19,14 @@ class AppView extends View {
 	 * @return void
 	 */
 	public function initialize() {
-		$this->loadHelper('Html');
-		$this->loadHelper('Form');
+		$this->loadHelper('Html', [
+		]);
+		$this->loadHelper('Form', [
+			'errorClass' => 'error',
+			'templates' => [
+				'error' => '<small class="error">{{content}}</small>',
+			],
+		]);
 		$this->loadHelper('Flash');
 	}
 }

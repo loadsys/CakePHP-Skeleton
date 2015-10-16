@@ -97,7 +97,7 @@ return [
 	 */
 
 	/**
-	 * Development Site Configuration
+	 * Testing Site Configuration
 	 *
 	 * Any time you'd be tempted to type one of these strings directly into
 	 * a file, call this Configure var instead.
@@ -106,7 +106,7 @@ return [
 		'Env' => [
 			'Token' => 'travis',
 			'Hint' => [
-				'Snippet' => 'background: #9999ff;',
+				'Snippet' => 'background: #9999ff;', // light blue
 			],
 		],
 	],

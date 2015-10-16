@@ -374,8 +374,16 @@ return [
 		'Env' => [
 			'Token' => 'prod',
 			'Hint' => [
-				'Format' => '<style> nav.top-bar { %s } </style>',
+				'Format' => '
+	<style>
+		nav.top-bar,
+		.top-bar-section li:not(.has-form) a:not(.button) {
+			%1$s
+		}
+	</style>
+				',
 				'Snippet' => '',
+				'AuxContent' => '',
 			],
 		],
 	],

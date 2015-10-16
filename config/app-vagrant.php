@@ -115,7 +115,7 @@ return [
 		'Env' => [
 			'Token' => 'vagrant',
 			'Hint' => [
-				'Snippet' => 'background: #ff9999;',
+				'Snippet' => 'background: #8d1c1c;', // maroon
 			],
 		],
 	],

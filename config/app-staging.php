@@ -110,7 +110,16 @@ return [
 		'Env' => [
 			'Token' => 'staging',
 			'Hint' => [
-				'Snippet' => 'background: #e5c627;',
+				'Snippet' => 'background: #cc7000;', // orange
+				'AuxContent' => '
+					<script language="JavaScript">
+					document.write(
+						\'<li><a target="_blank" href="//\'
+						+ window.location.hostname
+						+ \':1080/">Mailcatcher</a></li>\'
+					);
+					</script>
+				',
 			],
 		],
 	],
