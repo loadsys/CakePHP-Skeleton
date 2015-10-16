@@ -5,11 +5,11 @@
 /config/app-local.php
 /backups/
 /.vagrant/
-/puphpet/files/dot/ssh/*id_rsa*
 /phpunit.xml
 
 # Composer Dependencies
 /vendor/*
+/node_modules
 
 # OS X
 .DS_Store

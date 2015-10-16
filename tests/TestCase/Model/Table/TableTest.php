@@ -1,4 +1,8 @@
 <?php
+/**
+ * Test Classes for the Table Class.
+ */
+
 namespace App\Test\TestCase\Model\Table;
 
 use App\Model\Table\Table;
