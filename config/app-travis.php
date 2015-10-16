@@ -18,32 +18,32 @@ return [
 	 * key, only where to connect.
 	 *
 	 * On Travis, we want to connect to the simple, unprotected daemon
-	 * running on localhost, and we want caches to expire quickly.
+	 * running on localhost, and we want caches to expire moderately quickly.
 	 */
 	'Cache' => [
 		'default' => [
 			'compress' => false,
 			'duration' => 120,
-			'servers' => 'localhost',
+			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,
 		],
 		'_cake_core_' => [
 			'duration' => 120,
-			'servers' => 'localhost',
+			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,
 		],
 		'_cake_model_' => [
 			'duration' => 120,
-			'servers' => 'localhost',
+			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,
 		],
-		'sessions' =>[
+		'sessions' => [
 			'compress' => false,
 			'duration' => 120,
-			'servers' => 'localhost',
+			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,
 		],
@@ -63,7 +63,7 @@ return [
 
 	'Email' => [
 		'default' => [
-			'from' => 'travis@localhost',
+			'from' => 'travis@loadsys.com',
 		],
 	],
 
@@ -97,7 +97,7 @@ return [
 	 */
 
 	/**
-	 * Development Site Configuration
+	 * Testing Site Configuration
 	 *
 	 * Any time you'd be tempted to type one of these strings directly into
 	 * a file, call this Configure var instead.
@@ -106,7 +106,7 @@ return [
 		'Env' => [
 			'Token' => 'travis',
 			'Hint' => [
-				'Snippet' => 'background: #9999ff;',
+				'Snippet' => 'background: #9999ff;', // light blue
 			],
 		],
 	],

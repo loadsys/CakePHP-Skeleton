@@ -97,7 +97,8 @@ The composer scripts have their own unit tests. To execute them, run:
 
 ```shell
 $ composer install
-$ bin/phpunit --bootstrap skel/tests/bootstrap.php skel/tests/TestCase/
+$ bin/phpunit --configuration skel/tests/phpunit.xml.dist
+$ open tmp/coverage/skel/html/index.html
 ```
 
 

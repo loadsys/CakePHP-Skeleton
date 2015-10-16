@@ -1,30 +1,28 @@
 {
   "name": "{{COMPOSER_PROJECT_NAME:loadsys/@TODO}}",
-  "description": "{{COMPOSER_PROJECT_DESCRIPTION_NO_QUOTES:}}",
-  "homepage": "{{PROJECT_REPO_URL:}}",
+  "description": "{{PROJECT_DESCRIPTION_NO_QUOTES:}}",
   "type": "project",
   "license": "proprietary",
   "require": {
     "php": ">=5.6.0",
-    "cakephp/cakephp": "~3.0",
+    "cakephp/cakephp": "~3.1",
     "cakephp/migrations": "~1.0",
     "cakephp/plugin-installer": "*",
     "mobiledetect/mobiledetectlib": "2.*",
     "psy/psysh": "@stable",
-    "loadsys/cakephp-creatormodifier": "~1.0",
+    "loadsys/cakephp-basic-seed": "~2.1",
     "loadsys/cakephp-config-read": "~3.0",
-    "loadsys/cakephp-shell-scripts": "~3.0",
-    "loadsys/cakephp-libregistry": "~1.0"
+    "loadsys/cakephp-creatormodifier": "~1.0",
+    "loadsys/cakephp-libregistry": "~1.0",
+    "loadsys/cakephp-loadsys-theme": "dev-master",
+    "loadsys/cakephp-shell-scripts": "~3.0"
   },
   "require-dev": {
-    "cakephp/debug_kit": "~3.0",
+    "cakephp/debug_kit": "~3.2",
     "cakephp/bake": "~1.0",
-    "phpunit/phpunit": "4.1.*",
-    "phpdocumentor/phpdocumentor": "2.*@beta",
-    "squizlabs/php_codesniffer": "2.*",
+    "phpunit/phpunit": "~4.8",
     "johnkary/phpunit-speedtrap": "~1.0@dev",
-    "loadsys/loadsys_codesniffer": "~3.0",
-    "loadsys/cakephp-loadsys-theme": "dev-master"
+    "loadsys/loadsys_codesniffer": "~3.0"
   },
   "autoload": {
     "psr-4": {

@@ -1,0 +1,30 @@
+div#container {
+	margin-top: 5px;
+}
+
+div.contain-to-grid {
+	background: transparent;
+}
+
+div#content table {
+	width: 100%;
+}
+
+.unavailable {
+	color: #999999;
+	cursor: not-allowed;
+}
+
+footer div.row {
+	background-color: #dddddd;
+}
+
+footer ul.inline-list {
+	margin-bottom: 0;
+}
+
+footer,
+footer ul.inline-list li {
+	font-size: 0.75em;
+}
+

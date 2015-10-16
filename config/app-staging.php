@@ -6,7 +6,7 @@ return [
 	/**
 	 * Debug Level:
 	 *
-	 * Always enabled for Travis builds.
+	 * Keep enabled in staging to reveal errors.
 	 */
 	'debug' => true,
 
@@ -17,33 +17,33 @@ return [
 	 * means we don't have to redefine the [className => Memcached]
 	 * key, only where to connect.
 	 *
-	 * On Travis, we want to connect to the simple, unprotected daemon
-	 * running on localhost, and we want caches to expire quickly.
+	 * In staging, we want to connect to the simple, unprotected daemon
+	 * running on localhost, and we want caches to expire moderately quickly.
 	 */
 	'Cache' => [
 		'default' => [
 			'compress' => false,
 			'duration' => 120,
-			'servers' => 'localhost',
+			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,
 		],
 		'_cake_core_' => [
 			'duration' => 120,
-			'servers' => 'localhost',
+			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,
 		],
 		'_cake_model_' => [
 			'duration' => 120,
-			'servers' => 'localhost',
+			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,
 		],
-		'sessions' =>[
+		'sessions' => [
 			'compress' => false,
 			'duration' => 120,
-			'servers' => 'localhost',
+			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,
 		],
@@ -52,22 +52,27 @@ return [
 	/**
 	 * Email configuration.
 	 *
-	 * @TODO: When running in staging, actually try to generate and deliver emails, **but override destinations**.
+	 * Staging continues to use Mailcatcher (running locally on the same
+	 * server) to intercept outbound email. This allows for easy testing
+	 * both by Loadsys and the client without having to modify the app to
+	 * "detect" this special cased environment and override To: addresses.
 	 */
 	'EmailTransport' => [
 		'default' => [
-			'className' => 'Stmp',
-			'host' => 'localhost',
-			'port' => 25,
-			'timeout' => 30,
+			'className' => 'Smtp',
+			'host' => '127.0.0.1',
+			'port' => 1025,
+			'timeout' => 5,
 			'username' => null,
 			'password' => null,
+			'client' => null,
+			'tls' => null,
 		],
 	],
 
 	'Email' => [
 		'default' => [
-			'from' => 'travis@staging',
+			'from' => 'staging@loadsys.com',
 		],
 	],
 
@@ -75,24 +80,24 @@ return [
 	 * Connection information used by the ORM to connect
 	 * to your application's datastores.
 	 *
-	 * Connect to the local MySQL instance running on the staging box.
+	 * Connect to the an external MySQL instance, typically RDS.
 	 */
 	'Datasources' => [
 		'default' => [
-			'host' => '',
-			'username' => '',
-			'password' => '',
-			'database' => '',
+			'host' => 'localhost',
+			'username' => 'staging',
+			'password' => 'staging',
+			'database' => 'staging',
 		],
 
 		/**
 		 * The test connection is used during the test suite.
 		 */
 		'test' => [
-			'host' => '',
-			'username' => '',
-			'password' => '',
-			'database' => '',
+			'host' => 'localhost',
+			'username' => 'staging',
+			'password' => 'staging',
+			'database' => 'staging_test',
 		],
 	],
 
@@ -110,7 +115,16 @@ return [
 		'Env' => [
 			'Token' => 'staging',
 			'Hint' => [
-				'Snippet' => 'background: #e5c627;',
+				'Snippet' => 'background: #cc7000;', // orange
+				'AuxContent' => '
+					<script language="JavaScript">
+					document.write(
+						\'<li><a target="_blank" href="//\'
+						+ window.location.hostname
+						+ \':1080/">Mailcatcher</a></li>\'
+					);
+					</script>
+				',
 			],
 		],
 	],

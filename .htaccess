@@ -3,3 +3,13 @@
     RewriteRule    ^$    webroot/    [L]
     RewriteRule    (.*)  webroot/$1  [L]
 </IfModule>
+
+# Enforce connection security.
+# Note that `includeSubdomains` will force the staging.your-domain.com
+# site to require SSL as well. Also make sure vagrant's Apache doesn't
+# enable mod_headers.
+#<IfModule mod_headers.c>
+#	Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains;"
+#	Header always set X-Frame-Options DENY
+#	Header always set X-Content-Type-Options nosniff
+#</IfModule>

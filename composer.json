@@ -6,12 +6,12 @@
   "license": "MIT",
   "require": {
     "php": ">=5.6.0",
-    "cakephp/cakephp": "~3.0",
+    "cakephp/cakephp": "~3.1",
     "cakephp/plugin-installer": "*"
   },
   "require-dev": {
     "composer/composer": "*",
-    "phpunit/phpunit": "4.1.*",
+    "phpunit/phpunit": "4.8",
     "loadsys/loadsys_codesniffer": "~3.0"
   },
   "autoload": {
@@ -30,7 +30,6 @@
   },
   "scripts": {
     "post-create-project-cmd": [
-      "Skel\\Installer::postInstall",
       "Skel\\LoadsysInstaller::postInstall"
     ],
     "post-autoload-dump": [

@@ -48,7 +48,34 @@ class TableTest extends TestCase {
 	 * @return void
 	 */
 	public function testInitialize() {
-		$this->markTestIncomplete('Not implemented yet.');
+		$this->AppTable->initialize([]); // Have to call manually to get coverage.
+		$this->assertEquals(
+			'id',
+			$this->AppTable->primaryKey(),
+			'The [App]Table default primary key is expected to be `id`.'
+		);
+
+		$expectedAssociations = [
+			'Creators',
+			'Modifiers',
+		];
+		foreach ($expectedAssociations as $assoc) {
+			$this->assertTrue(
+				$this->AppTable->associations()->has($assoc),
+				"Cursory sanity check. The [App]Table table is expected to be associated with $assoc."
+			);
+		}
+
+		$expectedBehaviors = [
+			'Timestamp',
+			'CreatorModifier',
+		];
+		foreach ($expectedBehaviors as $behavior) {
+			$this->assertTrue(
+				$this->AppTable->behaviors()->has($behavior),
+				"Cursory sanity check. The [App]Table table is expected to use the $behavior behavior."
+			);
+		}
 	}
 
 	/**
@@ -57,7 +84,14 @@ class TableTest extends TestCase {
 	 * @return void
 	 */
 	public function testValidationDefault() {
-		$this->markTestIncomplete('Not implemented yet.');
+		$validator = new \Cake\Validation\Validator();
+		$validator = $this->AppTable->validationDefault($validator);
+
+		$this->assertTrue($validator->hasField('id'));
+		$this->assertTrue($validator->hasField('created'));
+		$this->assertTrue($validator->hasField('modified'));
+		$this->assertTrue($validator->hasField('creator_id'));
+		$this->assertTrue($validator->hasField('modifier_id'));
 	}
 
 	/**
@@ -66,6 +100,10 @@ class TableTest extends TestCase {
 	 * @return void
 	 */
 	public function testBuildRules() {
-		$this->markTestIncomplete('Not implemented yet.');
+		$this->assertInstanceOf(
+			'\Cake\ORM\RulesChecker',
+			$this->AppTable->buildRules(new \Cake\ORM\RulesChecker()),
+			'Cursory sanity check. buildRules() should return a ruleChecker.'
+		);
 	}
 }

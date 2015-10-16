@@ -25,26 +25,26 @@ return [
 		'default' => [
 			'compress' => false,
 			'duration' => 120,
-			'servers' => 'localhost',
+			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,
 		],
 		'_cake_core_' => [
 			'duration' => 120,
-			'servers' => 'localhost',
+			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,
 		],
 		'_cake_model_' => [
 			'duration' => 120,
-			'servers' => 'localhost',
+			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,
 		],
-		'sessions' =>[
+		'sessions' => [
 			'compress' => false,
 			'duration' => 120,
-			'servers' => 'localhost',
+			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,
 		],
@@ -59,7 +59,7 @@ return [
 	'EmailTransport' => [
 		'default' => [
 			'className' => 'Smtp',
-			'host' => 'localhost',
+			'host' => '127.0.0.1',
 			'port' => 1025,
 			'timeout' => 30,
 			'username' => null,
@@ -71,7 +71,7 @@ return [
 
 	'Email' => [
 		'default' => [
-			'from' => 'you@localhost',
+			'from' => 'vagrant@loadsys.com',
 		],
 	],
 
@@ -115,7 +115,7 @@ return [
 		'Env' => [
 			'Token' => 'vagrant',
 			'Hint' => [
-				'Snippet' => 'background: #ff9999;',
+				'Snippet' => 'background: #8d1c1c;', // maroon
 			],
 		],
 	],

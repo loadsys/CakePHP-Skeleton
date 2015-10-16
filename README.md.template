@@ -3,7 +3,11 @@ _This template includes more information than a typical project requires, both t
 
 # [{{PROJECT_TITLE:@TODO}}]({{PROJECT_REPO_URL:https://github.com/loadsys/app}})
 
-{{PROJECT_DESCRIPTION:@TODO}}
+<!--
+[![Build Status](https://magnum.travis-ci.com/loadsys/__REPO_NAME__.svg?token=__TRAVIS_TOKEN__&branch=dev)](https://magnum.travis-ci.com/loadsys/__REPO_NAME__)
+-->
+
+{{PROJECT_DESCRIPTION_NO_QUOTES:@TODO}}
 
 _Brief app description. Why does it exist? Who uses it?_
 
@@ -21,7 +25,7 @@ _"Environment" refers to external technologies required for the app to run. Anyt
 
 This section documents the minimum required tools for hosting this application.
 
-* [CakePHP](https://github.com/cakephp/cakephp) v3.0+
+* [CakePHP](https://github.com/cakephp/cakephp) v3.1+
 * PHP v5.6+
 	* intl
 	* pdo + mysql
@@ -80,9 +84,10 @@ Composer-provided:
 * [DebugKit](https://github.com/cakephp/debug_kit)
 * [Migrations](https://github.com/cakephp/migrations)
 * [Bake](https://github.com/cakephp/bake)
-* [Loadsys Cake Shell Scripts](https://github.com/loadsys/CakePHP-Shell-Scripts) //@TODO: Add Shell-Scripts plugin to composer.json.
+* [Loadsys Cake Shell Scripts](https://github.com/loadsys/CakePHP-Shell-Scripts)
 * [Loadsys Cake ConfigReadShell](https://github.com/loadsys/CakePHP-ConfigReadShell)
-* [Loadsys Cake Basic Seeds](https://github.com/loadsys/CakePHP-Basic-Seed) //@TODO: Add Basic Seed plugin to composer.json.
+* [Loadsys Cake LibRegistry](https://github.com/loadsys/CakePHP-LibRegistry)
+* [Loadsys Cake Basic Seeds](https://github.com/loadsys/CakePHP-Basic-Seed)
 * [phpunit](http://phpunit.de/) v4.1+
 * [phpDocumentor](http://phpdoc.org/) v2
 * [PHP Code Sniffer](https://github.com/squizlabs/PHP_CodeSniffer) v2
@@ -123,9 +128,6 @@ git clone {{PROJECT_REPO_CLONE_URL:@TODO}} ./
 ```
 
 The bootstrap file takes care of installing dependencies. After this process, the project should be available at [http://localhost:8080/](http://localhost:8080/).
-
-
-@TODO: Add a vagrant shutdown script to automatically call `bin/db-backup`, which will save a zipped. sql file in the shared folder under `backups/`.
 
 
 ### Production, Staging (bare metal)
@@ -170,11 +172,10 @@ On your host:
 
 ### Developer Workflow
 
-**@TODO: Review and update this section.**
-
 * Pull origin and get `dev` up to date.
 * Create new topic branch from `dev`.
 * Make changes and commit to your branch.
+* (Pull origin and get `dev` up to date.)
 * Rebase branch on latest `dev`.
 * Push (forced) topic branch to origin.
 * Create a PR and add the "Review" label to it. Assign to the PM.
@@ -223,6 +224,7 @@ Create a new "SSH" connection with the following settings:
 * SSH Port: 2222 (per `config/provision.yaml`.)
 
 This setup is handy for backing up your data if you're about to destroy the box, or for making Schema or Seed changes before running the Shell commands in the VM.
+
 
 #### Schema Migrations
 
@@ -291,8 +293,6 @@ There are three testsuites setup as part of the phpunit.xml.dist file.
 ### Javascript Unit Testing
 
 **@TODO: Review and update this section.**
-
-@TODO: Get the TestJs plugin integrated into the skeleton, use abus as reference.
 
 * Tests can also be written for the browser JavaScript code.
 * Javascript should be written in individual "class" files (they will be merged by asset compilation) in `webroot/js/src/`.

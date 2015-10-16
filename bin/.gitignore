@@ -3,6 +3,9 @@
 # !!!   Use the `/scripts` folder instead.                               !!!
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+# Ignore everything else in the /bin folder
+/*
+
 # Remember Cake Shells
 !.gitignore
 !.gitkeep
@@ -10,5 +13,3 @@
 !cake.bat
 !cake.php
 
-# Ignore everything else in the /bin folder
-/*

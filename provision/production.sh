@@ -17,23 +17,20 @@
 # Set up working vars.
 #   PROVISION_DIR must be inherited from main.sh
 #   APP_ENV must be inherited from main.sh
-THIS_DIR="$( cd -P "$( dirname "$0" )"/. >/dev/null 2>&1 && pwd )"
 
 FQDN="@TODO:hostname.domain.com"
 NOTIFY_EMAIL="@TODO:serveradmin@domain.com"
 SMTP_RELAY_HOST_AND_PORT="@TODO:ses.hostname.here:587"
 SMTP_RELAY_PASSWORD="@TODO:ses-password-here"
 
-echo "!! Nothing below has been tested yet!"
-exit 0
 
 echo "## Starting: `basename "$0"`."
 
 
-# Set machine hostname.
-# echo "## Setting hostname."
-sudo cp /etc/hostname /etc/hostname.bak
-echo "${FQDN}" | sudo tee /etc/hostname > /dev/null
+# Farm most everything out to the common "bare metal" script.
+"${PROVISION_DIR}/baremetal.sh"
+
+
 
 # Install CRON jobs as the current user.
 # echo "## Installing cron jobs."
@@ -45,87 +42,18 @@ echo "${FQDN}" | sudo tee /etc/hostname > /dev/null
 # } | crontab -
 
 
-# Configure system patches.
-sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ `lsb_release -sc` universe multiverse"
 
-sudo add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ `lsb_release -sc`-updates universe multiverse"
+# Configure SSL (Apache or AWS load balancer)
+# /etc/apache2/mods-available/ssl.conf & /etc/apache2/sites-available/default-ssl.conf
 
-
-# Install additional production-only utilities.
-sudo apt-get install -y \
- emacs23-nox \
- screen \
- wget \
- ca-certificates \
-#  gcc \
-#  make \
-#  autoconf \
-#  automake \
-#  libtool \
- rsync \
- mailutils \
- unattended-upgrades
-
-
-# Set up automatic system updates.
-# Ref: https://help.ubuntu.com/lts/serverguide/automatic-updates.html
-sudo cp /etc/apt/apt.conf.d/50unattended-upgrades /etc/apt/apt.conf.d/50unattended-upgrades.bak
-
-sudo tee /etc/apt/apt.conf.d/50unattended-upgrades <<-'EOF' > /dev/null
-    Unattended-Upgrade::Allowed-Origins {
-        "${distro_id}:${distro_codename}-security";
-    //	"${distro_id}:${distro_codename}-updates";
-    //	"${distro_id}:${distro_codename}-proposed";
-        "${distro_id}:${distro_codename}-backports";
-    };
-    Unattended-Upgrade::Package-Blacklist {
-        "apache2";
-        "php5";
-        "php5-common";
-        "php-cil";
-    //	"libc6";
-    //	"libc6-dev";
-    //	"libc6-i686";
-    };
-    //Unattended-Upgrade::AutoFixInterruptedDpkg "false";
-    //Unattended-Upgrade::MinimalSteps "true";
-    //Unattended-Upgrade::InstallOnShutdown "true";
-    Unattended-Upgrade::Mail "root@localhost";
-    Unattended-Upgrade::MailOnlyOnError "true";
-    Unattended-Upgrade::Remove-Unused-Dependencies "true";
-    Unattended-Upgrade::Automatic-Reboot "false";
-    //Unattended-Upgrade::Automatic-Reboot-Time "02:00";
-    Acquire::http::Dl-Limit "150";
-
-EOF
-
-
-# Set up Cake log file rotation.
-# Ref: http://ad7six.com/blog/2014/10/25/logrotate-rotate-your-log-files/
-
-sudo tee /etc/logrotate.d/cake-apps <<'EOF' > /dev/null
-/var/www/logs/*.log {
-   su ubuntu www-data
-   create 0664 ubuntu www-data
-   rotate 12
-   weekly
-   missingok
-   notifempty
-   compress
-   delaycompress
-}
-
-EOF
-
-
-# Set up user permissions.
-sudo usermod -a -G www-data ubuntu
-
-sudo rm -r /var/www/*
-
-sudo chown -R ubuntu:www-data /var/www
-
-sudo chmod -R a+w /var/www/tmp /var/www/logs
+# The following entries must be in the default SSL vhost:
+# SSLCipherSuite EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
+# SSLProtocol All -SSLv2 -SSLv3
+# SSLHonorCipherOrder On
+# #SSLSessionTickets Off
+# SSLCompression Off
+# SSLUseStapling On
+# SSLStaplingCache "shmcb:logs/stapling-cache(150000)"
 
 
 # Configure the email sub-system.
@@ -164,7 +92,7 @@ tee /etc/aliases <<EOF > /dev/null
 #
 # Forward local accounts to root's mailbox.
 postmaster: root
-ubuntu: root
+${TARGET_USER}: root
 www-data: root
 # Forward root's mail out to monitoring mailbox.
 root: ${NOTIFY_EMAIL}
@@ -172,7 +100,6 @@ root: ${NOTIFY_EMAIL}
 EOF
 
 sudo postalias /etc/aliases
-
 
 
 

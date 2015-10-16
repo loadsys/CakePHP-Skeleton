@@ -1,15 +1,6 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link      http://cakephp.org CakePHP(tm) Project
- * @since     3.0.0
- * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ * AppView class used for display all normal view instances.
  */
 namespace App\View;
 
@@ -19,7 +10,6 @@ use Cake\View\View;
  * App View class
  */
 class AppView extends View {
-
 	/**
 	 * Initialization hook method.
 	 *
@@ -29,6 +19,14 @@ class AppView extends View {
 	 * @return void
 	 */
 	public function initialize() {
-		$this->loadHelper('Html');
+		$this->loadHelper('Html', [
+		]);
+		$this->loadHelper('Form', [
+			'errorClass' => 'error',
+			'templates' => [
+				'error' => '<small class="error">{{content}}</small>',
+			],
+		]);
+		$this->loadHelper('Flash');
 	}
 }

@@ -6,6 +6,7 @@
  */
 namespace App\Lib;
 
+use Cake\Core\Configure;
 use Cake\Utility\Hash;
 
 /**
@@ -102,5 +103,29 @@ class ConfigClosures {
 			$address = sprintf('%s@%s', $localAddress, Configure::read('Defaults.domain'));
 			yield $address => $displayName;
 		};
+	}
+
+	/**
+	 * styleForEnv
+	 *
+	 * Spits out additional CSS <style> information for inclusion in a
+	 * Layout's <head> to override default styles based on the current
+	 * environment. (Changing the background color in staging, for example.)
+	 * See Config/env_vars.txt and Config/bootstrap.php for more. Debug MUST
+	 * be turned on for this method to return any results to prevent overrides
+	 * from affecting production environments (where debug takes precedence
+	 * over the environment variable.)
+	 *
+	 * @return string A pre-formatted <style></style> tag with the appropriate overrides for the $env.
+	 */
+	public static function styleForEnv() {
+		$format = (string)Configure::read('Defaults.Env.Hint.Format');
+		$snippet = (string)Configure::read('Defaults.Env.Hint.Snippet');
+
+		if (!empty($snippet) && Configure::read('debug')) {
+			return sprintf($format, $snippet);
+		}
+
+		return '';
 	}
 }

@@ -14,40 +14,16 @@
 # necessary to be different should be included here. Everything else must
 # go in main.sh so that it applies to all environments equally.
 
-
 # Set up working vars.
 #   PROVISION_DIR must be inherited from main.sh
 #   APP_ENV must be inherited from main.sh
-MYSQL_ROOT_PASS="password"
-THIS_DIR="$( cd -P "$( dirname "$0" )"/. >/dev/null 2>&1 && pwd )"
+
 
 echo "## Starting: `basename "$0"`."
 
 
-# Install a local MySQL server.
-echo "## Installing local MySQL server."
-
-sudo debconf-set-selections <<< "mysql-server mysql-server/root_password password ${MYSQL_ROOT_PASS}"
-
-sudo debconf-set-selections <<< "mysql-server mysql-server/root_password_again password ${MYSQL_ROOT_PASS}"
-
-sudo apt-get install -y mysql-server
-
-# You should probably run this yourself as it can't be automated.
-#mysql_secure_installation
-
-
-# Configure MySQL databases.
-SQL_IMPORT_FILE="${PROVISION_DIR}/${APP_ENV}.sql"
-
-
-if [ -r "${SQL_IMPORT_FILE}" ]; then
-    echo "## Executing environment-specific MySQL script: \`${SQL_IMPORT_FILE}\`"
-
-	mysql --host=localhost --user=root --password="$MYSQL_ROOT_PASS" mysql < "${SQL_IMPORT_FILE}"
-else
-    echo "## Environment-specific MySQL script not found. Skipping: \`${SQL_IMPORT_FILE}\`"
-fi
+# Farm out local MySQL server install to the common "mysql_server" script.
+"${PROVISION_DIR}/mysql_server.sh"
 
 
 # Install development-only PHP extensions.
@@ -61,26 +37,7 @@ sudo service apache2 reload
 
 
 # Install Mailcatcher.
-echo "## Installing Mailcatcher."
-
-sudo apt-add-repository ppa:brightbox/ruby-ng -y
-
-sudo apt-get update -y
-
-sudo apt-get install -y ruby1.9.3
-
-sudo gem install mailcatcher
-
-sudo tee "/etc/init/mailcatcher.conf" <<-'EOINIT' > /dev/null
-	description "Mailcatcher"
-	start on runlevel [2345]
-	stop on runlevel [!2345]
-	respawn
-	exec /usr/bin/env $(which mailcatcher) --foreground --http-ip=0.0.0.0
-
-EOINIT
-
-sudo service mailcatcher start
+"${PROVISION_DIR}/mailcatcher.sh"
 
 
 # Finish up.

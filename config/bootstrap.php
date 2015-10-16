@@ -48,7 +48,7 @@ use Cake\Database\Type;
 use Cake\Datasource\ConnectionManager;
 use Cake\Error\ErrorHandler;
 use Cake\Log\Log;
-use Cake\Network\Email\Email;
+use Cake\Mailer\Email;
 use Cake\Network\Request;
 use Cake\Routing\DispatcherFactory;
 use Cake\Utility\Inflector;
@@ -191,9 +191,10 @@ Request::addDetector('tablet', function ($request) {
  *
  */
 
-Plugin::load('ConfigRead');
-Plugin::load('CreatorModifier');
-Plugin::load('LoadsysTheme');
+Plugin::load('BasicSeed', ['bootstrap' => false, 'routes' => false]);
+Plugin::load('CreatorModifier', ['bootstrap' => false, 'routes' => false]);
+Plugin::load('ConfigRead', ['bootstrap' => false, 'routes' => false]);
+Plugin::load('LoadsysTheme', ['bootstrap' => false, 'routes' => false]);
 Plugin::load('Migrations');
 
 // Only try to load DebugKit in development mode

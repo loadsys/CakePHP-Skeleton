@@ -1,59 +1,78 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @since         0.10.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * Default layout template, used for the public facing portion of the application
  */
 
-$cakeDescription = 'CakePHP: the rapid development php framework';
+use App\Lib\ConfigClosures;
+use Cake\Core\Configure;
+
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <?= $this->Html->charset() ?>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <?= $cakeDescription ?>:
-        <?= $this->fetch('title') ?>
-    </title>
-    <?= $this->Html->meta('icon') ?>
+	<?= $this->Html->charset() ?>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <?= $this->Html->css('base.css') ?>
-    <?= $this->Html->css('cake.css') ?>
+	<title>
+		<?= Configure::read('Defaults.long_name') ?> &ndash;
+		<?= $this->fetch('title') ?>
+	</title>
 
-    <?= $this->fetch('meta') ?>
-    <?= $this->fetch('css') ?>
-    <?= $this->fetch('script') ?>
+	<?= $this->Html->meta(
+		'keywords',
+		$this->fetch('keywords', Configure::read('Defaults.meta_keywords'))
+	) ?>
+
+	<?= $this->Html->meta(
+		'description',
+		$this->fetch('description', Configure::read('Defaults.meta_description'))
+	) ?>
+
+	<?= $this->Html->meta('icon') ?>
+
+	<?= $this->Html->css([
+		'normalize.css',
+		'foundation.min.css',
+		'app.css'
+	]) ?>
+
+	<?= $this->Html->script([
+		'vendor/modernizr.js',
+	]) ?>
+
+	<?= $this->fetch('social_meta') ?>
+	<?= $this->fetch('meta') ?>
+	<?= $this->fetch('css') ?>
+	<?= $this->fetch('script') ?>
+	<?= ConfigClosures::styleForEnv() ?>
 </head>
 <body>
-    <header>
-        <div class="header-title">
-            <span><?= $this->fetch('title') ?></span>
-        </div>
-        <div class="header-help">
-            <span><a target="_blank" href="http://book.cakephp.org/3.0/">Documentation</a></span>
-            <span><a target="_blank" href="http://api.cakephp.org/3.0/">API</a></span>
-        </div>
-    </header>
-    <div id="container">
+	<?= $this->element('Layout/navigation') ?>
 
-        <div id="content">
-            <?= $this->Flash->render() ?>
+	<div id="container">
 
-            <div class="row">
-                <?= $this->fetch('content') ?>
-            </div>
-        </div>
-        <footer>
-        </footer>
-    </div>
+		<div id="content">
+			<?= $this->element('Layout/breadcrumbs', [
+				'currentPage' => null
+			]) ?>
+
+			<div class="row">
+				<?= $this->Flash->render() ?>
+				<?= $this->Flash->render('auth') ?>
+			</div>
+
+			<div class="row">
+				<?= $this->fetch('content') ?>
+			</div>
+		</div>
+	</div>
+
+	<?= $this->element('Layout/footer'); ?>
+
+	<?= $this->Html->script([
+		'vendor/jquery.js',
+		'foundation.min.js',
+		'app.js',
+	]) ?>
 </body>
 </html>

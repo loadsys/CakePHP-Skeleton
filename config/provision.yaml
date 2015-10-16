@@ -18,8 +18,8 @@
 readme: "Nothing is required to be present in this file. In fact, the file doesn't even have to be present!"
 vm:
    provider: 'virtualbox'
-   box: 'hashicorp/precise64'
-   box_url: 'hashicorp/precise64'
+   box: 'puppetlabs/ubuntu-14.04-64-nocm'
+   box_url: 'puppetlabs/ubuntu-14.04-64-nocm'
    hostname: 'loadsys-cake3-skeleton'
    memory: 2048
    cpus: 2
