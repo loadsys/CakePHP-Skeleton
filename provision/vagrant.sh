@@ -19,7 +19,7 @@
 #   PROVISION_DIR must be inherited from main.sh
 #   APP_ENV must be inherited from main.sh
 MYSQL_ROOT_PASS="password"
-THIS_DIR="$( cd -P "$( dirname "$0" )"/. >/dev/null 2>&1 && pwd )"
+
 
 echo "## Starting: `basename "$0"`."
 
@@ -61,26 +61,7 @@ sudo service apache2 reload
 
 
 # Install Mailcatcher.
-echo "## Installing Mailcatcher."
-
-sudo apt-add-repository ppa:brightbox/ruby-ng -y
-
-sudo apt-get update -y
-
-sudo apt-get install -y ruby1.9.3
-
-sudo gem install mailcatcher
-
-sudo tee "/etc/init/mailcatcher.conf" <<-'EOINIT' > /dev/null
-	description "Mailcatcher"
-	start on runlevel [2345]
-	stop on runlevel [!2345]
-	respawn
-	exec /usr/bin/env $(which mailcatcher) --foreground --http-ip=0.0.0.0
-
-EOINIT
-
-sudo service mailcatcher start
+"${PROVISION_DIR}/mailcatcher.sh"
 
 
 # Finish up.

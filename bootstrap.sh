@@ -9,12 +9,11 @@ ${0##*/}
     Thin script included with new projects to make it easier to
     bootstrap a freshly cloned repository.
 
-    At minimum, this script initializes git (and submodules) for
-    the project and runs \`composer install\`.
+    At minimum, this script initializes submodules and runs composer.
 
-    Project provisioning is kicked off via vagrant (when present) or
-    by directly calling \`provision/main.sh\` with your selected
-    APP_ENV.
+    Project provisioning is kicked off via vagrant for dev
+    environments, and directly via the provisioning shell scripts in
+    all others (staging, production).
 
 Usage:
     bin/${0##*/} <APP_ENV>
@@ -45,21 +44,20 @@ cd "${DIR}"
 if git rev-parse --git-dir > /dev/null 2>&1; then
     echo "## Initializing git submodules."
     git submodule update --init --recursive
+
+    git checkout -- composer.lock
 else
+    echo "## Cleaning up skeleton files."
+    rm -rf skel composer.lock config/app.default.php
+
     echo "## Initializing git repo."
     git init
-    #read -t 0 -p ">> Enter git remote URL: " GIT_REMOTE
-    #git remote add origin $GIT_REMOTE
+    git add .
+    git commit -m "Initial skeleton spawn."
+    if read -t 30 -p ">> Enter git remote URL: " GIT_REMOTE ; then
+    	git remote add origin $GIT_REMOTE
+    fi
 fi
-
-
-#@TODO: BUT WE CAN'T PROMPT HERE. When provisioning vagrant, we don't have tty access to this script's execution. Needs to be already available in the env somehow...
-# echo ">> Composer needs a GitHub auth token to fetch dependencies via the"
-# echo ">> API without being rate limited. This token can (and should) be"
-# echo ">> read-only, and public-only."
-# read -p ">> Enter a GitHub read-only, public-only auth token: " COMPOSER_TOKEN
-#@TODO: Set a Github auth token (read-only, public-only) to install into composer.
-# composer config --global github-oauth.github.com $COMPOSER_TOKEN
 
 
 # If we have a Vagrantfile, the `vagrant` command and APP_ENV=vagrant,
@@ -92,13 +90,35 @@ fi
 # Install composer packages using versions specified in config/lock file.
 echo "## Running \`composer install\`."
 
-composer update --lock --no-interaction --ignore-platform-reqs && \
- composer install --no-interaction --ignore-platform-reqs --optimize-autoloader
+composer install --no-interaction --ignore-platform-reqs --optimize-autoloader
 
 if [ $? -gt 0 ]; then
     echo "!! Running \`composer install\` failed. Aborting."
     exit 1
 fi
+
+
+# Load the new environment with a Github auth token (read-only, public-only)
+# token for Composer to use.
+echo ">> Composer needs a GitHub auth token to fetch dependencies via the"
+
+echo ">> API without being rate limited. This token can (and should) be"
+
+echo ">> read-only, and public-only."
+
+read -p ">> Enter a GitHub read-only, public-only auth token: " COMPOSER_TOKEN
+
+bin/vagrant-exec "composer config --global github-oauth.github.com $COMPOSER_TOKEN"
+
+
+# Prime the database with schema and data.
+echo "## Loading database schema and environment specific seed data."
+
+bin/vagrant-exec 'bin/cake Migrations migrate -v'
+
+# Always call the "production" seed file, because it's env-aware and will
+# load the correct seed file based on APP_ENV's value.
+bin/vagrant-exec 'bin/cake BasicSeed.basic_seed -v'
 
 
 # Finish up.

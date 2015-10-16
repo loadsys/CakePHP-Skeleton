@@ -98,7 +98,10 @@ Vagrant.configure(2) do |config|
 
   provConf = conf.fetch('provision', {})
   provConf.fetch('scripts', []).each do |id, script|
-	config.vm.provision "shell", path: script["path"], args: script.fetch("args", [])
+	config.vm.provision "shell",
+	  path: script["path"],
+	  args: script.fetch("args", []),
+	  privileged: script.fetch("privileged", false)
   end
 
 end

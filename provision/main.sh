@@ -36,10 +36,10 @@ fi
 if [ -z "$1" ]; then
 	usage
 fi
+
 export APP_ENV=${1}
 
-# @TODO: Make this dynamic?
-TARGET_USER=vagrant
+export TARGET_USER=$(whoami)
 
 if [ -r "/etc/provision_path" ]; then
 	export PROVISION_DIR="$( cat "/etc/provision_path" )"
@@ -47,11 +47,20 @@ else
 	export PROVISION_DIR="$( cd -P "$( dirname "$0" )"/. >/dev/null 2>&1 && pwd )"
 fi
 
+
 echo "## Starting: `basename "$0"`."
+
+
+# Prevent sometimes-troublesome packages from...causing trouble.
+echo " ## Holding packages that cause trouble..."
+
+sudo apt-mark hold grub-common grub-pc grub-pc-bin grub2-common
 
 
 # Install sub-dependencies first.
 echo "## Installing dependencies."
+
+export DEBIAN_FRONTEND=noninteractive
 
 echo "UTC" | sudo tee /etc/timezone > /dev/null
 
@@ -82,13 +91,13 @@ echo "## Installing LAMP stack components."
 
 sudo apt-get update -y
 
-sudo apt-get install -y git-core apache2 php5 php5-curl php5-intl php5-mcrypt php5-mysql
+sudo apt-get install -y git-core apache2 php5 php5-curl php5-intl php5-mcrypt php5-memcached php5-mysql
 
 
 # Install composer.
 echo "## Installing composer."
 
-curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+curl -sS https://raw.githubusercontent.com/loadsys/CakePHP-Shell-Scripts/master/composer > composer && sudo bash composer
 
 
 # Install Node.js, Grunt and Ember.
@@ -115,9 +124,11 @@ sudo chmod a+r /etc/app_env
 
 echo ". /etc/app_env" >> "/home/${TARGET_USER}/.profile"
 
-sudo cp -r ${PROVISION_DIR}/dot-files/.[a-zA-Z0-9]* "/home/${TARGET_USER}/" && \
- sudo chown -R ${TARGET_USER} /home/${TARGET_USER}/.[a-zA-Z0-9]* && \
- sudo cp -r ${PROVISION_DIR}/dot-files/.[a-zA-Z0-9]* /root/
+sudo cp -rv ${PROVISION_DIR}/dot-files/.[a-zA-Z0-9]* "/home/${TARGET_USER}/"
+
+sudo chown -Rv ${TARGET_USER} /home/${TARGET_USER}/.[a-zA-Z0-9]*
+
+sudo cp -rv ${PROVISION_DIR}/dot-files/.[a-zA-Z0-9]* /root/
 
 
 # Automatically switch to the webroot when logging in.
@@ -174,22 +185,6 @@ if [ -x "${ENV_SPECIFIC_SCRIPT}" ]; then
 else
     echo "## Environment-specific provisioning script not found. Skipping: \`${ENV_SPECIFIC_SCRIPT}\`"
 fi
-
-
-#@TODO: run `bin/migrations` and `bin/cake SeedShell.seed fill vagrant`. Maybe create a wrapper script like `bin/vagrant-provision` to bundle all this up? Put a "caller" script into `provision/main.sh` (here)?
-
-# Populate MySQL databases.
-# if [ -x "bin/migrations-run" ]; then
-#     echo "## Running migrations script."
-#
-# 	bin/migrations
-# fi
-#
-# if [ -x "@todo" ]; then
-#     echo "## Running Seed plugin."
-#
-# 	bin/cake basic_seed.basic_seed -f "config/seeds/${APP_ENV}.php"
-# fi
 
 
 # Finish up.
