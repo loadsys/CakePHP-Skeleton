@@ -191,9 +191,10 @@ Request::addDetector('tablet', function ($request) {
  *
  */
 
-Plugin::load('ConfigRead');
-Plugin::load('CreatorModifier');
-Plugin::load('LoadsysTheme');
+Plugin::load('BasicSeed', ['bootstrap' => false, 'routes' => false]);
+Plugin::load('CreatorModifier', ['bootstrap' => false, 'routes' => false]);
+Plugin::load('ConfigRead', ['bootstrap' => false, 'routes' => false]);
+Plugin::load('LoadsysTheme', ['bootstrap' => false, 'routes' => false]);
 Plugin::load('Migrations');
 
 // Only try to load DebugKit in development mode
