@@ -138,11 +138,8 @@ The bootstrap file takes care of installing dependencies. After this process, th
 	* Assign a user permissions to that database.
 	* (Locally) Update the `config/app.php` with the new credentials and commit/push them to GitHub.
 1. Create or provision a new web instance server, preferably matching the Vagrant `box` in use (or vice-versa).
-	1. Install git v1.8+
-	1. `cd` into the intended webroot (typically `/var/www`).
-	1. Clone the project and provision the server:
-			git clone {{PROJECT_REPO_HTTPS_URL:@TODO}} ./
-			./bootstrap.sh YOUR_APP_ENV_VALUE
+	1. ssh into the box.
+	1. Run `https://raw.githubusercontent.com/loadsys/CakePHP-Shell-Scripts/master/baremetal-bootstrap | bash -s -- {{PROJECT_REPO_HTTPS_URL:@TODO}} NEW_APP_ENV_HERE BRANCH_NAME_HERE`
 
 
 ### Writeable Directories

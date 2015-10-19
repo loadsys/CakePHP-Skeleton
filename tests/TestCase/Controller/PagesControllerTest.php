@@ -9,7 +9,7 @@ use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * \App\Test\TestCases\Controller\PagesControllerTest
+ * \App\Test\TestCase\Controller\PagesControllerTest
  */
 class PagesControllerTest extends IntegrationTestCase {
 	/**
