@@ -44,14 +44,12 @@ install:
 before_script:
   - phpenv rehash
   - mysql -e 'DROP DATABASE IF EXISTS `travis_app`; CREATE DATABASE `travis_app`;'
-  - bin/phpcs --config-set installed_paths vendor/loadsys/loadsys_codesniffer,vendor/cakephp/cakephp-codesniffer
 
 script:
   # The -n option can be used to suppress warnings
   - bin/codesniffer-run
   - bin/phpunit -v
-  # Disabled Coverage Check, the param defines the required percentage of code covered
-  # - bin/coverage-ensure 90
+  - bin/coverage-ensure 90
 
 notifications:
   email: false

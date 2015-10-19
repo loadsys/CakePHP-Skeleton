@@ -7,11 +7,10 @@
 
 
 # Set up working vars.
-#   PROVISION_DIR must be inherited from main.sh
-#   APP_ENV must be inherited from main.sh
-
-# Expects:
-#FQDN
+#   PROVISION_DIR must be inherited from caller.
+#   APP_ENV must be inherited from caller.
+#   TARGET_USER must be inherited from caller.
+#   FQDN must be inherited from caller.
 
 
 echo "## Starting: `basename "$0"`."
