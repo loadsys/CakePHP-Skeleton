@@ -98,4 +98,27 @@ class LoadsysInstaller
     public static function replace__SALT__($default) {
         return hash('sha256', __FILE__ . php_uname() . microtime(true));
     }
+
+    /**
+     * Generate a vagrant IP address for use in config/provision.yaml.
+     *
+     * Generating this IP allows for reduced risk of collisions between
+     * projects, which allows for multiple VMs to run concurrently without
+     * port forwards overlapping.
+     *
+     * Ideally, at some point this would be partially deterministic based
+     * on the "name" of the project. Unfortuantely, that requires knowledge
+     * of a human-entered value ({{PROJECT_TITLE}}, currently) that may not
+     * have been entered yet depending on the order that tokens are
+     * discovered and prompted to the user.
+     *
+     * @param string $default Ignored by this method since the salt value is always dynamically generated.
+     * @return string A generated salt value.
+     * @codeCoverageIgnore Can't test a method intended to produce (semi-)random output.
+     */
+    public static function replace__VAGRANT_IP__($default) {
+        $octet3 = abs((int)hash('sha256', __FILE__ . php_uname() . microtime(true)) % 254);
+        $octet4 = rand(1, 254);
+        return sprintf('172.42.%s.%s', $octet3, $octet4);
+    }
 }

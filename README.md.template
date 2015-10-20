@@ -51,8 +51,9 @@ The following tools **should be installed on your development machine** in order
 	* [VirtualBox](https://www.virtualbox.org/) v4.3+ (free)
 	* [VMware Fusion](http://www.vmware.com/products/fusion) v6+ plus the [vagrant VMware plugin](https://www.vagrantup.com/vmware) (not free, but **fast**)
 * [vagrant](http://www.vagrantup.com/downloads.html) v1.6+ for dev VM hosting. The following plugins are helpful but not required:
-	* [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest)
+	* [vagrant-bindfs](https://github.com/gael-ian/vagrant-bindfs)
 	* [vagrant-cachier](https://github.com/fgrehm/vagrant-cachier)
+	* [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest)
 * For automatically running tests:
 	* [node.js](http://nodejs.org/download/)
 	* [npm](https://npmjs.org/)
@@ -81,13 +82,13 @@ Libraries should be included with Composer whenever possible. Git submodules sho
 Composer-provided:
 
 * [CakePHP](https://github.com/cakephp/cakephp) v3.0+
-* [DebugKit](https://github.com/cakephp/debug_kit)
-* [Migrations](https://github.com/cakephp/migrations)
 * [Bake](https://github.com/cakephp/bake)
-* [Loadsys Cake Shell Scripts](https://github.com/loadsys/CakePHP-Shell-Scripts)
+* [DebugKit](https://github.com/cakephp/debug_kit)
+* [Loadsys Cake Basic Seeds](https://github.com/loadsys/CakePHP-Basic-Seed)
 * [Loadsys Cake ConfigReadShell](https://github.com/loadsys/CakePHP-ConfigReadShell)
 * [Loadsys Cake LibRegistry](https://github.com/loadsys/CakePHP-LibRegistry)
-* [Loadsys Cake Basic Seeds](https://github.com/loadsys/CakePHP-Basic-Seed)
+* [Loadsys Cake Shell Scripts](https://github.com/loadsys/CakePHP-Shell-Scripts)
+* [Migrations](https://github.com/cakephp/migrations)
 * [phpunit](http://phpunit.de/) v4.1+
 * [phpDocumentor](http://phpdoc.org/) v2
 * [PHP Code Sniffer](https://github.com/squizlabs/PHP_CodeSniffer) v2
@@ -127,25 +128,34 @@ git clone {{PROJECT_REPO_CLONE_URL:@TODO}} ./
 ./bootstrap.sh vagrant
 ```
 
-The bootstrap file takes care of installing dependencies. After this process, the project should be available at [http://localhost:8080/](http://localhost:8080/).
+The bootstrap script takes care of installing dependencies. After this process, the project should be available at [http://localhost:8080/](http://localhost:8080/).
 
 
-### Production, Staging (bare metal)
+### Staging
 
-1. Create or provision a new Memcached server.
+1. Create or provision a new web instance server (typically EC2), matching the Vagrant `box` in use (or vice-versa). This currently means **Ubuntu Server 14.04 LTS 64bit**.
+	1. The box should expose **only** the following ports:
+		* HTTP from Anywhere
+		* 1080 TCP from Anywhere (Mailcatcher)
+		* SSH from `66.228.59.201/32` (Loadsysdev)
+	1. ssh into the box.
+	1. Run `https://raw.githubusercontent.com/loadsys/CakePHP-Shell-Scripts/master/baremetal-bootstrap | bash -s -- {{PROJECT_REPO_HTTPS_URL:@TODO}} staging staging`
+
+
+### Production
+
+1. Create appropriate Security Groups for the gateway, app servers, cache servers and database servers.
+1. Create an Elastic Load Balancer.
+	* Install the site's SSL certificate.
+	* Assign a Route53 domain name to it.
+1. Create or provision a new Memcached/ElastiCache instance.
 	* (Locally) Update the `config/app.php` with the correct credentials and commit/push them to GitHub.
-1. Create or provision a new database server.
+1. Create or provision a new MySQL/RDS server.
 	* Assign a user permissions to that database.
 	* (Locally) Update the `config/app.php` with the new credentials and commit/push them to GitHub.
-1. Create or provision a new web instance server, preferably matching the Vagrant `box` in use (or vice-versa).
+1. Create or provision a new web instance server (EC2), matching the Vagrant `box` in use (or vice-versa). This currently means **Ubuntu Server 14.04 LTS 64bit**.
 	1. ssh into the box.
-	1. Run `https://raw.githubusercontent.com/loadsys/CakePHP-Shell-Scripts/master/baremetal-bootstrap | bash -s -- {{PROJECT_REPO_HTTPS_URL:@TODO}} NEW_APP_ENV_HERE BRANCH_NAME_HERE`
-
-
-### Writeable Directories
-
-Writeable directories are managed by `Config/writedirs.txt`, and they can be set by running `bin/writedirs`.
-
+	1. Run `https://raw.githubusercontent.com/loadsys/CakePHP-Shell-Scripts/master/baremetal-bootstrap | bash -s -- {{PROJECT_REPO_HTTPS_URL:@TODO}} master master`
 
 
 ## Contributing
@@ -159,12 +169,12 @@ Things to do after pulling updates from the remote repo.
 
 On your host:
 
-* `bin/deps-install` (Install any changes/updated dependencies from git submodules, composer, pear, npm, etc.)
-* `vagrant provision` (Make any changes to the VM's config that may be necessary, and runs associated Cake provisioning steps:)
-	* `bin/clear-cache` (Make sure temp files are reset between host/vm use.)
+* `composer install` (Install any changed/updated dependencies.)
+* `vagrant ssh`
+	* `bin/cache-clear` (Make sure temp files are reset between host/vm use.)
 	* `bin/db-backup` (Store the previous database contents before running schema/data updates.)
 	* `bin/migrations` (Set up the DB with the latest schema.)
-	* `bin/cake Seeds.seed fill vagrant` (Populate the latest set of development data from the seeds, if the plugin is available.)
+	* `bin/cake BasicSeed.basic_seed` (Populate the latest set of development data from the seeds, if the plugin is available.)
 
 
 ### Developer Workflow
@@ -192,6 +202,7 @@ The app assumes that every table will have the following fields by default. Thes
 
 ```sql
   `id` char(36) NOT NULL COMMENT 'UUID primary key.', -- First field in table.
+
   -- Foreign keys next.
 
   -- All other fields here.
@@ -226,21 +237,22 @@ This setup is handy for backing up your data if you're about to destroy the box,
 #### Schema Migrations
 
 * The database schema is maintained using the Migrations plugin.
-* Once you have made changes to your development database using the process above, run `bin/cake Migrations.migration generate -f` **from inside the vagrant box** (via `vagrant ssh`).
-* When prompted to update `schema.php`, choose **yes** and then choose **overwrite**.
-* Then review and commit the changes to `config/schema.php` and the new file from `config/Migration/`.
+* Use the BakeShell to generate a new Migration. For example:
+	`bin/cake bake migration CreatePosts id:uuid:primary title:string body:text created modified`
+* Modify the generated migration file to add table and column comments, limits, etc.
+* Run `bin/phpunit tests/TestCase/Migrations/MigrationsTest.php` to validate the migration file.
+* Review and commit the new Migration file.
 
 
 #### Sample Data
 
-**@TODO: Review and update this section.**
-
-@TODO: This doesn't work yet.
-
-* Test data is maintained by the Loadsys Basic Seeds plugin.
-* You can repopulate data in the VM's MySQL database by running `bin/cake Seeds.seed fill vagrant`.
-* To update a Seed dataset, make your changes in the database and run `bin/cake Seeds.seed generate vagrant`.
-* Review and commit the changes made in `Config/Seed/`.
+* Both test data and started production data is maintained by the Loadsys Basic Seeds plugin.
+* The default seed files are environment aware, making it possible to run the same command regardless of environment.
+* To populate (or reset) your local dev data back to the contents of the seed:
+	* `bin/cake BasicSeed.basic_seed`
+* There is not currently any way to automatically generate seed data-- it must be entered into the related files (`config/seed.php` for production, `config/seed_staging.php` and `config/seed_vagrant.php` for development) by hand.
+* It's possible for the seeds to refer to each other. In the default setup, staging and vagrant envs load **both** the production data, and the vagrant data.
+* :warning: Seeds are capable of `TRUNCATE`ing data during their execution-- be careful to have backups of any data you want to keep by using `bin/db-backup`.
 
 
 ### Email Debugging
@@ -260,7 +272,7 @@ The VM comes with Mailcatcher pre-installed and port-forwarded. The stock `confi
 
 ### PHP Unit Testing
 
-A project-wide phpunit configuration file is provided as `phpunit.xml.dist`. Changes to this file will be used during Travis testing and should be considered the "baseline" for the app. Developers may create a local `phpunit.xml` file which will be ignore by the repo if they wish to use or test more precise local configs.
+A project-wide phpunit configuration file is provided as `phpunit.xml.dist`. Changes to this file will be used during Travis testing and should be considered the "baseline" for the app. Developers may create a local `phpunit.xml` file which will be ignored by the repo if they wish to use or test more precise local configs.
 
 Unit tests should be created for all new code written in the following categories:
 
@@ -276,15 +288,13 @@ Unit tests should be created for all new code written in the following categorie
 * **Bundled** plugins
 
 
-Command line automated "test-on-save" is also possible with Grunt via: `grunt watch`. This will block the terminal while it waits for file changes. New files should get picked up as well.
-
-The full testsuite is run using `./bin/phpunit` from the root of the project.
+The full testsuite is run using `bin/phpunit` from the root of the project.
 
 There are three testsuites setup as part of the phpunit.xml.dist file.
 
-* `./bin/phpunit --testsuite app` - The default testsuite, runs all tests available for the application. Equivalent to `./bin/phpunit`.
-* `./bin/phpunit --testsuite unit` - Runs all tests excluding the `./tests/TestCase/Controller` path.
-* `./bin/phpunit --testsuite integration` - Runs only the tests in the `./tests/TestCase/Controller` path.
+* `bin/phpunit --testsuite app` - The default testsuite, runs all tests available for the application. Equivalent to `./bin/phpunit`.
+* `bin/phpunit --testsuite unit` - Runs all tests excluding the `./tests/TestCase/Controller` path.
+* `bin/phpunit --testsuite integration` - Runs only the tests in the `./tests/TestCase/Controller` path.
 
 
 ### Javascript Unit Testing
@@ -295,14 +305,9 @@ There are three testsuites setup as part of the phpunit.xml.dist file.
 * Javascript should be written in individual "class" files (they will be merged by asset compilation) in `webroot/js/src/`.
 * Anything you would normally put in a `document.ready(...)` call should be placed in @TODO.
 * Matching test files should be created in `webroot/js/test/`.
-* Everything from these folders will be compressed into `webroot/js/assets.js`.
-* These compiled assets and tests are then included in `View/Pages/test.ctp`.
-* You can run your tests in the browser by visiting http://localhost:8080/pages/testjs.
-* There is a `grunt` task to auto-run these tests on change as well: `grunt test`
+
 
 ### CSS Changes
-
-**@TODO: Review and update this section.**
 
 * CSS is managed via Standard CSS files in the webroot directory
 
