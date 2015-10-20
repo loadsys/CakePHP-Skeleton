@@ -20,11 +20,11 @@ vm:
    provider: 'virtualbox'
    box: 'puppetlabs/ubuntu-14.04-64-nocm'
    box_url: 'puppetlabs/ubuntu-14.04-64-nocm'
-   hostname: 'loadsys-cake3-skeleton'
-   memory: 2048
-   cpus: 2
+   hostname: '{{VAGRANT_HOSTNAME:loadsys-cake3-skeleton}}'
+   memory: {{VAGRANT_MEMORY:2048}}
+   cpus: {{VAGRANT_CPUS:2}}
    network:
-       ip: '192.168.8.42'
+       ip: '{{__VAGRANT_IP__:auto-replaced}}'
        forwarded_port:
            apache:
                guest: 80
@@ -48,4 +48,4 @@ vm:
            main:
                path: 'provision/main.sh'
                args: 'vagrant'
-   post_up_message: 'It works!'
+   post_up_message: '{{VAGRANT_HOSTNAME:loadsys-cake3-skeleton}} provisioning complete. Connect at http://{{__VAGRANT_IP__}}/ or http://localhost:8080/. Mailcatcher is available at http://{{__VAGRANT_IP__}}:1080/ or http://localhost:1080/.'
