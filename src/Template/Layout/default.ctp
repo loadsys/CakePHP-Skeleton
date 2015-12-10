@@ -31,13 +31,13 @@ use Cake\Core\Configure;
 	<?= $this->Html->meta('icon') ?>
 
 	<?= $this->Html->css([
-		'normalize.css',
-		'foundation.min.css',
-		'app.css'
+		'normalize',
+		'foundation.min',
+		'app',
 	]) ?>
 
 	<?= $this->Html->script([
-		'vendor/modernizr.js',
+		'vendor/modernizr',
 	]) ?>
 
 	<?= $this->fetch('social_meta') ?>
@@ -70,9 +70,9 @@ use Cake\Core\Configure;
 	<?= $this->element('Layout/footer'); ?>
 
 	<?= $this->Html->script([
-		'vendor/jquery.js',
-		'foundation.min.js',
-		'app.js',
+		'vendor/jquery',
+		'foundation.min',
+		'app',
 	]) ?>
 </body>
 </html>

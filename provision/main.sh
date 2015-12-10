@@ -159,7 +159,8 @@ sudo service apache2 restart
 
 
 # Set up DB backups on reboot/shutdown.
-SHUTDOWN_DB_BACKUP_SCRIPT="/etc/init.d/k99_shutdown_db_backup"
+SHUTDOWN_DB_BACKUP_SCRIPT_NAME="K99_shutdown_db_backup"
+SHUTDOWN_DB_BACKUP_SCRIPT="/etc/init.d/${SHUTDOWN_DB_BACKUP_SCRIPT_NAME}"
 sudo tee "${SHUTDOWN_DB_BACKUP_SCRIPT}"  <<-EOSHL > /dev/null
 	#!/usr/bin/env bash
 	. /etc/app_env
@@ -170,9 +171,9 @@ EOSHL
 
 sudo chmod a+x "${SHUTDOWN_DB_BACKUP_SCRIPT}"
 
-sudo ln -s "${SHUTDOWN_DB_BACKUP_SCRIPT}" /etc/rc0.d/`basename "${SHUTDOWN_DB_BACKUP_SCRIPT}"`
+sudo ln -s "${SHUTDOWN_DB_BACKUP_SCRIPT}" "/etc/rc0.d/${SHUTDOWN_DB_BACKUP_SCRIPT_NAME}"
 
-sudo ln -s "${SHUTDOWN_DB_BACKUP_SCRIPT}" /etc/rc6.d/`basename "${SHUTDOWN_DB_BACKUP_SCRIPT}"`
+sudo ln -s "${SHUTDOWN_DB_BACKUP_SCRIPT}" "/etc/rc6.d/${SHUTDOWN_DB_BACKUP_SCRIPT_NAME}"
 
 
 # Call the environment-specific provisioning script, if it exists.

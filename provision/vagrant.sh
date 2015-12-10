@@ -40,5 +40,10 @@ sudo service apache2 reload
 "${PROVISION_DIR}/mailcatcher.sh"
 
 
+# Set a user account password for the vagrant user to allow Sequel Pro to connect easily.
+echo "## Setting vagrant user's password for easy MySQL access."
+echo "vagrant:vagrant" | sudo chpasswd
+
+
 # Finish up.
 echo "## Done: `basename "$0"`"
