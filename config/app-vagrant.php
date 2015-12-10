@@ -88,6 +88,8 @@ return [
 			'username' => 'vagrant',
 			'password' => 'vagrant',
 			'database' => 'vagrant',
+			// remove comment to log sql queries
+			// 'log' => true,
 		],
 
 		/**
@@ -98,6 +100,8 @@ return [
 			'username' => 'vagrant',
 			'password' => 'vagrant',
 			'database' => 'vagrant_test',
+			// remove comment to log sql queries
+			// 'log' => true,
 		],
 	],
 
