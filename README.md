@@ -4,9 +4,9 @@ A skeleton for creating applications with [CakePHP](http://cakephp.org) 3.x. (If
 for a 2.x compatible version you'll want to check out the
 [cake-2.x](https://github.com/loadsys/CakePHP-Skeleton/tree/cake-2.x) branch.)
 
-:warning: This is an unstable repository and should be treated as alpha quality.
+This skeleton is tuned to serve the most common needs for [Loadsys](http://loadsys.com). If you're finding this on your own, it may be more than you need or not exactly what you need. Feel free to cherry pick any ideas that are useful.
 
-:warning: This is the _Skeleton's_ Readme! To edit the README that is bundled with new projects, open `README.md.template`.
+:grey_exclamation: This is the _Skeleton's_ Readme! To edit the README that is bundled with new projects, see [`README.md.template`](README.md.template).
 
 
 ## Requirements for Using the Skeleton
@@ -24,16 +24,20 @@ Please see [README.md.template](README.md.template#Developer-specific) for syste
 The 3.x version of the skeleton leverages composer's `create-project` command. A new project will be created for you locally using this repo as the foundation. Post-install scripts will fire during the process to transform the cloned files appropriately.
 
 ```bash
-composer self-update # Generally a good idea to run first.
-composer create-project --prefer-dist --ignore-platform-reqs loadsys/skeleton local/path/for/new/project ~3.2
+$ composer self-update # Generally a good idea to run first.
+
+$ composer create-project --prefer-dist --ignore-platform-reqs loadsys/skeleton local/path/for/new/project ~3.2
+
 # (Answer wizard questions.)
-cd local/path/for/new/project
-./bootstrap.sh vagrant
+
+$ cd local/path/for/new/project
+
+$ ./bootstrap.sh vagrant
 ```
 
 After vagrant provisioning finishes, the VM will be available at [http://localhost:8080](http://localhost:8080).
 
-Alternatively, you can edit your system's `hosts` file to include the VM's IP and hostname listed the `puphpet/config.yaml` file. The finished machine's webserver will respond to any domain that resolves to this IP address. if you use the [vagrant-hostmanager](https://github.com/smdahlen/vagrant-hostmanager) plugin, this should be done for you.
+Alternatively, you can edit your system's `hosts` file to include the VM's IP and hostname listed the `config/provision.yaml` file. The finished machine's webserver will respond to any domain that resolves to this IP address. if you use the [vagrant-hostmanager](https://github.com/smdahlen/vagrant-hostmanager) plugin, this should be done for you.
 
 You should be able to visit the homepage of the new app and see the setup "traffic lights" as green.
 
@@ -43,7 +47,7 @@ You should be able to visit the homepage of the new app and see the setup "traff
 If you would like to contribute to this project open a pull request targeted at the correct branch;
 `master` for the 3.x skeleton and `cake-2.x` for the 2.x skeleton.
 
-Testing the skeleton can be difficult because under normal circumstances, a dev would have to commit their experimental changes, push the changes to github, merge the changes into master and (optionally) tag a new release semver for packagist.org to pick up for "release". Since this is a bad situation when working on something new and untested, it would be nice to be able to run the `create-project` command using your local checked-out copy of the skeleton repo.
+Testing the skeleton can be difficult because under normal circumstances, a dev would have to commit their experimental changes, push the changes to Github, merge the changes into master and (optionally) tag a new release semver for packagist.org to pick up for "release". Since this is a bad situation when working on something new and untested, it would be nice to be able to run the `create-project` command using your local checked-out copy of the skeleton repo.
 
 In order to accomplish this, composer needs to be "tricked" into using the local copy, which requires a specially-crafted `packages.json` file. To ease this process, a `skel/test-project.sh [branch-name] [dest/dir]` script is included with the skeleton.
 
@@ -63,33 +67,29 @@ Because this repo is used through Packagist, it maintains semantic versioning. T
 
 ### Templates
 
-As a part of the `create-project` process, a post-install script is executed that scans the new project for `*.template` files, then scans inside them for `{{TOKEN}}`s. The developer running the `create-project` command is then prompted for values for each token, and those values are written into renamed files.
+As a part of the `create-project` process, a composer post-install script is executed that scans the new project for `*.template` files, then scans inside them for `{{TOKEN}}`s. The developer running the `create-project` command is then prompted for values for each token, and those values are written into renamed files.
 
-For example, if `README.md.template` includes a `{{GIT_CLONE_URL}}` token, the developer will be prompted to enter a value during setup. The value will be written back into `README.md.template` and the resulting file will replace any existing `README.md` file.
+For example, if `README.md.template` includes a `{{GIT_CLONE_URL}}` token, the developer will be prompted to enter a value during setup, such as `git@github.com:myself/super-project.git` That value will be written back into `README.md.template` and the resulting file will replace any existing `README.md` file.
 
-In other words: **This** repo uses README.md and composer.json, but your **generated project** will be using filled-in copies of README.md.template and composer.json.template. If you want to change the default composer packages, you need to edit `composer.json.template`.
+In other words: **This** repo uses README.md and composer.json, but your **generated project** will be using filled-in copies of README.md.template and composer.json.template. So if you want to change the default composer packages available in new projects, you need to edit `composer.json.template`.
 
 When working on the skeleton's templates, it can be handy to review the list of tokens currently in use. This can be done pretty easily on the command line using `grep`.
 
-`grep -norE --include "*.template" '{{([A-Z0-9_]+):?([^}]*)?}}' .` - Lists all tokens and their defaults, including files and line numbers, but may include duplicates across files. This is useful for seeing what is used where.
+* `grep -norE --include "*.template" '{{([A-Z0-9_]+):?([^}]*)?}}' .` - Lists all tokens and their defaults, including files and line numbers, but may include duplicates across files. This is useful for seeing what is used where.
 
-`grep -horE --include "*.template" '{{([A-Z0-9_]+):?([^}]*)?}}' . | sort | uniq` - Lists all tokens and their defaults without duplicates, files or line numbers. Useful for reviewing the "reduced" list of tokens and defaults to see if they can be further consolidated.
+* `grep -horE --include "*.template" '{{([A-Z0-9_]+):?([^}]*)?}}' . | sort | uniq` - Lists all tokens and their defaults without duplicates, files or line numbers. Useful for reviewing the "reduced" list of tokens and defaults to see if they can be further consolidated.
 
 
 ### Post-Install Scripts
 
 Most of the magic behind the `create-project` command lies in composer's ability to execute PHP scripts on the new project. These scripts traditionally live in `skel/src/` and are wired into the `composer.json:scripts:post-create-project-cmd` array. The current tasks that are performed during setup:
 
-* Copy `config/app.default.php` to `config/app.php`.
-* Sets writable folder permissions.
-* Writes a random security salt into `config/app.php`.
-* Replaces `{{TOKEN}}`s in all `*.template` files and renames the files without `.template.`
-* @TODO: `git init`s _the new project's_ git repo and adds the 'origin' remote URL, if available. (`git remote add origin ${REPO_URL}`)
-* @TODO: Removes the post-install scripts since they are now irrelevant.
+* Replaces `{{TOKEN}}`s in all `*.template` files and renames the files without `.template.`, including `config/app.php.template`.
+* Writes a random security salt into a fresh `config/app.php`.
 * @TODO: Runs the `bin/deps-install` commands from the Shell Scripts repo, if available, to install node, git submodule, and/or PEAR dependencies.
 * @TODO: Prompts the user to commit and push the project.
 
-Additional first-time setup should be added as a post-install script. If a process should be repeatable, consider making it part of the [loadsys/CakePHP-Shell-Scripts]() repo instead, and calling that script from a post-install hook.
+Additional first-time setup should be added as a post-install script. If a process should be repeatable, consider making it part of the [loadsys/CakePHP-Shell-Scripts](https://github.com/loadsys/CakePHP-Shell-Scripts) repo instead, and calling that script from a post-install hook.
 
 #### Running Tests
 
@@ -101,8 +101,6 @@ $ bin/phpunit --configuration skel/tests/phpunit.xml.dist
 $ open tmp/coverage/skel/html/index.html
 ```
 
-
-## Skeleton Development
 
 ### Keeping in sync with CakePHP App
 
@@ -140,11 +138,12 @@ Next it can be rebased onto `origin/master` and any conflicts can be resolved.
 
 Now [create a PR](https://github.com/loadsys/CakePHP-Skeleton) and merge it.
 
+
 ### Bundled Provisioning
 
 By default, the Cake 3 projects created by this skeleton will be [environment-aware](https://github.com/beporter/CakePHP-EnvAwareness). This approach to configuration allows the Cake app to work in multiple environments without much fuss, but the question of _creating_ those environments consistently remains.
 
-We used to use [PuPHPet](https://puphpet.com/) to handle the Vagrant side of this, but grew weary of having to include thousands of files into each of our projects that we typically didn't need. It was also difficult to engage PuPHPet's assets for a "bare metal" installation on AWS or for a dedication production server, reducing the utility even further.
+We used to use [PuPHPet](https://puphpet.com/) to handle the Vagrant side of this, but grew weary of having to include thousands of files into each of our projects that we typically didn't need. It was also difficult to engage PuPHPet's assets for a "bare metal" installation on AWS or for a dedicated production server, reducing the utility even further.
 
 So we've replaced it with very slim, lightweight shell scripts. Here's how they work:
 
@@ -193,24 +192,9 @@ All told, this allows us to:
 
 
 
-# TODO
-
-@TODO: To add to `composer.json.template` require once these plugins are compatible:
-
-        "loadsys/cakephp-shell-scripts": "~3.0"
-
-
-@TODO: Items we need to review/convert to the tokenization system:
-
-* `README.md`: Add project information.
-
-* `composer.json`: Set the (composer) project name and description. (The name is typically not used for anything, but should be unique.) Add any additional dependencies.
-
-* `Config/phpdoc.xml`: Set the project name in two places.
+## TODO
 
 * Search project-wide for `@TODO` markers. This should reveal any additional necessary configuration.
 
-* `.travis.yml`: (Probably won't need to do much here.)
 
 
-@TODO: The Codesniffer requires setting the install path for the Sniffs, this probably should be automated in some fashion, or the Shell Scripts should include setting this path?
