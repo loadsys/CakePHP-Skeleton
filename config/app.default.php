@@ -257,7 +257,7 @@ return [
             'driver' => 'Cake\Database\Driver\Mysql',
             'persistent' => false,
             'host' => 'localhost',
-            //'port' => 'nonstandard_port_number',
+            //'port' => 'non_standard_port_number',
             'username' => 'my_app',
             'password' => 'secret',
             'database' => 'test_myapp',
