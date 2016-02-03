@@ -57,7 +57,16 @@ Vagrant.configure(2) do |config|
       config.vm.synced_folder folder['source'].to_s, folder['target'].to_s,
         id: id.to_s,
        	type: 'nfs',
-       	:linux__nfs_options => ['rw', 'no_root_squash', 'no_subtree_chec']
+		:linux__nfs_options => [
+			'rw',
+			'no_root_squash',
+			'no_subtree_chec',
+			'nolock',
+			'vers=3',
+			'udp',
+			'noatime',
+			'actimeo=1'
+		]
 
         if Vagrant.has_plugin?('vagrant-bindfs')
           config.bindfs.bind_folder folder['target'].to_s, "/mnt/vagrant-#{id}"
