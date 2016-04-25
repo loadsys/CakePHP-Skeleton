@@ -228,7 +228,7 @@ Create a new "SSH" connection with the following settings:
 * Port: 3306
 * SSH Host: 127.0.0.1
 * SSH User: vagrant
-* SSH Password: vagrant (Or [some guys online](https://coderwall.com/p/yzwqvg) say you can point to your local `~/.vagrant.d/insecureprivatekey`.)
+* SSH Password: vagrant (Or [someone online](https://coderwall.com/p/yzwqvg) say you can point to your local `~/.vagrant.d/insecureprivatekey`.)
 * SSH Port: 2222 (per `config/provision.yaml`.)
 
 This setup is handy for backing up your data if you're about to destroy the box, or for making Schema or Seed changes before running the Shell commands in the VM.
