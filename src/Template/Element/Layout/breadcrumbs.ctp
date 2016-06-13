@@ -20,13 +20,12 @@ foreach($breadcrumbs as $breadcrumbTitle => $breadcrumbUrl) {
 ?>
 
 <div class="row">
-<?php echo $this->Html->getCrumbList(
-	[
-		'firstClass' => false,
-		'lastClass' => 'current',
-		'class' => 'breadcrumbs',
-		'role' => 'menubar'
-	]
-);
-?>
+	<div class="large-12 medium-12 columns">
+		<?= $this->Html->getCrumbList([
+			'firstClass' => false,
+			'lastClass' => 'current',
+			'class' => 'breadcrumbs',
+			'role' => 'menubar'
+		]) ?>
+	</div>
 </div>

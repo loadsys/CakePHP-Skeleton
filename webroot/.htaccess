@@ -3,3 +3,8 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+<Files "test.html">
+    Order Allow,Deny
+    Deny from all
+</Files>

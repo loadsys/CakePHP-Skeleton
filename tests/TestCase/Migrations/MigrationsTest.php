@@ -13,7 +13,8 @@ use Cake\TestSuite\TestCase;
 use Cake\Utility\Inflector;
 use Phinx\Db\Table;
 use Phinx\Migration\AbstractMigration;
-use \FilesystemIterator;
+use \AppendIterator;
+use \FilesystemIterator as FSI;
 use \GlobIterator;
 
 /**
@@ -25,11 +26,18 @@ use \GlobIterator;
 class MigrationFolderIterator extends GlobIterator {
 	public function current() {
 		$fileInfo = parent::current();
+		$realpath = $fileInfo->getRealPath();
 		$filename = $fileInfo->getBasename();
 		list($version, $underscoredName) = explode('_', $filename, 2);
 		$classname = Inflector::camelize(basename($underscoredName, '.php'));
-		//@DEBUG: return compact('filename', 'classname', 'version');
-		return [$fileInfo->getRealPath(), $classname, $version];
+
+		// Determine the plugin name the Migration file originates from.
+		$segments = explode(DIRECTORY_SEPARATOR, $realpath);
+		$isPlugin = array_search('plugins', $segments);
+		$plugin = ($isPlugin ? $segments[$isPlugin + 1] : null);
+
+		//@DEBUG: return compact('filename', 'realpath', 'classname', 'version', 'plugin');
+		return [$realpath, $classname, $version, $plugin];
 	}
 }
 
@@ -86,17 +94,20 @@ class MigrationsTest extends TestCase {
 	 *
 	 * @param string $filename The full filesystem path to the Migration file to load.
 	 * @param string $classname The inferred (inflected) name of the Migration class.
-	 * @param string $version The inferred version number of the Migration, taken from the timestamp in the filename.
+	 * @param string $version The inferred version number of the Migration, taken
+	 *    from the timestamp in the filename.
+	 * @param string $plugin The inferred plugin name from which the Migration
+	 *    file originates, if any.
 	 * @return void
 	 * @dataProvider provideMigrationFiles
 	 */
-	public function testMigrationFile($filename, $classname, $version) {
-		include $filename;
+	public function testMigrationFile($filename, $classname, $version, $plugin = null) {
+		require_once $filename;
 		$this->mockMigration($classname, $version);
 
 		// Trigger the up() and/or change() methods. (The mocks provide the assertions.)
 		$this->migration->up();
-		if (is_callable([$this->migration, "change"])) {
+		if (is_callable([$this->migration, 'change'])) {
 			$this->migration->change();
 		}
 	}
@@ -107,9 +118,29 @@ class MigrationsTest extends TestCase {
 	 * @return void
 	 */
 	public function provideMigrationFiles() {
-		$globPath = dirname(dirname(dirname(dirname(__FILE__)))) . '/config/Migrations/*.php';
-		$it = new MigrationFolderIterator($globPath, FilesystemIterator::KEY_AS_FILENAME);
+		$basePaths = [
+			ROOT . '/config/Migrations/*.php', // main app
+			ROOT . '/plugins/*/config/Migrations/*.php', // plugins
+		];
+
+		$it = new AppendIterator();
+		foreach ($basePaths as $path) {
+			$it->append(new MigrationFolderIterator($path, FSI::KEY_AS_FILENAME));
+		}
+
 		return $it;
+	}
+
+	/**
+	 * Return an array of method names available in $class, except for those in $excluded.
+	 *
+	 * Used when mocking the individual migration classes to mock "everything
+	 * except up(), down() and change()".
+	 *
+	 * @return array
+	 */
+	protected function getClassMethodsExcept($class, array $excluded) {
+		return array_diff(get_class_methods($class), $excluded);
 	}
 
 	/**
@@ -128,7 +159,8 @@ class MigrationsTest extends TestCase {
 			->will($this->returnCallback([$this, 'assertOptions']));
 
 		// The Migration just needs to return an instance of the mocked Table.
-		$this->migration = $this->getMock($class, ['table'], [$version]);
+		$methods = $this->getClassMethodsExcept($class, ['up', 'down', 'change']);
+		$this->migration = $this->getMock($class, $methods, [$version]);
 		$this->migration->expects($this->any())
 			->method('table')
 			->will($this->returnCallback([$this, 'collectTableProperties']));
@@ -203,6 +235,7 @@ class MigrationsTest extends TestCase {
 				break;
 
 			default:
+				//$this->markTestSkipped('Nothing found to test.'); // Useful for debugging the spies.
 				break;
 		}
 
@@ -213,10 +246,18 @@ class MigrationsTest extends TestCase {
 	 * Custom assertion to ensure the given array has a [key] element.
 	 *
 	 * @param string $key The key to assert exists.
-	 * @param array $array An array, typically options for the migration method, obtained from the mocked call to table() or addColumn(), etc. in the Migration file.
-	 * @param string $table The name of the "current" table the Migration file is operating on. This is stateful given the fluent nature of phinx migrations. Set by ::assertOptions(). Used to provide more accurate assertion failure messages.
-	 * @param string $method The name of the current method being called in the migration file. Used to provide more accurate assertion failure messages.
-	 * @param string $field The name of the field being modified by the migration. Context-sensitive. Used to provide more accurate assertion failure messages.
+	 * @param array $array An array, typically options for the migration method,
+	 *    obtained from the mocked call to table() or addColumn(), etc. in the
+	 *    Migration file.
+	 * @param string $table The name of the "current" table the Migration file
+	 *    is operating on. This is stateful given the fluent nature of phinx
+	 *    migrations. Set by ::assertOptions(). Used to provide more accurate
+	 *    assertion failure messages.
+	 * @param string $method The name of the current method being called in the
+	 *    migration file. Used to provide more accurate assertion failure messages.
+	 * @param string $field The name of the field being modified by the migration.
+	 *    Context-sensitive. Used to provide more accurate assertion failure
+	 *    messages.
 	 * @return void
 	 */
 	public function assertHasKey($key, $array, $table, $method, $field) {
@@ -232,10 +273,18 @@ class MigrationsTest extends TestCase {
 	 * Custom assertion to ensure the given array has a non-empty [key] element.
 	 *
 	 * @param string $key The key to assert exists and is not empty.
-	 * @param array $array An array, typically options for the migration method, obtained from the mocked call to table() or addColumn(), etc. in the Migration file.
-	 * @param string $table The name of the "current" table the Migration file is operating on. This is stateful given the fluent nature of phinx migrations. Set by ::assertOptions(). Used to provide more accurate assertion failure messages.
-	 * @param string $method The name of the current method being called in the migration file. Used to provide more accurate assertion failure messages.
-	 * @param string $field The name of the field being modified by the migration. Context-sensitive. Used to provide more accurate assertion failure messages.
+	 * @param array $array An array, typically options for the migration method,
+	 *    obtained from the mocked call to table() or addColumn(), etc. in the
+	 *    Migration file.
+	 * @param string $table The name of the "current" table the Migration file
+	 *    is operating on. This is stateful given the fluent nature of phinx
+	 *    migrations. Set by ::assertOptions(). Used to provide more accurate
+	 *    assertion failure messages.
+	 * @param string $method The name of the current method being called in the
+	 *    migration file. Used to provide more accurate assertion failure messages.
+	 * @param string $field The name of the field being modified by the migration.
+	 *    Context-sensitive. Used to provide more accurate assertion failure
+	 *    messages.
 	 * @return void
 	 */
 	public function assertKeyNotEmpty($key, $array, $table, $method, $field) {
@@ -250,10 +299,17 @@ class MigrationsTest extends TestCase {
 	/**
 	 * Custom assertion to ensure that DECIMAL field types defined both a [precision] and a [scale].
 	 *
-	 * @param array $options An array of options obtained from the mocked call to table() or addColumn(), etc. in the Migration file.
-	 * @param string $table The name of the "current" table the Migration file is operating on. This is stateful given the fluent nature of phinx migrations. Set by ::assertOptions(). Used to provide more accurate assertion failure messages.
-	 * @param string $method The name of the current method being called in the migration file. Used to provide more accurate assertion failure messages.
-	 * @param string $field The name of the field being modified by the migration. Context-sensitive. Used to provide more accurate assertion failure messages.
+	 * @param array $options An array of options obtained from the mocked call
+	 *    to table() or addColumn(), etc. in the Migration file.
+	 * @param string $table The name of the "current" table the Migration file
+	 *    is operating on. This is stateful given the fluent nature of phinx
+	 *    migrations. Set by ::assertOptions(). Used to provide more accurate
+	 *    assertion failure messages.
+	 * @param string $method The name of the current method being called in the
+	 *    migration file. Used to provide more accurate assertion failure messages.
+	 * @param string $field The name of the field being modified by the migration.
+	 *    Context-sensitive. Used to provide more accurate assertion failure
+	 *    messages.
 	 * @return void
 	 */
 	public function assertDecimal($options, $table, $method, $field) {
@@ -279,10 +335,17 @@ class MigrationsTest extends TestCase {
 	/**
 	 * Custom assertion to ensure that TINYINT(1) (boolean) field types define an [unsigned => true] option.
 	 *
-	 * @param array $options An array of options obtained from the mocked call to table() or addColumn(), etc. in the Migration file.
-	 * @param string $table The name of the "current" table the Migration file is operating on. This is stateful given the fluent nature of phinx migrations. Set by ::assertOptions(). Used to provide more accurate assertion failure messages.
-	 * @param string $method The name of the current method being called in the migration file. Used to provide more accurate assertion failure messages.
-	 * @param string $field The name of the field being modified by the migration. Context-sensitive. Used to provide more accurate assertion failure messages.
+	 * @param array $options An array of options obtained from the mocked call
+	 *    to table() or addColumn(), etc. in the Migration file.
+	 * @param string $table The name of the "current" table the Migration file
+	 *    is operating on. This is stateful given the fluent nature of phinx
+	 *    migrations. Set by ::assertOptions(). Used to provide more accurate
+	 *    assertion failure messages.
+	 * @param string $method The name of the current method being called in the
+	 *    migration file. Used to provide more accurate assertion failure messages.
+	 * @param string $field The name of the field being modified by the migration.
+	 *    Context-sensitive. Used to provide more accurate assertion failure
+	 *    messages.
 	 * @return void
 	 */
 	public function assertBoolean($options, $table, $method, $field) {

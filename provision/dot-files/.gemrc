@@ -1,0 +1,4 @@
+# Skip installation of all documentation
+# Ref: https://gauravsohoni.wordpress.com/2014/02/19/install-gems-without-documentation-ri-rdoc/
+---
+gem: --no-ri --no-rdoc

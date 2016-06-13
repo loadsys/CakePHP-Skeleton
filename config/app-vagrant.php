@@ -116,6 +116,7 @@ return [
 	 * a file, call this Configure var instead.
 	 */
 	'Defaults' => [
+		'ssl_force' => false,
 		'Env' => [
 			'Token' => 'vagrant',
 			'Hint' => [

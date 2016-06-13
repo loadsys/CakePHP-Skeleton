@@ -6,11 +6,15 @@
 namespace App\Test\TestCase\Model\Table;
 
 use App\Model\Table\Table;
+use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Cake\Validation\Validator;
 
 /**
  * \App\Test\TestCase\Model\Table\TableTest
+ *
+ * @coversDefaultClass App\Model\Table\Table
  */
 class TableTest extends TestCase {
 	/**
@@ -86,7 +90,7 @@ class TableTest extends TestCase {
 	 * @return void
 	 */
 	public function testValidationDefault() {
-		$validator = new \Cake\Validation\Validator();
+		$validator = new Validator();
 		$validator = $this->AppTable->validationDefault($validator);
 
 		$this->assertTrue($validator->hasField('id'));
@@ -104,7 +108,7 @@ class TableTest extends TestCase {
 	public function testBuildRules() {
 		$this->assertInstanceOf(
 			'\Cake\ORM\RulesChecker',
-			$this->AppTable->buildRules(new \Cake\ORM\RulesChecker()),
+			$this->AppTable->buildRules(new RulesChecker()),
 			'Cursory sanity check. buildRules() should return a ruleChecker.'
 		);
 	}

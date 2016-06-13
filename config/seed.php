@@ -5,7 +5,7 @@
 
 namespace App\Config\BasicSeed;
 
-// Define records.
+// Define records to be imported into the database.
 $data = [
 	//@TODO: Add PRODUCTION seed data for each table as migrations are created.
 ];

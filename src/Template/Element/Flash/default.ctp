@@ -1,5 +1,5 @@
 <?php
-$class = 'message';
+$class = 'message ' . basename(__FILE__, '.ctp');
 if (!empty($params['class'])) {
 	$class .= ' ' . $params['class'];
 }

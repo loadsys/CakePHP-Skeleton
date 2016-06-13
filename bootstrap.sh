@@ -66,12 +66,21 @@ VAGRANT_CONFIG_FILE="$DIR/Vagrantfile"
 
 VAGRANT="$( which vagrant )"
 
-# Checking specifically for `vagrant` here is a magic string, but what can we do?
+# Checking for `vagrant`.
 if [ $? -eq 0 ] && [ -e "$VAGRANT_CONFIG_FILE" ] && [ "$NEW_APP_ENV" = "vagrant" ]; then
 
     echo "## Found Vagrant: ${VAGRANT}"
     echo "## Found Vagrant config file: $VAGRANT_CONFIG_FILE"
     echo "## Provisioning for development."
+
+	# Verify required apps are installed.
+	APP_LIST=('composer' 'node' 'npm' 'grunt' 'bower')
+	for APP in "${APP_LIST[@]}"; do
+		if ! command -v "$APP" >/dev/null 2>&1; then
+			echo "!! Required command missing: \`$APP\`. Please install before continuing."
+			exit 1
+		fi
+	done
 
     vagrant up
 
@@ -90,7 +99,7 @@ fi
 
 
 # Install composer packages using versions specified in config/lock file.
-echo "## Running \`composer install\`."
+echo "## Installing project dependencies."
 
 composer install --no-interaction --ignore-platform-reqs --optimize-autoloader
 
@@ -112,6 +121,13 @@ read -p ">> Enter a GitHub read-only, public-only auth token: " COMPOSER_TOKEN
 
 bin/vagrant-exec "composer config --global github-oauth.github.com $COMPOSER_TOKEN"
 
+npm install --save-dev
+
+bower install
+
+# Build CSS and JS assets to start things off.
+grunt -v
+
 
 # Prime the database with schema and data.
 echo "## Loading database schema and environment specific seed data."
@@ -120,7 +136,7 @@ bin/vagrant-exec 'bin/cake Migrations migrate -v'
 
 # Always call the "production" seed file, because it's env-aware and will
 # load the correct seed file based on APP_ENV's value.
-bin/vagrant-exec 'bin/cake BasicSeed.basic_seed -v'
+bin/vagrant-exec 'bin/cake basic_seed -v'
 
 
 # Finish up.

@@ -17,9 +17,22 @@
 # Set up working vars.
 #   PROVISION_DIR must be inherited from main.sh
 #   APP_ENV must be inherited from main.sh
+#   TARGET_USER must be inherited from main.sh
+
+LOGIN_PASS='vagrant'
 
 
 echo "## Starting: `basename "$0"`."
+
+
+# Set a user account password for the vagrant user to allow Sequel Pro to connect easily.
+echo "## Setting vagrant user's password for easy MySQL access."
+
+echo "${TARGET_USER}:${LOGIN_PASS}" | sudo chpasswd
+
+
+# Add the user to the admin group to make reading logs easier.
+sudo usermod -a -G adm $TARGET_USER
 
 
 # Farm out local MySQL server install to the common "mysql_server" script.
@@ -36,13 +49,28 @@ sudo php5enmod memcached sqlite3 pdo_sqlite xdebug
 sudo service apache2 reload
 
 
+# Make sure Apache starts (again) after vagrant shared folders are mounted.
+echo "## Ensuring Apache starts after vagrant shared folders are mounted."
+
+sudo cp -v "${PROVISION_DIR}/apache-vagrant.conf" /etc/init/
+
+
 # Install Mailcatcher.
 "${PROVISION_DIR}/mailcatcher.sh"
 
 
-# Set a user account password for the vagrant user to allow Sequel Pro to connect easily.
-echo "## Setting vagrant user's password for easy MySQL access."
-echo "vagrant:vagrant" | sudo chpasswd
+# Install Node.js, Grunt. (Compiled "production-ready" files are currently
+# committed to the repo, so these tools are only required in development.)
+# Ref: https://nodesource.com/blog/nodejs-v012-iojs-and-the-nodesource-linux-repositories
+echo "## Installing node.js and Grunt."
+
+curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+
+sudo apt-get install -y libfontconfig nodejs
+
+sudo npm install -g json grunt-cli bower
+
+sudo gem install sass
 
 
 # Finish up.

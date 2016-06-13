@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Updates and changes for the Configuration for when running in the Travis env.
+ */
 use App\Lib\ConfigClosures;
 
 return [
@@ -103,6 +105,7 @@ return [
 	 * a file, call this Configure var instead.
 	 */
 	'Defaults' => [
+		'ssl_force' => false,
 		'Env' => [
 			'Token' => 'travis',
 			'Hint' => [

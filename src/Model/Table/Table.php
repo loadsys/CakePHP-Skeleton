@@ -84,8 +84,22 @@ class Table extends CakeORMTable {
 	 * @return \Cake\ORM\RulesChecker
 	 */
 	public function buildRules(RulesChecker $rules) {
-		$rules->add($rules->existsIn(['creator_id'], 'Creators'));
-		$rules->add($rules->existsIn(['modifier_id'], 'Modifiers'));
+		$rules->add(
+			$rules->existsIn(['creator_id'], 'Creators'),
+			'creator_id_exists_in',
+			[
+				'message' => 'Please select a valid Creator.',
+				'errorField' => 'creator_id',
+			]
+		);
+		$rules->add(
+			$rules->existsIn(['modifier_id'], 'Modifiers'),
+			'modifier_id_exists_in',
+			[
+				'message' => 'Please select a valid Modifier.',
+				'errorField' => 'modifier_id',
+			]
+		);
 
 		return $rules;
 	}

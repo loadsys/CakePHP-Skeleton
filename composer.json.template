@@ -5,7 +5,7 @@
   "license": "proprietary",
   "require": {
     "php": ">=5.6.0",
-    "cakephp/cakephp": "~3.1",
+    "cakephp/cakephp": "~3.2",
     "cakephp/migrations": "~1.0",
     "cakephp/plugin-installer": "*",
     "mobiledetect/mobiledetectlib": "2.*",
@@ -14,7 +14,7 @@
     "loadsys/cakephp-config-read": "~3.0",
     "loadsys/cakephp-creatormodifier": "~1.0",
     "loadsys/cakephp-libregistry": "~1.0",
-    "loadsys/cakephp-loadsys-theme": "dev-master",
+    "loadsys/cakephp-loadsys-theme": "~1.0",
     "loadsys/cakephp-shell-scripts": "~3.0",
     "loadsys/cakephp-auth-userentity": "~1.0"
   },
@@ -24,7 +24,14 @@
     "phpunit/phpunit": "~4.8",
     "johnkary/phpunit-speedtrap": "~1.0@dev",
     "loadsys/loadsys_codesniffer": "~3.0",
-    "loadsys/cakephp-uuid-shell": "~1.0"
+    "phpmd/phpmd": "^2.3",
+    "loadsys/cakephp-uuid-shell": "~1.0",
+    "loadsys/cakephp-loadsys-theme": "^1.0",
+    "behat/behat": "~3.0",
+    "behat/mink": "^1.7",
+    "behat/mink-extension": "^2.2",
+    "behat/mink-goutte-driver": "^1.2",
+    "behat/mink-selenium2-driver": "^1.3"
   },
   "autoload": {
     "psr-4": {

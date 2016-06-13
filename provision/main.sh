@@ -66,6 +66,10 @@ echo "UTC" | sudo tee /etc/timezone > /dev/null
 
 sudo dpkg-reconfigure --frontend noninteractive tzdata
 
+sudo update-rc.d -f ntp remove
+
+sudo apt-get remove -y ntp
+
 sudo apt-get update -y
 
 sudo apt-get upgrade -y
@@ -85,30 +89,21 @@ sudo add-apt-repository -y ppa:ondrej/php5-5.6
 
 sudo apt-add-repository -y ppa:git-core/ppa
 
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+
 
 # Install direct requirements.
 echo "## Installing LAMP stack components."
 
 sudo apt-get update -y
 
-sudo apt-get install -y git-core apache2 php5 php5-curl php5-intl php5-mcrypt php5-memcached php5-mysql
+sudo apt-get install -y git-core git-lfs apache2 php5 php5-curl php5-intl php5-mcrypt php5-memcached php5-mysql
 
 
 # Install composer.
 echo "## Installing composer."
 
 curl -sS https://raw.githubusercontent.com/loadsys/CakePHP-Shell-Scripts/master/composer > composer && sudo bash composer
-
-
-# Install Node.js, Grunt and Ember.
-# Ref: https://nodesource.com/blog/nodejs-v012-iojs-and-the-nodesource-linux-repositories
-# echo "## Installing node.js, Grunt and Ember."
-#
-# curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
-#
-# sudo apt-get install -y nodejs
-#
-# sudo npm install -g json grunt-cli ember-cli
 
 
 # Set up the machine's APP_ENV value.
@@ -159,20 +154,8 @@ sudo service apache2 restart
 
 
 # Set up DB backups on reboot/shutdown.
-SHUTDOWN_DB_BACKUP_SCRIPT="/etc/init.d/k99_shutdown_db_backup"
-sudo tee "${SHUTDOWN_DB_BACKUP_SCRIPT}"  <<-EOSHL > /dev/null
-	#!/usr/bin/env bash
-	. /etc/app_env
-	cd "/var/www"
-	bin/db-backup
-
-EOSHL
-
-sudo chmod a+x "${SHUTDOWN_DB_BACKUP_SCRIPT}"
-
-sudo ln -s "${SHUTDOWN_DB_BACKUP_SCRIPT}" /etc/rc0.d/`basename "${SHUTDOWN_DB_BACKUP_SCRIPT}"`
-
-sudo ln -s "${SHUTDOWN_DB_BACKUP_SCRIPT}" /etc/rc6.d/`basename "${SHUTDOWN_DB_BACKUP_SCRIPT}"`
+echo "## Installing a mysqld shutdown script to dump a backup first."
+sudo cp -v "${PROVISION_DIR}/mysql-shutdown-backup.conf" /etc/init/
 
 
 # Call the environment-specific provisioning script, if it exists.

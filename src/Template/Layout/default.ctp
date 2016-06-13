@@ -31,9 +31,7 @@ use Cake\Core\Configure;
 	<?= $this->Html->meta('icon') ?>
 
 	<?= $this->Html->css([
-		'normalize',
-		'foundation.min',
-		'app',
+		'build/app',
 	]) ?>
 
 	<?= $this->Html->script([
@@ -43,7 +41,6 @@ use Cake\Core\Configure;
 	<?= $this->fetch('social_meta') ?>
 	<?= $this->fetch('meta') ?>
 	<?= $this->fetch('css') ?>
-	<?= $this->fetch('script') ?>
 	<?= ConfigClosures::styleForEnv() ?>
 </head>
 <body>
@@ -70,9 +67,9 @@ use Cake\Core\Configure;
 	</div>
 
 	<?= $this->Html->script([
-		'vendor/jquery',
-		'foundation.min',
-		'app',
+		'build/scripts.min',
 	]) ?>
+
+	<?= $this->fetch('script') ?>
 </body>
 </html>

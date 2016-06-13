@@ -98,6 +98,9 @@ sudo chown -R ${TARGET_USER}:www-data /var/www
 sudo chmod -R a+w /var/www/tmp /var/www/logs
 
 
+# Initialize git LFS support in the repo:
+cd /var/www
+git lfs install
 
 
 # Finish up.

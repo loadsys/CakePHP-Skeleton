@@ -6,6 +6,7 @@
  * unit tests in this file.
  */
 
+use Cake\Cache\Cache;
 use Cake\Core\Configure;
 
 require dirname(__DIR__) . DS . 'config' . DS . 'bootstrap.php';
@@ -35,8 +36,13 @@ Configure::write('App', [
 
 
 // Wipe out any accumulated caches before running tests.
-foreach (\Cake\Cache\Cache::configured() as $key) {
-	\Cake\Cache\Cache::clear(false, $key);
+foreach (Cache::configured() as $key) {
+	if (in_array($key, ['sessions'])) {
+		echo "Skipped cache: $key\n";
+		continue;
+	}
+
+	Cache::clear(false, $key);
 	echo "Cleared cache: $key\n";
 }
 

@@ -12,6 +12,6 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 
 ; Matches the exact files package.json and .travis.yml
-[{package.json,.travis.yml,composer.json,*.yaml,*.yml}]
+[{package.json,.travis.yml,composer.json,*.yaml,*.yml,*.scss}]
 indent_style = space
 indent_size = 2

@@ -1,0 +1,7 @@
+{
+    "name": "{{COMPOSER_PROJECT_NAME:loadsys/@TODO}}",
+    "dependencies" : {
+        "qunit" : "1.*",
+		"foundation-sites" : "6.1.2"
+    }
+}

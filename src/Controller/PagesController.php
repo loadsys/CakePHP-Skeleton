@@ -27,6 +27,16 @@ use Cake\View\Exception\MissingTemplateException;
  */
 class PagesController extends AppController {
 	/**
+	 * Set whether authentication is required to access actions in this controller.
+	 *
+	 * @return void
+	 */
+	protected function auth() {
+		// Pages are public by default.
+		$this->Auth->allow();
+	}
+
+	/**
 	 * Displays a view
 	 *
 	 * @return void|\Cake\Network\Response

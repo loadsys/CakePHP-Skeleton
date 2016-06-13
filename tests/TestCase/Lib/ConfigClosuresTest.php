@@ -6,6 +6,7 @@ namespace App\Test\TestCase\Lib;
 
 use App\Lib\ConfigClosures;
 use Cake\Core\Configure;
+use Cake\ORM\Entity as User;
 use Cake\TestSuite\TestCase;
 
 /**
@@ -40,9 +41,9 @@ class ConfigClosuresTest extends TestCase {
 	 */
 	public function testCacheMerge(array $overrides, array $expected) {
 		$output = ConfigClosures::cacheMerge($overrides);
-		$this->assertEquals(
-			$output,
+		$this->assertArraySubset(
 			$expected,
+			$output,
 			'The output does not match what we expected to have generated.'
 		);
 	}
@@ -56,9 +57,6 @@ class ConfigClosuresTest extends TestCase {
 					'compress' => true,
 					'duration' => '+1 years',
 					'prefix' => '@TODO_',
-					'servers' => '@TODO: Default (prod) Memcached server address',
-					'username' => '@TODO: Default (prod) Memcached server username',
-					'password' => '@TODO: Default (prod) Memcached server password',
 				],
 			],
 			'className Override' => [
@@ -70,9 +68,6 @@ class ConfigClosuresTest extends TestCase {
 					'compress' => true,
 					'duration' => '+1 years',
 					'prefix' => '@TODO_',
-					'servers' => '@TODO: Default (prod) Memcached server address',
-					'username' => '@TODO: Default (prod) Memcached server username',
-					'password' => '@TODO: Default (prod) Memcached server password',
 				],
 			],
 
@@ -86,9 +81,6 @@ class ConfigClosuresTest extends TestCase {
 					'compress' => true,
 					'duration' => '+1 years',
 					'prefix' => '@TODO_something_',
-					'servers' => '@TODO: Default (prod) Memcached server address',
-					'username' => '@TODO: Default (prod) Memcached server username',
-					'password' => '@TODO: Default (prod) Memcached server password',
 				],
 			],
 		];
@@ -131,15 +123,14 @@ class ConfigClosuresTest extends TestCase {
 	 * @dataProvider providerUserEntity
 	 */
 	public function testUserEntity($email, $firstname, $lastname) {
-		if (!class_exists('App\Model\Entity\User')) {
+		if (!class_exists('User')) {
 			$this->markTestSkipped('No User entity available to test with.');
 		}
 
-		$entity = new \App\Model\Entity\User();
+		$entity = new User();
 		$entity->email = $email;
 		$entity->firstname = $firstname;
 		$entity->lastname = $lastname;
-		$entity->ignore_invalid_email = true;
 
 		$output = ConfigClosures::userEntity($email, $firstname, $lastname);
 

@@ -34,3 +34,5 @@
 *.mo binary
 *.pdf binary
 *.phar binary
+
+# Paths, files and extensions managed by Large File Support.

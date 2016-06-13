@@ -1,4 +1,7 @@
 <?php
+/**
+ * Updates and changes for the Configuration for when running in the Staging env.
+ */
 
 use App\Lib\ConfigClosures;
 
@@ -42,7 +45,7 @@ return [
 		],
 		'sessions' => [
 			'compress' => false,
-			'duration' => 120,
+			'duration' => '+1 day',
 			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,
@@ -112,6 +115,16 @@ return [
 	 * a file, call this Configure var instead.
 	 */
 	'Defaults' => [
+		/**
+		 * We don't have to **force** ssl in staging because it should already
+		 * enabled via the load balancer. Since config/bootstrap.php defines
+		 * an updated Request::is('ssl') detector that recognizes AWS load
+		 * balancer scenarios, asset URLs will still be created with https://
+		 * even though Cake will think the request was over http:// from
+		 * the ELB.
+		 */
+		'ssl_force' => false,
+
 		'Env' => [
 			'Token' => 'staging',
 			'Hint' => [

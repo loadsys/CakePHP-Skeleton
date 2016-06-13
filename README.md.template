@@ -25,7 +25,7 @@
 
 This section documents the minimum required tools for hosting this application.
 
-* [CakePHP](https://github.com/cakephp/cakephp) v3.1+
+* [CakePHP](https://github.com/cakephp/cakephp) v3.2+
 * PHP v5.6+
 	* intl
 	* pdo + mysql
@@ -47,6 +47,7 @@ The following tools **should be installed on your development machine** in order
 * PHP v5.4+ (Mac system default should work fine.)
 * [composer](http://getcomposer.org/) for dependency management.
 * [git](https://git-scm.com/)
+	* [git-lfs](https://git-lfs.github.com/) :exclamation: **Recommended** in order to store photos and assets "in" the repo using Large File Support.
 * Either of the following:
 	* [VirtualBox](https://www.virtualbox.org/) v4.3+ (free)
 	* [VMware Fusion](http://www.vmware.com/products/fusion) v6+ plus the [vagrant VMware plugin](https://www.vagrantup.com/vmware) (not free, but **fast**)
@@ -54,23 +55,17 @@ The following tools **should be installed on your development machine** in order
 	* [vagrant-bindfs](https://github.com/gael-ian/vagrant-bindfs)
 	* [vagrant-cachier](https://github.com/fgrehm/vagrant-cachier)
 	* [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest)
-* For automatically running tests:
-	* [node.js](http://nodejs.org/download/)
-	* [npm](https://npmjs.org/)
-	* [grunt-cli](http://gruntjs.com/getting-started)
 
 Vagrant + VirtualBox/VMware provide the following additional tools inside the VM. There are no "optional" installs. Developers must be able to run tests, generate phpDocs and run the code sniffer locally before committing. Thankfully, **the vagrant VM provides the following tools**, including:
 
 * PHP's [xdebug extension](http://xdebug.org/) v2+
 * PHP's sqlite extension (for DebugKit).
 * [composer](https://getcomposer.org/)
-
-The following tools can easily be _made_ available by uncommenting the appropriate section of the `provision/main.sh` script:
-
 * [nodejs](http://nodejs.org/) + [npm](https://www.npmjs.org/)
 	* [`json`](http://trentm.com/json/) command line tool.
 	* ember-cli
 	* grunt-cli
+	* bower
 
 
 ### Included Libaries and Submodules
@@ -81,14 +76,14 @@ Libraries should be included with Composer whenever possible. Git submodules sho
 
 Composer-provided:
 
-* [CakePHP](https://github.com/cakephp/cakephp) v3.0+
+* [CakePHP](https://github.com/cakephp/cakephp) v3.2+
 * [Bake](https://github.com/cakephp/bake)
 * [DebugKit](https://github.com/cakephp/debug_kit)
+* [Migrations](https://github.com/cakephp/migrations)
 * [Loadsys Cake Basic Seeds](https://github.com/loadsys/CakePHP-Basic-Seed)
 * [Loadsys Cake ConfigReadShell](https://github.com/loadsys/CakePHP-ConfigReadShell)
 * [Loadsys Cake LibRegistry](https://github.com/loadsys/CakePHP-LibRegistry)
 * [Loadsys Cake Shell Scripts](https://github.com/loadsys/CakePHP-Shell-Scripts)
-* [Migrations](https://github.com/cakephp/migrations)
 * [phpunit](http://phpunit.de/) v4.1+
 * [phpDocumentor](http://phpdoc.org/) v2
 * [PHP Code Sniffer](https://github.com/squizlabs/PHP_CodeSniffer) v2
@@ -139,7 +134,7 @@ The bootstrap script takes care of installing dependencies. After this process, 
 		* 1080 TCP from Anywhere (Mailcatcher)
 		* SSH from `66.228.59.201/32` (Loadsysdev)
 	1. ssh into the box.
-	1. Run `https://raw.githubusercontent.com/loadsys/CakePHP-Shell-Scripts/master/baremetal-bootstrap | bash -s -- {{PROJECT_REPO_CLONE_HTTPS:@TODO}} staging staging`
+	1. Run `curl https://raw.githubusercontent.com/loadsys/CakePHP-Shell-Scripts/master/baremetal-bootstrap | bash -s -- {{PROJECT_REPO_CLONE_HTTPS:@TODO}} staging staging`
 
 
 ### Production
@@ -155,7 +150,7 @@ The bootstrap script takes care of installing dependencies. After this process, 
 	* (Locally) Update the `config/app.php` with the new credentials and commit/push them to GitHub.
 1. Create or provision a new web instance server (EC2), matching the Vagrant `box` in use (or vice-versa). This currently means **Ubuntu Server 14.04 LTS 64bit**.
 	1. ssh into the box.
-	1. Run `https://raw.githubusercontent.com/loadsys/CakePHP-Shell-Scripts/master/baremetal-bootstrap | bash -s -- {{PROJECT_REPO_CLONE_HTTPS:@TODO}} master master`
+	1. Run `curl https://raw.githubusercontent.com/loadsys/CakePHP-Shell-Scripts/master/baremetal-bootstrap | bash -s -- {{PROJECT_REPO_CLONE_HTTPS:@TODO}} master master`
 
 
 ## Contributing
@@ -169,12 +164,15 @@ Things to do after pulling updates from the remote repo.
 
 On your host:
 
-* `composer install` (Install any changed/updated dependencies.)
-* `vagrant ssh`
-	* `bin/cache-clear` (Make sure temp files are reset between host/vm use.)
+* `bin/deps-install` (Install any changes/updated dependencies from git submodules, composer, pear, npm, etc.)
+* `vagrant provision` (Make any changes to the VM's config that may be necessary, and runs associated Cake provisioning steps:)
+	* `bin/clear-cache` (Make sure temp files are reset between host/vm use.)
 	* `bin/db-backup` (Store the previous database contents before running schema/data updates.)
 	* `bin/migrations` (Set up the DB with the latest schema.)
-	* `bin/cake basic_seed -v` (Populate the latest set of development data from the seeds, if the plugin is available.)
+	* `bin/cake basic_seed -v` (Populate the latest set of development data from the seeds.)
+	* `npm install --save-dev` (Installs grunt modules.)
+	* `bower install` (Installs front end dependencies.)
+	* `grunt bowercopy` (Moves css files from bower_components to webroot/css.)
 
 
 ### Developer Workflow
@@ -283,10 +281,12 @@ Unit tests should be created for all new code written in the following categorie
 * Components
 * Helper methods
 * Shells and Tasks
-* Libraries in `Lib/'
+* Libraries in `src/Lib/'
 * Javascript in `webroot/js/`
 * **Bundled** plugins
 
+
+Command line automated "test-on-save" is also possible with Grunt via: `grunt watch`. This will block the terminal while it waits for file changes. New files should get picked up as well.
 
 The full testsuite is run using `bin/phpunit` from the root of the project.
 
@@ -299,12 +299,13 @@ There are three testsuites setup as part of the phpunit.xml.dist file.
 
 ### Javascript Unit Testing
 
-**@TODO: Review and update this section.**
-
-* Tests can also be written for the browser JavaScript code.
+* Tests should also be written for the browser JavaScript code.
 * Javascript should be written in individual "class" files (they will be merged by asset compilation) in `webroot/js/src/`.
-* Anything you would normally put in a `document.ready(...)` call should be placed in @TODO.
+* Anything you would normally put in a `document.ready(...)` call should be placed in `webroot/js/init.js`.
 * Matching test files should be created in `webroot/js/test/`.
+* Tests are run with phantomjs via grunt:
+    * Run `grunt watch` to run the test suite on js test or source file change.
+    * Run `grunt qunit` to run the qunit test suite.
 
 
 ### CSS Changes

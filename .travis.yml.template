@@ -12,6 +12,8 @@ php:
 cache:
   directories:
     - $HOME/.composer/cache
+    - bower_components
+    - node_modules
 
 # Environment Variables to set
 env:
@@ -34,22 +36,32 @@ branches:
     - gh-pages
 
 before_install:
-  - composer self-update
+  #- composer self-update
   - echo "extension = memcached.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 install:
   - composer config -g github-oauth.github.com $GITHUB_TOKEN
   - composer install --no-interaction
+  - npm install --save-dev
 
 before_script:
   - phpenv rehash
   - mysql -e 'DROP DATABASE IF EXISTS `travis_app`; CREATE DATABASE `travis_app`;'
 
 script:
-  # The -n option can be used to suppress warnings
+  # Test the main app
   - bin/codesniffer-run
   - bin/phpunit -v
   - bin/coverage-ensure 90
+  # Test the Javascript
+  #- grunt qunit --verbose --force
+  # Run Behat behavior tests
+  #- mysql -e 'DROP DATABASE IF EXISTS `travis_app`; CREATE DATABASE `travis_app`;'
+  #- bin/cake server -p 8765 &
+  #- sleep 3
+  #- bin/migrations
+  #- bin/cake basic_seed -v
+  #- bin/behat -v -p travis
 
 notifications:
   email: false

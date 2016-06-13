@@ -1,0 +1,27 @@
+{
+  "name": "{{COMPOSER_PROJECT_NAME:loadsys/@TODO}}",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "{{PROJECT_REPO_URL:https://github.com/loadsys/app}}"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "autoprefixer": "^6.3.6",
+    "cssnano": "^3.5.2",
+    "graceful-fs": "^4.1.3",
+    "grunt": "*",
+    "grunt-bowercopy": "^1.2.4",
+    "grunt-contrib-concat": "~1.0.0",
+    "grunt-contrib-qunit": ">=1.0.1",
+    "grunt-contrib-sass": "^1.0.0",
+    "grunt-contrib-uglify": "~1.0.0",
+    "grunt-contrib-watch": "~1.0.0",
+    "grunt-postcss": "~0.8.0",
+    "grunt-sass-lint": "^0.1.1",
+    "lodash": "^4.6.1",
+    "phantomjs-prebuilt": "*"
+  }
+}

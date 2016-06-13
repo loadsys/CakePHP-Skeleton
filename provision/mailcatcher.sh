@@ -12,7 +12,9 @@ sudo apt-get update -y
 
 sudo apt-get install -y libsqlite3-dev ruby1.9.3
 
-sudo gem install mailcatcher --no-ri --no-rdoc
+sudo gem install mime-types --version "< 3"
+
+sudo gem install mailcatcher --conservative --no-ri --no-rdoc
 
 sudo tee "/etc/init/mailcatcher.conf" <<-'EOINIT' > /dev/null
 	description "Mailcatcher"

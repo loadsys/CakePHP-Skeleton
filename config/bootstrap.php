@@ -51,6 +51,7 @@ use Cake\Log\Log;
 use Cake\Mailer\Email;
 use Cake\Network\Request;
 use Cake\Routing\DispatcherFactory;
+use Cake\Routing\Router;
 use Cake\Utility\Inflector;
 use Cake\Utility\Security;
 
@@ -182,23 +183,25 @@ Request::addDetector('tablet', function ($request) {
  */
 
 /**
- * Plugins need to be loaded manually, you can either load them one by one or all of them in a single call
- * Uncomment one of the lines below, as you need. make sure you read the documentation on Plugin to use more
- * advanced ways of loading plugins
+ * Plugins need to be loaded manually, you can either load them one by one
+ * or all of them in a single call. Uncomment one of the lines below as
+ * needed. Make sure you read the documentation on Plugin to use more
+ * advanced ways of loading plugins.
  *
  * Plugin::loadAll(); // Loads all plugins at once
  * Plugin::load('Migrations'); //Loads a single plugin named Migrations
- *
  */
-
 Plugin::load('BasicSeed', ['bootstrap' => false, 'routes' => false]);
 Plugin::load('CreatorModifier', ['bootstrap' => false, 'routes' => false]);
 Plugin::load('ConfigRead', ['bootstrap' => false, 'routes' => false]);
 Plugin::load('LoadsysTheme', ['bootstrap' => false, 'routes' => false]);
 Plugin::load('Migrations');
+Plugin::load('Uuid', ['bootstrap' => false, 'routes' => false]);
 
-// Only try to load DebugKit in development mode
-// Debug Kit should not be installed on a production system
+/**
+ * Only try to load DebugKit in development mode
+ * Debug Kit should not be installed on a production system
+ */
 if (Configure::read('debug')) {
 	Plugin::load('DebugKit', ['bootstrap' => true]);
 }
@@ -215,3 +218,35 @@ DispatcherFactory::add('ControllerFactory');
  * This is needed for matching the auto-localized string output of Time() class when parsing dates.
  */
 Type::build('datetime')->useLocaleParser();
+
+/**
+ * Override the `ssl` detector to also work behind a load balancer.
+ */
+Request::addDetector('sslorig', ['env' => 'HTTPS', 'options' => [1, 'on']]);
+
+Request::addDetector('ssl', function ($request) {
+	return $request->is('sslorig') || $request->header('X_FORWARDED_PROTO') === 'https';
+});
+
+/**
+ * If we're running in an SSL environment, make sure all generated links
+ * include SSL even if the request was decrypted before it reached Apache.
+ *
+ * This fixes issues with links to media and assets being written to the
+ * page using http:// URLs because the request into Apache was vanilla
+ * http:// even though the browser connected to the load balancer over
+ * https://, which prevents "mixed content" warnings in the browser.
+ */
+if (Request::createFromGlobals()->is('ssl') || Configure::read('Defaults.ssl_force')) {
+	$secureUrl = str_replace('http://', 'https://', Router::fullBaseUrl());
+	Router::fullBaseUrl($secureUrl);
+}
+
+/**
+ * Custom field type to automatically encode/decode data into json format
+ *
+ * In Coupon Table, we've defined a custom type field
+ * This field will store json formatted properties/values to identify data
+ * for a particular coupon type:  basic, location, multi-site
+ */
+Type::map('json', 'App\Database\Type\JsonType');

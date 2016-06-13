@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Core app configuration.
+ */
 use App\Lib\ConfigClosures;
 
 //----
@@ -82,9 +84,10 @@ return [
 	 * Configure the cache adapters.
 	 */
 	'Cache' => [
-		'default' => ConfigClosures::cacheMerge(
+		'default' => ConfigClosures::cacheMerge([
 			// Returns the default array, merged with the array passed in.
-		),
+			'prefix' => 'default_',
+		]),
 
 		/**
 		 * Configure the cache used for general framework caching. Path information,
@@ -239,17 +242,20 @@ return [
 		],
 
 		/**
-		 * The test connection is used during the test suite.
+		 * The test connection is used during the test suite. (Not used in
+		 * production, but provides defaults for all other envs.)
 		 */
 		'test' => [
 			'className' => 'Cake\Database\Connection',
 			'driver' => 'Cake\Database\Driver\Mysql',
 			'persistent' => false,
+			/*
 			'host' => 'localhost',
-			//'port' => 'nonstandard_port_number',
+			'port' => 3306,
 			'username' => 'my_app',
 			'password' => 'secret',
 			'database' => 'test_myapp',
+			*/
 			'encoding' => 'utf8',
 			'timezone' => 'UTC',
 			'cacheMetadata' => true,
@@ -278,11 +284,25 @@ return [
 			'file' => 'error',
 			'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
 		],
+		'transactions' => [
+			'className' => 'Cake\Log\Engine\FileLog',
+			'path' => LOGS,
+			'file' => 'transactions',
+			'levels' => [],
+			'scopes' => ['transactions'],
+		],
+		'security' => [
+			'className' => 'Cake\Log\Engine\FileLog',
+			'path' => LOGS,
+			'file' => 'security',
+			'levels' => [],
+			'scopes' => ['security'],
+		],
 		'performance' => [
 			'className' => 'Cake\Log\Engine\FileLog',
 			'path' => LOGS,
 			'file' => 'performance',
-			//'levels' => [],
+			'levels' => [],
 			'scopes' => ['performance'],
 		],
 	],
@@ -313,6 +333,15 @@ return [
 	 * a file, call this Configure var instead.
 	 */
 	'Defaults' => [
+		/**
+		 * When enabled, all generated URLs will use https and any non-ssl
+		 * requests will be redirected to their ssl counterpart.
+		 *
+		 * @see \App\Controller\AppController::ssl()
+		 * @see config/bootstrap.php
+		 */
+		'ssl_force' => true,
+
 		'short_name' => '{{APP_DISPLAY_SHORT_NAME:@TODO Set app short name.}}',
 		'long_name' => '{{PROJECT_TITLE}}',
 		'domain' => '{{APP_DOMAIN_ONLY:acme.com}}',

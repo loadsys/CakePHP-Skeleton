@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<ruleset name="{{APP_DISPLAY_SHORT_NAME:@TODO Set app short name.}}">
+	<description>{{PROJECT_TITLE}} coding standard.</description>
+
+	<!-- Include Loadsys rules as a base. -->
+	<rule ref="vendor/loadsys/loadsys_codesniffer/Loadsys/ruleset.xml" />
+</ruleset>

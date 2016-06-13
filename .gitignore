@@ -7,9 +7,13 @@
 /.vagrant/
 /phpunit.xml
 
-# Composer Dependencies
+# Composer Dependencies & Build Tooling
 /vendor/*
 /node_modules
+/bower_components
+/.sass-cache
+/webroot/css/qunit.css
+
 
 # OS X
 .DS_Store
@@ -24,3 +28,6 @@ Icon?
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# IDEs
+/.idea/

@@ -1,3 +1,18 @@
+/**
+ * Main application styles should be defined here.
+ */
+
+@import "../cake.css"; // @TODO: Remove this when no longer required.
+
+//@import 'settings';
+@import 'foundation';
+@include foundation-everything;
+//@import 'variables';
+//@import 'tables';
+//@import 'forms';
+//@import 'footer';
+
+
 div#container {
 	margin-top: 0.3125rem;
 }
