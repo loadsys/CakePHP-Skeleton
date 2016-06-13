@@ -7,7 +7,7 @@ namespace App\View;
 use Cake\View\View;
 
 /**
- * App View class
+ * \App\View\AppView
  */
 class AppView extends View {
 	/**
@@ -25,6 +25,7 @@ class AppView extends View {
 			'errorClass' => 'error',
 			'templates' => [
 				'error' => '<small class="error">{{content}}</small>',
+				'radioContainer' => '<div class="form-radio large-12 columns">{{content}}</div>',
 			],
 		]);
 		$this->loadHelper('Flash');

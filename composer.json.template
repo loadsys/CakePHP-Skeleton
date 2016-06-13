@@ -15,7 +15,8 @@
     "loadsys/cakephp-creatormodifier": "~1.0",
     "loadsys/cakephp-libregistry": "~1.0",
     "loadsys/cakephp-loadsys-theme": "dev-master",
-    "loadsys/cakephp-shell-scripts": "~3.0"
+    "loadsys/cakephp-shell-scripts": "~3.0",
+    "loadsys/cakephp-auth-userentity": "~1.0"
   },
   "require-dev": {
     "cakephp/debug_kit": "~3.2",

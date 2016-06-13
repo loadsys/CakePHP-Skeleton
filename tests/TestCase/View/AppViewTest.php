@@ -52,7 +52,14 @@ class AppViewTest extends TestCase {
 			->with('Html');
 		$AppView->expects($this->at(1))
 			->method('loadHelper')
-			->with('Form');
+			->with(
+				'Form',
+				$this->callback(function ($options) {
+					$this->assertArrayHasKey('errorClass', $options);
+					$this->assertArrayHasKey('templates', $options);
+					return true;
+				})
+			);
 		$AppView->expects($this->at(2))
 			->method('loadHelper')
 			->with('Flash');

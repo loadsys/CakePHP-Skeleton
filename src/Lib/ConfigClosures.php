@@ -7,6 +7,7 @@
 namespace App\Lib;
 
 use Cake\Core\Configure;
+use Cake\ORM\Entity as User;
 use Cake\Utility\Hash;
 
 /**
@@ -73,14 +74,11 @@ class ConfigClosures {
 	 * properties set.
 	 */
 	public static function userEntity($email, $firstname = '', $lastname = '') {
-		$entity = new \App\Model\Entity\User();
-
-		$entity->email = $email;
-		$entity->firstname = $firstname;
-		$entity->lastname = $lastname;
-		$entity->ignore_invalid_email = true;
-
-		return $entity;
+		return new User([
+			'email' => $email,
+			'firstname' => $firstname,
+			'lastname' => $lastname,
+		]);
 	}
 
 	/**

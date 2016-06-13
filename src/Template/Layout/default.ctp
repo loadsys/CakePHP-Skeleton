@@ -65,9 +65,9 @@ use Cake\Core\Configure;
 				<?= $this->fetch('content') ?>
 			</div>
 		</div>
-	</div>
 
-	<?= $this->element('Layout/footer'); ?>
+		<?= $this->element('Layout/footer'); ?>
+	</div>
 
 	<?= $this->Html->script([
 		'vendor/jquery',

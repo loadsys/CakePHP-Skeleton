@@ -13,11 +13,9 @@ use Cake\ORM\Table as CakeORMTable;
 use Cake\Validation\Validator;
 
 /**
- * App Model
- *
+ * \App\Model\Table\Table
  */
 class Table extends CakeORMTable {
-
 	/**
 	 * Initialize method
 	 *
@@ -34,11 +32,11 @@ class Table extends CakeORMTable {
 
 		$this->belongsTo('Creators', [
 			'className' => 'Users',
-			'foreignKey' => 'creator_id'
+			'foreignKey' => 'creator_id',
 		]);
 		$this->belongsTo('Modifiers', [
 			'className' => 'Users',
-			'foreignKey' => 'modifier_id'
+			'foreignKey' => 'modifier_id',
 		]);
 	}
 

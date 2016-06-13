@@ -278,6 +278,13 @@ return [
 			'file' => 'error',
 			'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
 		],
+		'performance' => [
+			'className' => 'Cake\Log\Engine\FileLog',
+			'path' => LOGS,
+			'file' => 'performance',
+			//'levels' => [],
+			'scopes' => ['performance'],
+		],
 	],
 
 	/**

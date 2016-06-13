@@ -10,7 +10,7 @@ use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Test\TestCase\Model\Table\TableTest
+ * \App\Test\TestCase\Model\Table\TableTest
  */
 class TableTest extends TestCase {
 	/**

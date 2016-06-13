@@ -158,11 +158,6 @@ class ConfigClosuresTest extends TestCase {
 			$output->lastname,
 			'The generated User->lastname Entity should match the output'
 		);
-		$this->assertEquals(
-			$entity->ignore_invalid_email,
-			$output->ignore_invalid_email,
-			'The generated User->ignore_invalid_email Entity should match the output'
-		);
 	}
 
 	/**

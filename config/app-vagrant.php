@@ -24,26 +24,26 @@ return [
 	'Cache' => [
 		'default' => [
 			'compress' => false,
-			'duration' => 120,
+			'duration' => 0,
 			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,
 		],
 		'_cake_core_' => [
-			'duration' => 120,
+			'duration' => 0,
 			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,
 		],
 		'_cake_model_' => [
-			'duration' => 120,
+			'duration' => 0,
 			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,
 		],
 		'sessions' => [
 			'compress' => false,
-			'duration' => 120,
+			'duration' => '+1 day',
 			'servers' => '127.0.0.1',
 			'username' => null,
 			'password' => null,

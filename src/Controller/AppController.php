@@ -15,6 +15,7 @@
 namespace App\Controller;
 
 use Cake\Controller\Controller;
+use LibRegistry\LibRegistryTrait;
 
 /**
  * Application Controller
@@ -25,6 +26,8 @@ use Cake\Controller\Controller;
  * @link http://book.cakephp.org/3.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
+	// Allow access to shared/injected libraries, works like TableRegistry.
+	use LibRegistryTrait;
 
 	/**
 	 * Initialization hook method.

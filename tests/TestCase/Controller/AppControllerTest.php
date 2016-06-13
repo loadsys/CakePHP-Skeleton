@@ -8,7 +8,7 @@ use App\Controller\AppController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * App\Test\TestCase\Controller\AppControllerTest
+ * \App\Test\TestCase\Controller\AppControllerTest
  */
 class AppControllerTest extends IntegrationTestCase {
 	/**
