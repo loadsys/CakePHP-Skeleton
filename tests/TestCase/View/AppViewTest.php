@@ -16,8 +16,7 @@ class AppViewTest extends TestCase {
 	 *
 	 * @var array
 	 */
-	public $fixtures = [
-	];
+	public $fixtures = [];
 
 	/**
 	 * setUp method

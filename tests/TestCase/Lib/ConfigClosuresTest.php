@@ -63,7 +63,7 @@ class ConfigClosuresTest extends TestCase {
 			],
 			'className Override' => [
 				[
-					'className' => 'RandomClass'
+					'className' => 'RandomClass',
 				],
 				[
 					'className' => 'RandomClass',
@@ -79,7 +79,7 @@ class ConfigClosuresTest extends TestCase {
 			'Prefix and ClassName Overrides' => [
 				[
 					'className' => 'RandomClass',
-					'prefix' => 'something_'
+					'prefix' => 'something_',
 				],
 				[
 					'className' => 'RandomClass',

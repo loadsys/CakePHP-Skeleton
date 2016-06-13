@@ -10,17 +10,15 @@ use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\Table Test Case
+ * App\Test\TestCase\Model\Table\TableTest
  */
 class TableTest extends TestCase {
-
 	/**
 	 * Fixtures
 	 *
 	 * @var array
 	 */
-	public $fixtures = [
-	];
+	public $fixtures = [];
 
 	/**
 	 * setUp method

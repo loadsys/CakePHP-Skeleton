@@ -1,4 +1,4 @@
-_This template includes more information than a typical project requires, both to provide hints on possible things to include, as well as to make the process of filling it largely a matter of deleting information that is not applicable. Specifically; **be sure to remove or replace any notes and comments in italics,** like this one. By convention, pseudo-variables you should replace are typically in ALLCAPS._
+<!-- This template includes more information than a typical project requires, both to provide hints on possible things to include, as well as to make the process of filling it largely a matter of deleting information that is not applicable. Specifically; **be sure to remove or replace any notes and comments in HTML comment blocks,** like this one. By convention, pseudo-variables you should replace are typically in ALLCAPS. -->
 
 
 # [{{PROJECT_TITLE:@TODO}}]({{PROJECT_REPO_URL:https://github.com/loadsys/app}})
@@ -9,7 +9,7 @@ _This template includes more information than a typical project requires, both t
 
 {{PROJECT_DESCRIPTION_NO_QUOTES:@TODO}}
 
-_Brief app description. Why does it exist? Who uses it?_
+<!-- Brief app description. Why does it exist? Who uses it? -->
 
 * Production URL: {{PROJECT_PRODUCTION_URL:@TODO}}
 * Staging URL: {{PROJECT_STAGING_URL:@TODO}}
@@ -19,7 +19,7 @@ _Brief app description. Why does it exist? Who uses it?_
 
 ## Environment
 
-_"Environment" refers to external technologies required for the app to run. Anything that the app "assumes" will be available. Memcache is part of the environment, jQuery is a library. **Always** include the minimum PHP version, PHP extensions (and versions) utilized, database software version, and any other **external** programs used. Think in particular about the production environment, even if a tool (like memcached) is not used locally in development._
+<!-- "Environment" refers to external technologies required for the app to run. Anything that the app "assumes" will be available. Memcache is part of the environment, jQuery is a library. **Always** include the minimum PHP version, PHP extensions (and versions) utilized, database software version, and any other **external** programs used. Think in particular about the production environment, even if a tool (like memcached) is not used locally in development. -->
 
 ### Hosting
 
@@ -75,7 +75,7 @@ The following tools can easily be _made_ available by uncommenting the appropria
 
 ### Included Libaries and Submodules
 
-_"Libraries" refer to packages that are directly executed or used by the app. Items that the app is able to obtain or install for itself are libraries. List any packages that are pulled in via composer, included as git submodules or directly bundled in the repo. Include links to the package's homepage or repo and the version number in use (if applicable). The list below is pre-populated with the submodules included in this CakePHP-Skeleton repo, and also lists some common add-ons._
+<!-- "Libraries" refer to packages that are directly executed or used by the app. Items that the app is able to obtain or install for itself are libraries. List any packages that are pulled in via composer, included as git submodules or directly bundled in the repo. Include links to the package's homepage or repo and the version number in use (if applicable). The list below is pre-populated with the submodules included in this CakePHP-Skeleton repo, and also lists some common add-ons. -->
 
 Libraries should be included with Composer whenever possible. Git submodules should be used as a fallback, and directly bundling the code into the project repo as a last resort. The Skeleton includes the following defaults:
 
@@ -106,7 +106,7 @@ Bundled packages:
 
 ### cron Tasks
 
-_Document anything that is expected to run outside of a normal web browser interface here. Include when it is supposed to run and any details about permissions, logging, etc._
+<!-- Document anything that is expected to run outside of a normal web browser interface here. Include when it is supposed to run and any details about permissions, logging, etc. -->
 
 ```
 0 0,12	* * *	/var/www/bin/cake COMMAND > /var/www/logs/COMMAND.log 2>&1
@@ -116,7 +116,7 @@ _Document anything that is expected to run outside of a normal web browser inter
 
 ## Installation
 
-_In general, document the series of steps necessary to set up the project on a new system (development or production). If there is a setup shell script, don't document its internal steps (the script itself does that), just how to run it. If setup is manual, list each step in order._
+<!-- In general, document the series of steps necessary to set up the project on a new system (development or production). If there is a setup shell script, don't document its internal steps (the script itself does that), just how to run it. If setup is manual, list each step in order. -->
 
 
 ### Development (vagrant)
@@ -124,7 +124,7 @@ _In general, document the series of steps necessary to set up the project on a n
 Developers are expected to use the vagrant environment for all local work. Using a \_AMP stack on your machine directly is no longer advised or supported. You should have everything from the [Developer Specific](#Developer-specific) section above already installed on your Mac.
 
 ```bash
-git clone {{PROJECT_REPO_CLONE_URL:@TODO}} ./
+git clone {{PROJECT_REPO_CLONE_SSH:@TODO}} ./
 ./bootstrap.sh vagrant
 ```
 
@@ -139,7 +139,7 @@ The bootstrap script takes care of installing dependencies. After this process, 
 		* 1080 TCP from Anywhere (Mailcatcher)
 		* SSH from `66.228.59.201/32` (Loadsysdev)
 	1. ssh into the box.
-	1. Run `https://raw.githubusercontent.com/loadsys/CakePHP-Shell-Scripts/master/baremetal-bootstrap | bash -s -- {{PROJECT_REPO_HTTPS_URL:@TODO}} staging staging`
+	1. Run `https://raw.githubusercontent.com/loadsys/CakePHP-Shell-Scripts/master/baremetal-bootstrap | bash -s -- {{PROJECT_REPO_CLONE_HTTPS:@TODO}} staging staging`
 
 
 ### Production
@@ -155,12 +155,12 @@ The bootstrap script takes care of installing dependencies. After this process, 
 	* (Locally) Update the `config/app.php` with the new credentials and commit/push them to GitHub.
 1. Create or provision a new web instance server (EC2), matching the Vagrant `box` in use (or vice-versa). This currently means **Ubuntu Server 14.04 LTS 64bit**.
 	1. ssh into the box.
-	1. Run `https://raw.githubusercontent.com/loadsys/CakePHP-Shell-Scripts/master/baremetal-bootstrap | bash -s -- {{PROJECT_REPO_HTTPS_URL:@TODO}} master master`
+	1. Run `https://raw.githubusercontent.com/loadsys/CakePHP-Shell-Scripts/master/baremetal-bootstrap | bash -s -- {{PROJECT_REPO_CLONE_HTTPS:@TODO}} master master`
 
 
 ## Contributing
 
-_Information a developer would need to work on the project in the "correct" way. (Tests, etc.)_
+<!-- Information a developer would need to work on the project in the "correct" way. (Tests, etc.) -->
 
 
 ### After Pulling
@@ -174,7 +174,7 @@ On your host:
 	* `bin/cache-clear` (Make sure temp files are reset between host/vm use.)
 	* `bin/db-backup` (Store the previous database contents before running schema/data updates.)
 	* `bin/migrations` (Set up the DB with the latest schema.)
-	* `bin/cake BasicSeed.basic_seed` (Populate the latest set of development data from the seeds, if the plugin is available.)
+	* `bin/cake basic_seed -v` (Populate the latest set of development data from the seeds, if the plugin is available.)
 
 
 ### Developer Workflow
@@ -228,7 +228,7 @@ Create a new "SSH" connection with the following settings:
 * Port: 3306
 * SSH Host: 127.0.0.1
 * SSH User: vagrant
-* SSH Password: vagrant (Or [someone online](https://coderwall.com/p/yzwqvg) say you can point to your local `~/.vagrant.d/insecureprivatekey`.)
+* SSH Password: vagrant (Or [someone online](https://coderwall.com/p/yzwqvg) says you can point to your local `~/.vagrant.d/insecureprivatekey`.)
 * SSH Port: 2222 (per `config/provision.yaml`.)
 
 This setup is handy for backing up your data if you're about to destroy the box, or for making Schema or Seed changes before running the Shell commands in the VM.
@@ -246,7 +246,7 @@ This setup is handy for backing up your data if you're about to destroy the box,
 
 #### Sample Data
 
-* Both test data and started production data is maintained by the Loadsys Basic Seeds plugin.
+* Both test data and starting production data is maintained by the Loadsys Basic Seeds plugin.
 * The default seed files are environment aware, making it possible to run the same command regardless of environment.
 * To populate (or reset) your local dev data back to the contents of the seed:
 	* `bin/cake BasicSeed.basic_seed`
@@ -328,4 +328,4 @@ New devs should all run through these steps to get familiar with the app and the
 
 ## License
 
-Copyright (c) 2015 {{PROJECT_CLIENT_NAME:@TODO}}
+Copyright (c) 2016 {{PROJECT_CLIENT_NAME:@TODO}}

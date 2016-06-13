@@ -1,24 +1,25 @@
 <?php
+/**
+ * Tests for the AppController.
+ */
 namespace App\Test\TestCase\Controller;
 
 use App\Controller\AppController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * App\Controller\AppController Test Case
+ * App\Test\TestCase\Controller\AppControllerTest
  */
 class AppControllerTest extends IntegrationTestCase {
-
 	/**
 	 * Fixtures
 	 *
 	 * @var array
 	 */
-	public $fixtures = [
-	];
+	public $fixtures = [];
 
 	/**
-	 * Test initialize method
+	 * Test initialize() method.
 	 *
 	 * @return void
 	 * @covers \App\Controller\AppController::initialize
@@ -40,7 +41,7 @@ class AppControllerTest extends IntegrationTestCase {
 	}
 
 	/**
-	 * Test isAuthorized method
+	 * Test isAuthorized() method.
 	 *
 	 * @return void
 	 * @covers \App\Controller\AppController::isAuthorized
@@ -50,7 +51,7 @@ class AppControllerTest extends IntegrationTestCase {
 	}
 
 	/**
-	 * Test beforeFilter method
+	 * Test beforeFilter() method.
 	 *
 	 * @return void
 	 * @covers \App\Controller\AppController::beforeFilter
@@ -61,7 +62,7 @@ class AppControllerTest extends IntegrationTestCase {
 	}
 
 	/**
-	 * Test beforeRender method
+	 * Test beforeRender() method.
 	 *
 	 * @return void
 	 * @covers \App\Controller\AppController::beforeRender

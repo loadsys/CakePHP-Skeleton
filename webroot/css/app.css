@@ -28,3 +28,11 @@ footer ul.inline-list li {
 	font-size: 0.75em;
 }
 
+.top-bar-section li.text {
+	background: #8d1c1c;
+	color: #eee;
+    font-size: 0.8125rem;
+    font-weight: normal;
+    padding: 12px 0.9375rem 12px 0.9375rem;
+    text-transform: none;
+}
