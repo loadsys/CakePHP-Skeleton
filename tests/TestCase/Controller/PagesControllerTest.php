@@ -5,6 +5,7 @@
 namespace App\Test\TestCase\Controller;
 
 use App\Controller\PagesController;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestCase;
 
@@ -26,6 +27,7 @@ class PagesControllerTest extends IntegrationTestCase {
 	 */
 	public function setUp() {
 		parent::setUp();
+		$this->debug = Configure::read('debug');
 	}
 
 	/**
@@ -34,16 +36,20 @@ class PagesControllerTest extends IntegrationTestCase {
 	 * @return void
 	 */
 	public function tearDown() {
+		Configure::write('debug', $this->debug);
 		parent::tearDown();
 	}
 
 	/**
-	 * Test the home page display method for the pages controller
+	 * Test the home page display method for the pages controller, but
+	 * only when debug is on.
 	 *
 	 * @return void
 	 * @covers App\Controller\PagesController::display
 	 */
-	public function testDisplayHome() {
+	public function testDisplayHomeDevelopment() {
+		Configure::write('debug', true);
+
 		$this->get("/");
 
 		$this->assertResponseOk();
@@ -51,6 +57,22 @@ class PagesControllerTest extends IntegrationTestCase {
 			'home',
 			'We should be rendering the home template'
 		);
+	}
+
+	/**
+	 * Verify that the default home page is suppressed when debug is off.
+	 *
+	 * @return void
+	 * @covers App\Controller\PagesController::display
+	 */
+	public function testDisplayHomeProduction() {
+		$this->markTestIncomplete('@TODO: Can not get this working properly.');
+		Configure::write('debug', false);
+
+		$r = $this->get('/');
+
+		$this->assertResponseError();
+		$this->assertResponseContains('Default Cake homepage is suppressed when debug is off.');
 	}
 
 	/**
@@ -66,7 +88,7 @@ class PagesControllerTest extends IntegrationTestCase {
 		$this->assertRedirect('/', 'Attempting to access the PagesController::display() method directly should force a redirect to the homepage.');
 
 		$this->get('/pages/this/page/does/not/exist');
-		$this->assertResponseFailure();
-		$this->assertResponseContains('this/page/does/not/exist.ctp');
+		$this->assertResponseError();
+		$this->assertResponseContains('this/page/does/not/exist');
 	}
 }

@@ -187,6 +187,7 @@ class ConfigClosuresTest extends TestCase {
 			'Format' => '<style> element { %1$s } </style>',
 			'Snippet' => 'background: red !important;',
 		];
+		Configure::write('debug', true);
 		Configure::write('Defaults.Env.Hint', $expected);
 
 		$result = ConfigClosures::styleForEnv();

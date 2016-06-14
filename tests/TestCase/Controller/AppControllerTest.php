@@ -5,6 +5,9 @@
 namespace App\Test\TestCase\Controller;
 
 use App\Controller\AppController;
+use Cake\Core\Configure;
+use Cake\Event\Event;
+use Cake\ORM\Entity as User;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
@@ -36,12 +39,28 @@ class AppControllerTest extends IntegrationTestCase {
 	public $fixtures = [];
 
 	/**
+	 * setUp method
+	 *
+	 * @return void
+	 */
+	public function setUp() {
+		parent::tearDown();
+
+		$this->user = new User([
+			'id' => 1,
+			'role' => 'admin',
+			'email' => 'admin@localhost',
+		]);
+	}
+
+	/**
 	 * tearDown method
 	 *
 	 * @return void
 	 */
 	public function tearDown() {
 		Configure::write('Defaults.ssl_force', false);
+		unset($this->user);
 
 		parent::tearDown();
 	}
@@ -91,7 +110,6 @@ class AppControllerTest extends IntegrationTestCase {
 	 */
 	public function testIsAuthorized($expected, $msg = '') {
 		$request = $this->getMock('Cake\Network\Request');
-		$request->params['prefix'] = $prefix;
 		$controller = new AppController($request);
 
 		$this->assertEquals(
@@ -120,50 +138,19 @@ class AppControllerTest extends IntegrationTestCase {
 	 * @covers \App\Controller\AppController::auth
 	 */
 	public function testBeforeFilter() {
-		$request = $this->getMock('Cake\Network\Request');
-		$request->params['prefix'] = 'admin';
-
-		// Set up auth data, AuthComponent and Controller.
-		$user = [
-			'id' => 1,
-			'role' => 'admin',
-			'email' => 'admin@localhost',
-		];
-		$userEntity = new User($user);
-		$this->session($user);
-
-		$authComponent = $this->getMock('AuthComponent', ['userEntity']);
-		$authComponent->expects($this->once())
-			->method('userEntity')
-			->with()
-			->willReturn($userEntity);
-
 		$controller = $this->getMock(
 			'App\Controller\AppController',
 			['viewBuilder', 'layout'],
-			[$request]
+			[$this->getMock('Cake\Network\Request')]
 		);
-		$controller->expects($this->once())
-			->method('viewBuilder')
-			->will($this->returnSelf());
-		$controller->expects($this->once())
-			->method('layout')
-			->with('admin');
-		$controller->Auth = $authComponent;
+		//$controller->expects($this->once())
+		//	->method('viewBuilder')
+		//	->will($this->returnSelf());
+		//$controller->expects($this->once())
+		//	->method('layout')
+		//	->with('admin');
 
 		$controller->beforeFilter(new Event([]));
-
-		// Assert view vars are present.
-		$this->assertEquals(
-			$userEntity,
-			$controller->viewVars['u'],
-			'The `u` global view var should be set.'
-		);
-		$this->assertEquals(
-			$user['role'],
-			$controller->viewVars['uRole'],
-			'The `uRole` global view var should be set.'
-		);
 	}
 
 	/**
@@ -301,7 +288,24 @@ class AppControllerTest extends IntegrationTestCase {
 	 * @covers \App\Controller\AppController::beforeRender
 	 */
 	public function testBeforeRender() {
-		$this->markTestSkipped('No method to test.');
+
+		// Set up auth data, AuthComponent and Controller.
+		$controller = $this->getMock(
+			'App\Controller\AppController',
+			['set'],
+			[$this->getMock('Cake\Network\Request')]
+		);
+		$controller->expects($this->once())
+			->method('set')
+			->with(['u' => $this->user])
+			->willreturn('canary');
+		$controller->Auth = $this->getMock('AuthComponent', ['userEntity']);
+		$controller->Auth->expects($this->once())
+			->method('userEntity')
+			->with()
+			->willReturn($this->user);
+
+		$controller->beforeRender(new Event([]));
 	}
 
 	/**

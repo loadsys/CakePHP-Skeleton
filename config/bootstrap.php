@@ -194,7 +194,7 @@ Request::addDetector('tablet', function ($request) {
 Plugin::load('BasicSeed', ['bootstrap' => false, 'routes' => false]);
 Plugin::load('CreatorModifier', ['bootstrap' => false, 'routes' => false]);
 Plugin::load('ConfigRead', ['bootstrap' => false, 'routes' => false]);
-Plugin::load('LoadsysTheme', ['bootstrap' => false, 'routes' => false]);
+Plugin::load('LoadsysTheme', ['bootstrap' => true, 'routes' => false]);
 Plugin::load('Migrations');
 Plugin::load('Uuid', ['bootstrap' => false, 'routes' => false]);
 
