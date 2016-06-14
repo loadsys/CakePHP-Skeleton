@@ -25,7 +25,7 @@ endif;
 
 ?>
 
-<?= $this->Html->css('cake.css') ?>
+<?= $this->Html->css(['vendor/normalize', 'vendor/cake']) ?>
 
 <div class="columns large-12 home">
 
