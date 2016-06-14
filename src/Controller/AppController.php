@@ -23,7 +23,6 @@ use Cake\Network\Exception\BadRequestException;
 use Cake\Routing\Router;
 use LibRegistry\LibRegistryTrait;
 
-
 /**
  * Application Controller
  *

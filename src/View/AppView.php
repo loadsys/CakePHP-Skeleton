@@ -19,8 +19,7 @@ class AppView extends View {
 	 * @return void
 	 */
 	public function initialize() {
-		$this->loadHelper('Html', [
-		]);
+		$this->loadHelper('Html', []);
 		$this->loadHelper('Form', [
 			'errorClass' => 'error',
 			'templates' => [

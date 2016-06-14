@@ -373,6 +373,5 @@ return [
 	 * Top-level keys should match the Entity/Table, second-level keys
 	 * should match `*_slug` field names.
 	 */
-	'Lists' => [
-	],
+	'Lists' => [],
 ];
