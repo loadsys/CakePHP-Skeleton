@@ -21,7 +21,7 @@ module.exports = function(grunt) {
 		sass: {
 			dist: {
 				options: {
-					loadPath: ['bower_components/foundation-sites/scss'],
+					// loadPath: ['bower_components/foundation-sites/scss'],
 				},
 				files: {
 					'webroot/css/build/app.css': 'webroot/css/src/app.scss'
@@ -59,25 +59,31 @@ module.exports = function(grunt) {
 			},
 			main: {
 				src: [
+					'webroot/js/vendor/modernizr.js',
 					'webroot/js/vendor/jquery.js',
-					'bower_components/foundation-sites/js/foundation.core.js',
-					'bower_components/foundation-sites/js/foundation.util.mediaQuery.js',
-					'bower_components/foundation-sites/js/foundation.drilldown.js',
-					'bower_components/foundation-sites/js/foundation.dropdown.js',
-					'bower_components/foundation-sites/js/foundation.dropdownMenu.js',
-					'bower_components/foundation-sites/js/foundation.equalizer.js',
-					'bower_components/foundation-sites/js/foundation.orbit.js',
-					'bower_components/foundation-sites/js/foundation.responsiveMenu.js',
-					'bower_components/foundation-sites/js/foundation.responsiveToggle.js',
-					'bower_components/foundation-sites/js/foundation.tabs.js',
-					'bower_components/foundation-sites/js/foundation.toggler.js',
-					'bower_components/foundation-sites/js/foundation.util.box.js',
-					'bower_components/foundation-sites/js/foundation.util.keyboard.js',
-					'bower_components/foundation-sites/js/foundation.util.motion.js',
-					'bower_components/foundation-sites/js/foundation.util.nest.js',
-					'bower_components/foundation-sites/js/foundation.util.timerAndImageLoader.js',
-					'bower_components/foundation-sites/js/foundation.util.touch.js',
-					'bower_components/foundation-sites/js/foundation.util.triggers.js',
+
+					// Foundation 5 (bundled):
+					'webroot/js/vendor/foundation.min.js',
+
+					// Use all of the following for Foundation 6 instead:
+					//'bower_components/foundation-sites/js/foundation.core.js',
+					//'bower_components/foundation-sites/js/foundation.util.mediaQuery.js',
+					//'bower_components/foundation-sites/js/foundation.drilldown.js',
+					//'bower_components/foundation-sites/js/foundation.dropdown.js',
+					//'bower_components/foundation-sites/js/foundation.dropdownMenu.js',
+					//'bower_components/foundation-sites/js/foundation.equalizer.js',
+					//'bower_components/foundation-sites/js/foundation.orbit.js',
+					//'bower_components/foundation-sites/js/foundation.responsiveMenu.js',
+					//'bower_components/foundation-sites/js/foundation.responsiveToggle.js',
+					//'bower_components/foundation-sites/js/foundation.tabs.js',
+					//'bower_components/foundation-sites/js/foundation.toggler.js',
+					//'bower_components/foundation-sites/js/foundation.util.box.js',
+					//'bower_components/foundation-sites/js/foundation.util.keyboard.js',
+					//'bower_components/foundation-sites/js/foundation.util.motion.js',
+					//'bower_components/foundation-sites/js/foundation.util.nest.js',
+					//'bower_components/foundation-sites/js/foundation.util.timerAndImageLoader.js',
+					//'bower_components/foundation-sites/js/foundation.util.touch.js',
+					//'bower_components/foundation-sites/js/foundation.util.triggers.js',
 					'webroot/js/src/init.js',
 					'webroot/js/src/app.js',
 				],
@@ -88,7 +94,6 @@ module.exports = function(grunt) {
 					'webroot/js/vendor/modernizr.js',
 					'webroot/js/vendor/jquery.js',
 					'webroot/js/init.js',
-					'webroot/js/src/order-balance.js',
 					'bower_components/qunit/qunit/qunit.js',
 					'webroot/js/test/*.js',
 				],
@@ -99,7 +104,7 @@ module.exports = function(grunt) {
 			options: {
 				mangle: false
 			},
-			my_target: {
+			all: {
 				files: {
 					'webroot/js/build/scripts.min.js': ['webroot/js/build/scripts.js'],
 				}
@@ -134,13 +139,21 @@ module.exports = function(grunt) {
 	grunt.registerTask('css', [
 		'sass:dist', 'postcss:dist' // build css assets (in order)
 	]);
-	grunt.registerTask('sasstest', [
-		'sasslint:dist' // lint source scss files
+	grunt.registerTask('testcss', [
+		'sasslint:dist' // lint source scss files (not enabled in `default` yet)
+	]);
+
+	grunt.registerTask('js', [
+		'concat', 'uglify' // build js assets (in order)
 	]);
 	grunt.registerTask('testjs', [
-		'concat', 'uglify', 'qunit' // build js assets and run tests (in order)
+		'js', 'qunit' // build js assets and run tests (in order)
 	]);
-	grunt.registerTask('default', [
+
+	grunt.registerTask('build', [
+		'css', 'js' // build everything, skip tests
+	]);
+	grunt.registerTask('default', [ // build and test everything
 		'css', 'testjs'
 	]);
 };
