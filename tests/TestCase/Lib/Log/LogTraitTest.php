@@ -31,9 +31,7 @@ class LogTraitTest extends TestCase {
 	 *
 	 * @var array
 	 */
-	public $fixtures = [
-		'app.users',
-	];
+	public $fixtures = [];
 
 	/**
 	 * setUp method
@@ -44,9 +42,12 @@ class LogTraitTest extends TestCase {
 		parent::setUp();
 
 		$this->TestLogTrait = new TestLogTrait();
-
-		$config = TableRegistry::exists('Users') ? [] : ['className' => '\App\Model\Table\UsersTable'];
-		$this->Users = TableRegistry::get('Users', $config);
+		$this->Users = $this->getMockBuilder('Cake\ORM\Table')
+			->setMethods([])
+			->setConstructorArgs([
+				['alias' => 'Users'], // 1st constructor arg
+			])
+			->getMock();
 	}
 
 	/**
