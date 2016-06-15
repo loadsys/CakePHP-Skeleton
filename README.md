@@ -41,6 +41,11 @@ Alternatively, you can edit your system's `hosts` file to include the VM's IP an
 
 You should be able to visit the homepage of the new app and see the setup "traffic lights" as green.
 
+The [bundled vagrant VM](https://github.com/puppetlabs/puppetlabs-packer) starts with two user accounts:
+
+* `root` / `puppet` # Default for the box.
+* `vagrant` / `vagrant` # Customized by our provisioning. Useful for Sequel Pro MySQL access.
+
 
 ## Contributing
 
