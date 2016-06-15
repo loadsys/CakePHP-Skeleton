@@ -56,24 +56,16 @@ class InListRule {
 	/**
 	 * Performs the check that ensures this field matches an array_key provided
 	 * at either the passed configPath in the constructor or matching the path
-	 * `Lists.{$options['repository']->registryAlias()}.{$this->field}`
+	 * `Lists.{$entity->source()}.{$this->field}`
 	 *
 	 * @param \Cake\Datasource\EntityInterface $entity The entity from which to extract the fields
-	 * @param array $options Options passed to the check, where the `repository` key is required.
+	 * @param array $options Options passed to the check.
 	 * @return bool Returns true on the field being found as an array key in the
 	 *    Configure value at configPath. False if it does not match or repository
 	 *    not passed. If nulls are permitted, and the value is null, short circuits
 	 *    to return true. On the field not being dirty returns true.
-	 * @throws \InvalidArgumentException On options not including a repository value
 	 */
 	public function __invoke(EntityInterface $entity, array $options) {
-		// if we don't have a repository passed as an option, must return false
-		if (empty($options['repository'])) {
-			throw new InvalidArgumentException(
-				'Options requires a repository key to be passed to run this rule.'
-			);
-		}
-
 		// if we want to check the field only if it is dirty
 		// and the entity reports the field as being dirty
 		if ((bool)$this->_config['checkOnlyIfDirty']
@@ -84,7 +76,7 @@ class InListRule {
 
 		// build the path to the config value if not passed
 		if (is_null($this->_config['configPath'])) {
-			$configPath = "Lists.{$options['repository']->registryAlias()}.{$this->field}";
+			$configPath = "Lists.{$entity->source()}.{$this->field}";
 		} else {
 			$configPath = $this->_config['configPath'];
 		}

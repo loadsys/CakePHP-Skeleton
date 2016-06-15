@@ -147,9 +147,9 @@ $ open tmp/coverage/skel/html/index.html
 
 	* T2 (vagrant): `$ bin/cake migrations migrate` # Make sure the generated migration file executes correctly and populate the DB with a `users` table to test bake with.
 
-	* T2 (vagrant): `$bin/cake bake --all Users` # Should use LoadsysTheme automatically!
+	* T2 (vagrant): `$ bin/cake bake all Users` # Should use LoadsysTheme automatically!
 
-	* T2 (vagrant): `$ bin/codesniffer && bin/phpunit` # Should come back (mostly) clean.
+	* T2 (vagrant): `$ bin/codesniffer-run && bin/phpunit` # Should come back (mostly) clean.
 
 	* (Make corrections in the `skelbuild-check/` project.)
 

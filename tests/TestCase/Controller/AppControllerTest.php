@@ -288,7 +288,6 @@ class AppControllerTest extends IntegrationTestCase {
 	 * @covers \App\Controller\AppController::beforeRender
 	 */
 	public function testBeforeRender() {
-
 		// Set up auth data, AuthComponent and Controller.
 		$controller = $this->getMock(
 			'App\Controller\AppController',
