@@ -9,6 +9,7 @@
 			<directory>../Vendor</directory>
 			<directory>../Plugin/DebugKit</directory>
 			<directory>../Plugin/Migrations</directory>
+			<directory suffix=".ctp">../View</directory>
 			<!-- Project-specific exclusions. -->
 		</blacklist>
 	</filter>
@@ -23,7 +24,7 @@
 			highLowerBound="90"
 		/>
 		<!-- Not currently used, but include the config anyway so it's here already. -->
-		<!-- 
+		<!--
 		<log
 			type="coverage-clover"
 			target="../tmp/coverage/clover.xml"

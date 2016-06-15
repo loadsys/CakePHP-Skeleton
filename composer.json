@@ -4,7 +4,8 @@
     "license": "proprietary",
     "require": {
         "cakephp/cakephp": "2.6.*",
-        "loadsys/cakephp-shell-scripts": "~2.1"
+        "loadsys/cakephp-shell-scripts": "~2.1",
+        "loadsys/cakephp-config-read": "~2.0"
     },
     "config": {
         "vendor-dir": "Vendor/",
