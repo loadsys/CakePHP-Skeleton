@@ -26,7 +26,7 @@
     "loadsys/loadsys_codesniffer": "~3.0",
     "phpmd/phpmd": "^2.3",
     "loadsys/cakephp-uuid-shell": "~1.0",
-    "loadsys/cakephp-loadsys-theme": "^1.0",
+    "loadsys/cakephp-loadsys-theme": "^1.1",
     "behat/behat": "~3.0",
     "behat/mink": "^1.7",
     "behat/mink-extension": "^2.2",
