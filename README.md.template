@@ -247,7 +247,7 @@ This setup is handy for backing up your data if you're about to destroy the box,
 * Both test data and starting production data is maintained by the Loadsys Basic Seeds plugin.
 * The default seed files are environment aware, making it possible to run the same command regardless of environment.
 * To populate (or reset) your local dev data back to the contents of the seed:
-	* `bin/cake BasicSeed.basic_seed`
+	* `bin/cake basic_seed -v`
 * There is not currently any way to automatically generate seed data-- it must be entered into the related files (`config/seed.php` for production, `config/seed_staging.php` and `config/seed_vagrant.php` for development) by hand.
 * It's possible for the seeds to refer to each other. In the default setup, staging and vagrant envs load **both** the production data, and the vagrant data.
 * :warning: Seeds are capable of `TRUNCATE`ing data during their execution-- be careful to have backups of any data you want to keep by using `bin/db-backup`.
@@ -299,18 +299,32 @@ There are three testsuites setup as part of the phpunit.xml.dist file.
 
 ### Javascript Unit Testing
 
-* Tests should also be written for the browser JavaScript code.
-* Javascript should be written in individual "class" files (they will be merged by asset compilation) in `webroot/js/src/`.
+* Javascript is managed via JS source files in the `webroot/js/src/` folder.
+* Separate files should be used for each specific class or each specific page.
+* Vendor libraries live in `webroot/js/vendor/`.
+* Files need to be added to the `Gruntfile.js` for both the `concat` and `qunit` steps to ensure they are bunlded correctly.
+* Tests must be written for all JavaScript code and live in `webroot/js/test/`.
+
 * Anything you would normally put in a `document.ready(...)` call should be placed in `webroot/js/init.js`.
-* Matching test files should be created in `webroot/js/test/`.
 * Tests are run with phantomjs via grunt:
+    * Run `grunt testjs` to run the qunit test suite.
     * Run `grunt watch` to run the test suite on js test or source file change.
-    * Run `grunt qunit` to run the qunit test suite.
 
 
 ### CSS Changes
 
-* CSS is managed via Standard CSS files in the webroot directory
+* CSS is managed via SASS source files in the `webroot/css/src/` dir.
+* Vendor libraries live in `webroot/css/vendor/`.
+* All CSS is compiled together using `grunt css`.
+* SASS linting should be performed using `grunt testcss`.
+* Use `grunt watch` to compile SASS changes on file save.
+* The "main" SASS file is `webroot/css/src/app.scss`. Add your includes here and the build process will take care of the rest.
+
+
+### Other grunt commands
+
+* `grunt build` - Compiles all CSS and JS assets _without running tests_.
+* `grunt` - Compiles all CSS/JS assets and executes all tests.
 
 
 ### Command Line Scripts

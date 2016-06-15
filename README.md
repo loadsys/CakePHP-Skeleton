@@ -96,7 +96,7 @@ Most of the magic behind the `create-project` command lies in composer's ability
 
 Additional first-time setup should be added as a post-install script. If a process should be repeatable, consider making it part of the [loadsys/CakePHP-Shell-Scripts](https://github.com/loadsys/CakePHP-Shell-Scripts) repo instead, and calling that script from a post-install hook.
 
-#### Running Tests
+### Running Tests
 
 The composer scripts have their own unit tests. To execute them, run:
 
@@ -105,6 +105,63 @@ $ composer install
 $ bin/phpunit --configuration skel/tests/phpunit.xml.dist
 $ open tmp/coverage/skel/html/index.html
 ```
+
+### Testing the Spawn Process
+
+(This is customized for Brian's preferred editor and git UI- adjust as necessary.)
+
+* Open 2 terminal Windows:
+
+* T1 (host): `$ cd CakePHP-Skeleton/`
+
+* (Make your changes to the skeleton files, and **commit them to a branch!**)
+
+* T1 (host): `$ ./skel/test-project.sh MY_BRANCH_NAME ~/Desktop/skelbuild-check`
+
+	* (Answer all of the prompts, dummy data is mostly fine.)
+
+* T2 (host): `$ cd ~/Desktop/skelbuild-check/ ; bb . ; ./bootstrap.sh vagrant ; gitx ; vagrant ssh`
+
+	* (If you're also testing changes to the LoadsysTheme):
+
+		* Add this to the `skelbuild-check/composer.json`:
+
+		```json
+		"repositories": [
+			{
+				"type": "path",
+				"url" : "~/path/to/CakePHP-LoadsysTheme/",
+				"options": {
+					"symlink": false
+				}
+			},
+			{
+				"packagist": false
+			}
+		],
+		```
+
+		* T2 (host!): `$ composer update loadsys/cakephp-loadsys-theme`
+
+	* T2 (vagrant): `$ bin/cake bake migration CreateUsers email:string password:string` # This should use the LoadsysTheme **automatically**!
+
+	* T2 (vagrant): `$ bin/cake migrations migrate` # Make sure the generated migration file executes correctly and populate the DB with a `users` table to test bake with.
+
+	* T2 (vagrant): `$bin/cake bake --all Users` # Should use LoadsysTheme automatically!
+
+	* T2 (vagrant): `$ bin/codesniffer && bin/phpunit` # Should come back (mostly) clean.
+
+	* (Make corrections in the `skelbuild-check/` project.)
+
+	* (Re-run sniffs/tests.)
+
+	* (Use the git diff to copy them back into the `CakePHP-Skeleton/` working copy.)
+
+	* T2 (vagrant): `$ exit`
+
+* T2 (host): `$ vagrant destroy -f ; cd ../ ; rm -rf skelbuild-check`
+
+* (Repeat from the top.)
 
 
 ### Keeping in sync with CakePHP App
