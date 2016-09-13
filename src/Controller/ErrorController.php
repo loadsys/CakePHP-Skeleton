@@ -60,7 +60,7 @@ class ErrorController extends AppController
      * afterFilter callback.
      *
      * @param \Cake\Event\Event $event Event.
-     * @return void
+     * @return \Cake\Network\Response|null|void
      */
     public function afterFilter(Event $event)
     {
