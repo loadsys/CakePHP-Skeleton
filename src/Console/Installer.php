@@ -14,6 +14,7 @@
  */
 namespace App\Console;
 
+use Cake\Utility\Security;
 use Composer\Script\Event;
 use Exception;
 
@@ -128,8 +129,8 @@ class Installer
     {
         // Change the permissions on a path and output the results.
         $changePerms = function ($path, $perms, $io) {
-            // Get current permissions in decimal format so we can bitmask it.
-            $currentPerms = octdec(substr(sprintf('%o', fileperms($path)), -4));
+            // Get permission bits from stat(2) result.
+            $currentPerms = fileperms($path) & 0777;
             if (($currentPerms & $perms) == $perms) {
                 return;
             }
@@ -174,17 +175,19 @@ class Installer
         $config = $dir . '/config/app.php';
         $content = file_get_contents($config);
 
-        $newKey = hash('sha256', $dir . php_uname() . microtime(true));
+        $newKey = hash('sha256', Security::randomBytes(64));
         $content = str_replace('__SALT__', $newKey, $content, $count);
 
         if ($count == 0) {
             $io->write('No Security.salt placeholder to replace.');
+
             return;
         }
 
         $result = file_put_contents($config, $content);
         if ($result) {
             $io->write('Updated Security.salt value in config/app.php');
+
             return;
         }
         $io->write('Unable to update Security.salt value.');
