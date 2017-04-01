@@ -15,6 +15,8 @@
  * @since         2.0.0
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
+require dirname(__DIR__) . '/vendor/autoload.php';
 include dirname(__DIR__) . '/config/bootstrap.php';
 
 exit(Cake\Console\ShellDispatcher::run($argv));

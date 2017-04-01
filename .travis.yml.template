@@ -5,7 +5,7 @@ sudo: false
 
 # PHP Versions to support
 php:
-  - 5.6
+  - 7.1
 
 # Cache the composer directories, only allowed if using the container based setup
 # which depends on setting sudo to false

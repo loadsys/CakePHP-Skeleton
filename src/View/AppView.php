@@ -7,14 +7,17 @@ namespace App\View;
 use Cake\View\View;
 
 /**
- * App View class
+ * Application View
+ *
+ * Your application’s default view class
+ *
+ * @link http://book.cakephp.org/3.0/en/views.html#the-app-view
  */
 class AppView extends View {
 	/**
 	 * Initialization hook method.
 	 *
-	 * For e.g. use this method to load a helper for all views:
-	 * `$this->loadHelper('Html');`
+	 * Use this method to add common initialization code like loading helpers.
 	 *
 	 * @return void
 	 */

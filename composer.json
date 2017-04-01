@@ -6,7 +6,7 @@
   "license": "MIT",
   "require": {
     "php": ">=5.6.0",
-    "cakephp/cakephp": "~3.1",
+    "cakephp/cakephp": "~3.3",
     "cakephp/plugin-installer": "*"
   },
   "require-dev": {

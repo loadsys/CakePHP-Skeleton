@@ -8,7 +8,10 @@
 
 use Cake\Core\Configure;
 
+require dirname(__DIR__) . DS . 'vendor' . DS . 'autoload.php';
 require dirname(__DIR__) . DS . 'config' . DS . 'bootstrap.php';
+
+$_SERVER['PHP_SELF'] = '/';
 
 define('CORE_TESTS', CORE_PATH . 'tests' . DS);
 define('CORE_TEST_CASES', CORE_TESTS . 'TestCase');

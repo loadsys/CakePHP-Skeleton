@@ -4,7 +4,7 @@ A skeleton for creating applications with [CakePHP](http://cakephp.org) 3.x. (If
 for a 2.x compatible version you'll want to check out the
 [cake-2.x](https://github.com/loadsys/CakePHP-Skeleton/tree/cake-2.x) branch.)
 
-This skeleton is tuned to serve the most common needs for [Loadsys](http://loadsys.com). If you're finding this on your own, it may be more than you need or not exactly what you need. Feel free to cherry pick any ideas that are useful.
+This skeleton is tuned to serve the most common needs for [Loadsys](http://loadsys.com). If you're finding this on your own, it may be more than you need or not exactly what you need. Feel free to cherry pick any ideas that are useful. You may also want to checkout the standard [CakePHP 3.x Application Skeleton](https://github.com/cakephp/app).
 
 :grey_exclamation: This is the _Skeleton's_ Readme! To edit the README that is bundled with new projects, see [`README.md.template`](README.md.template).
 
@@ -100,7 +100,6 @@ $ composer install
 $ bin/phpunit --configuration skel/tests/phpunit.xml.dist
 $ open tmp/coverage/skel/html/index.html
 ```
-
 
 ### Keeping in sync with CakePHP App
 

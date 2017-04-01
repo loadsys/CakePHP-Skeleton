@@ -4,6 +4,7 @@
  */
 namespace Skel;
 
+use Cake\Utility\Security;
 use Composer\Script\Event;
 use Exception;
 
@@ -96,7 +97,7 @@ class LoadsysInstaller
      * @codeCoverageIgnore Can't test PHP built-in functions.
      */
     public static function replace__SALT__($default) {
-        return hash('sha256', __FILE__ . php_uname() . microtime(true));
+        return hash('sha256', Security::randomBytes(64));
     }
 
     /**

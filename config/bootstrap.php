@@ -19,9 +19,6 @@
  */
 require __DIR__ . '/paths.php';
 
-// Use composer to load the autoloader.
-require ROOT . DS . 'vendor' . DS . 'autoload.php';
-
 /**
  * Bootstrap CakePHP.
  *
@@ -32,11 +29,6 @@ require ROOT . DS . 'vendor' . DS . 'autoload.php';
  * - Setting the default application paths.
  */
 require CORE_PATH . 'config' . DS . 'bootstrap.php';
-
-// You can remove this if you are confident you have intl installed.
-if (!extension_loaded('intl')) {
-	trigger_error('You must enable the intl extension to use CakePHP.', E_USER_ERROR);
-}
 
 use Cake\Cache\Cache;
 use Cake\Console\ConsoleErrorHandler;
@@ -50,7 +42,6 @@ use Cake\Error\ErrorHandler;
 use Cake\Log\Log;
 use Cake\Mailer\Email;
 use Cake\Network\Request;
-use Cake\Routing\DispatcherFactory;
 use Cake\Utility\Inflector;
 use Cake\Utility\Security;
 
@@ -66,7 +57,7 @@ try {
 	Configure::config('default', new PhpConfig());
 	Configure::load('app', 'default', false);
 } catch (\Exception $e) {
-	die($e->getMessage() . "\n");
+	exit($e->getMessage() . "\n");
 }
 
 /**
@@ -107,19 +98,21 @@ mb_internal_encoding(Configure::read('App.encoding'));
  * Set the default locale. This controls how dates, number and currency is
  * formatted and sets the default language to use for translations.
  */
-ini_set('intl.default_locale', 'en_US');
+ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
 
 /**
  * Register application error and exception handlers.
  */
-$isCli = php_sapi_name() === 'cli';
+$isCli = PHP_SAPI === 'cli';
 if ($isCli) {
 	(new ConsoleErrorHandler(Configure::read('Error')))->register();
 } else {
 	(new ErrorHandler(Configure::read('Error')))->register();
 }
 
-// Include the CLI bootstrap overrides.
+/**
+ * Include the CLI bootstrap overrides.
+ */
 if ($isCli) {
 	require __DIR__ . '/bootstrap_cli.php';
 }
@@ -156,7 +149,7 @@ Security::salt(Configure::consume('Security.salt'));
  * If you are migrating from 2.x uncomment this code to
  * use a more compatible Mcrypt based implementation
  */
-// Security::engine(new \Cake\Utility\Crypto\Mcrypt());
+//Security::engine(new \Cake\Utility\Crypto\Mcrypt());
 
 /**
  * Setup detectors for mobile and tablet.
@@ -171,15 +164,31 @@ Request::addDetector('tablet', function ($request) {
 });
 
 /**
+ * Enable immutable time objects in the ORM.
+ *
+ * You can enable default locale format parsing by adding calls
+ * to `useLocaleParser()`. This enables the automatic conversion of
+ * locale specific date formats. For details see
+ * @link http://book.cakephp.org/3.0/en/core-libraries/internationalization-and-localization.html#parsing-localized-datetime-data
+ */
+Type::build('time')
+	->useImmutable();
+Type::build('date')
+	->useImmutable();
+Type::build('datetime')
+	->useImmutable();
+Type::build('timestamp')
+	->useImmutable();
+
+/**
  * Custom Inflector rules, can be set to correctly pluralize or singularize
  * table, model, controller names or whatever other string is passed to the
  * inflection functions.
- *
- * Inflector::rules('plural', ['/^(inflect)or$/i' => '\1ables']);
- * Inflector::rules('irregular', ['red' => 'redlings']);
- * Inflector::rules('uninflected', ['dontinflectme']);
- * Inflector::rules('transliteration', ['/å/' => 'aa']);
  */
+//Inflector::rules('plural', ['/^(inflect)or$/i' => '\1ables']);
+//Inflector::rules('irregular', ['red' => 'redlings']);
+//Inflector::rules('uninflected', ['dontinflectme']);
+//Inflector::rules('transliteration', ['/å/' => 'aa']);
 
 /**
  * Plugins need to be loaded manually, you can either load them one by one or all of them in a single call
@@ -197,21 +206,10 @@ Plugin::load('ConfigRead', ['bootstrap' => false, 'routes' => false]);
 Plugin::load('LoadsysTheme', ['bootstrap' => false, 'routes' => false]);
 Plugin::load('Migrations');
 
-// Only try to load DebugKit in development mode
-// Debug Kit should not be installed on a production system
+/**
+ * Only try to load DebugKit in development mode
+ * Debug Kit should not be installed on a production system
+ */
 if (Configure::read('debug')) {
 	Plugin::load('DebugKit', ['bootstrap' => true]);
 }
-
-/**
- * Connect middleware/dispatcher filters.
- */
-DispatcherFactory::add('Asset');
-DispatcherFactory::add('Routing');
-DispatcherFactory::add('ControllerFactory');
-
-/**
- * Enable default locale format parsing.
- * This is needed for matching the auto-localized string output of Time() class when parsing dates.
- */
-Type::build('datetime')->useLocaleParser();
