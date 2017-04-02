@@ -9,7 +9,7 @@
 # bootstrap.php.
 #
 # The full set of config keys used in provisioning must be defined
-# in this file. @TODO: Additional override keys may be defined in separate
+# in this file. Additional override keys may be defined in separate
 # files named after the matching APP_ENV. For example:
 # `provision-staging.yaml` and/or `provision-local.yaml`. Values
 # from those files will be deep-merged on top of this one during
@@ -18,8 +18,8 @@
 readme: "Nothing is required to be present in this file. In fact, the file doesn't even have to be present!"
 vm:
    provider: 'virtualbox'
-   box: 'puppetlabs/ubuntu-14.04-64-nocm'
-   box_url: 'puppetlabs/ubuntu-14.04-64-nocm'
+   box: 'loadsys/cakephp-dev'
+   box_url: 'loadsys/cakephp-dev'
    hostname: '{{VAGRANT_HOSTNAME:loadsys-cake3-skeleton}}'
    memory: {{VAGRANT_MEMORY:2048}}
    cpus: {{VAGRANT_CPUS:2}}
@@ -32,9 +32,9 @@ vm:
            mysql:
                guest: 3306
                host: 3307
-           mailcatcher:
-               guest: 1080
-               host: 1080
+           mailhog:
+               guest: 8025
+               host: 8025
        auto_correct_collisions: true
        usable_port_range:
            start: 10200
@@ -48,4 +48,4 @@ vm:
            main:
                path: 'provision/main.sh'
                args: 'vagrant'
-   post_up_message: '{{VAGRANT_HOSTNAME:loadsys-cake3-skeleton}} provisioning complete. Connect at http://{{__VAGRANT_IP__}}/ or http://localhost:8080/. Mailcatcher is available at http://{{__VAGRANT_IP__}}:1080/ or http://localhost:1080/.'
+   post_up_message: '{{VAGRANT_HOSTNAME:loadsys-cake3-skeleton}} provisioning complete. Connect at http://{{__VAGRANT_IP__}}/ or http://localhost:8080/. MailHog is available at http://{{__VAGRANT_IP__}}:8025/ or http://localhost:8025/.'

@@ -53,8 +53,8 @@ return [
 	/**
 	 * Email configuration.
 	 *
-	 * The vagrant VM runs Mailcatcher internally, making email
-	 * available in a web interface on port 1080.
+	 * The vagrant VM runs MailHog internally, making email available in a web
+	 * interface on port 8025.
 	 */
 	'EmailTransport' => [
 		'default' => [

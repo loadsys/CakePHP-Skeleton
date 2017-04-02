@@ -8,12 +8,11 @@ usage ()
 ${0##*/}
     Primary provisioning script for Loadsys Cake 3 applications.
 
-    (Starting to be) Designed to be used both by vagrant an on any
-    Ubuntu 12.04 LTS (Precise) server. Provide the desired APP_ENV
+    (Starting to be) Designed to be used both by vagrant and on any
+    Ubuntu 16.04 LTS (Xenial) server. Provide the desired APP_ENV
     value as the first argument (defaults to "production"). That
     value will be written to \`/etc/app_env\` and used by both the
-    current user's \`~/.profile\` and
-    \`/etc/apache2/envvars\` + \`provision/010-cake.conf\`.
+    current user's \`~/.profile\` and \`/etc/apache2/envvars\`.
 
     Will execute \`provision/$APP_ENV.sql\` against the local MySQL
     database and call \`provision/$APP_ENV.sh\` if present.
@@ -31,12 +30,11 @@ EOT
 if [ "$1" = '-h' ]; then
 	usage
 fi
-
-# Set up working vars.
 if [ -z "$1" ]; then
 	usage
 fi
 
+# Set up working vars.
 export APP_ENV=${1}
 
 export TARGET_USER=$(whoami)
@@ -47,69 +45,7 @@ else
 	export PROVISION_DIR="$( cd -P "$( dirname "$0" )"/. >/dev/null 2>&1 && pwd )"
 fi
 
-
 echo "## Starting: `basename "$0"`."
-
-
-# Prevent sometimes-troublesome packages from...causing trouble.
-echo "## Holding packages that cause trouble..."
-
-sudo apt-mark hold grub-common grub-pc grub-pc-bin grub2-common grub-legacy-ec2
-
-
-# Install sub-dependencies first.
-echo "## Installing dependencies."
-
-export DEBIAN_FRONTEND=noninteractive
-
-echo "UTC" | sudo tee /etc/timezone > /dev/null
-
-sudo dpkg-reconfigure --frontend noninteractive tzdata
-
-sudo apt-get update -y
-
-sudo apt-get upgrade -y
-
-sudo apt-get install -y \
- software-properties-common \
- python-software-properties \
- build-essential \
- curl \
- bzip2 \
- gzip \
- unzip \
- zip \
- mysql-client
-
-sudo add-apt-repository -y ppa:ondrej/php5-5.6
-
-sudo apt-add-repository -y ppa:git-core/ppa
-
-
-# Install direct requirements.
-echo "## Installing LAMP stack components."
-
-sudo apt-get update -y
-
-sudo apt-get install -y git-core apache2 php5 php5-curl php5-intl php5-mcrypt php5-memcached php5-mysql
-
-
-# Install composer.
-echo "## Installing composer."
-
-curl -sS https://raw.githubusercontent.com/loadsys/CakePHP-Shell-Scripts/master/composer > composer && sudo bash composer
-
-
-# Install Node.js, Grunt and Ember.
-# Ref: https://nodesource.com/blog/nodejs-v012-iojs-and-the-nodesource-linux-repositories
-# echo "## Installing node.js, Grunt and Ember."
-#
-# curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
-#
-# sudo apt-get install -y nodejs
-#
-# sudo npm install -g json grunt-cli ember-cli
-
 
 # Set up the machine's APP_ENV value.
 echo "## Setting app environment."
@@ -122,7 +58,16 @@ EOAPPENV
 
 sudo chmod a+r /etc/app_env
 
-echo ". /etc/app_env" >> "/home/${TARGET_USER}/.profile"
+if ! grep -q "/etc/app_env$" "/home/${TARGET_USER}/.profile"
+then
+	tee -a "/home/${TARGET_USER}/.profile" <<-EOENV > /dev/null
+
+		## Load this machine's APP_ENV value.
+		. /etc/app_env
+
+	EOENV
+	echo "## Setting app_env in /home/${TARGET_USER}/.profile"
+fi
 
 sudo cp -rv ${PROVISION_DIR}/dot-files/.[a-zA-Z0-9]* "/home/${TARGET_USER}/"
 
@@ -130,10 +75,13 @@ sudo chown -Rv ${TARGET_USER} /home/${TARGET_USER}/.[a-zA-Z0-9]*
 
 sudo cp -rv ${PROVISION_DIR}/dot-files/.[a-zA-Z0-9]* /root/
 
-
 # Automatically switch to the webroot when logging in.
-echo "cd /var/www" >> "/home/${TARGET_USER}/.profile"
-
+if grep -q "^cd /var/www" /home/${TARGET_USER}/.profile
+then
+    echo "## Webroot cd is already added to ~/.profile"
+else
+    printf "\ncd /var/www" >> "/home/${TARGET_USER}/.profile"
+fi
 
 # Set up Apache config.
 echo "## Setting up Apache virtual host."
